@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>The Scala.js Tutorial</title>
+  </head>
+  <body>
+
+  Ejemplo: H2O = H2 + O2
+    <!-- Include JavaScript dependencies, webjars -->
+    <script type="text/javascript" src="./target/scala-2.12/scala-js-tutorial-jsdeps.js"></script>
+
+    <!-- Include Scala.js compiled code, generated with fastOptJS|fullOptJS in sbt -->
+    <script type="text/javascript" src="./target/scala-2.12/scala-js-tutorial-fastopt.js"></script>
+
+    
+    <button id="click-me-button" type="button">
+      Click me jquery!
+    </button>
+
+    <button type="button" onclick="addClickedMessage()">
+      Click me!
+    </button>
+
+    <input type="text" id="ecuacion"/>
+
+    <div id="ecuacion-normalizada"></div>
+
+  </body>
+</html>
