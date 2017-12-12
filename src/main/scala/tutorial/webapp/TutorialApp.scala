@@ -7,6 +7,7 @@ import org.scalajs.jquery.jQuery
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSExportTopLevel
+import scala.util.{Left, Right}
 
 object TutorialApp {
   def main(args: Array[String]): Unit = {
@@ -39,15 +40,15 @@ object TutorialApp {
 
     jQuery("#ecuacion").keyup{ () =>
       val s = jQuery("#ecuacion").value()
-      val (success,norm) = EcuacionMolecular.ajustaEcuacion(s.toString)
-      norm match {
-        case Some(s) =>
-          println(s)
-          ecuacionNormalizadaDiv.text(s)
-        case None =>
-          println("No puede ajustarse")
-          ecuacionNormalizadaDiv.text("No puede ajustarse")
+      val ec = EcuacionMolecular.parse(s.toString)
+      val msg = ec.map(_.ajusta()) match {
+        case Left(msg) => msg
+        case Right(oec) => oec match {
+          case Some(e) => e.toString
+          case None => "No se puede ajustar la ecuación (índices muy altos o átomos no balanceables):" + ec
+        }
       }
+      ecuacionNormalizadaDiv.text(msg)
     }
   }
 }

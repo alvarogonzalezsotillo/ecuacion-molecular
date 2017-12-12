@@ -4,6 +4,7 @@ import java.io.{PrintStream, Serializable, Writer}
 
 import scala.Option
 import scala.collection.mutable.IndexedSeq
+import scala.util.{Left, Right}
 import scala.util.parsing.combinator.RegexParsers
 
 /**
@@ -14,88 +15,82 @@ object EcuacionMolecular{
 
   case class AtomoEnMolecula(elemento: String, cantidad: Int = 1)
 
-  case class Molecula(atomos: List[AtomoEnMolecula], cantidad: Int = 1)
-
-  case class LadoEcuacion(moleculas: List[Molecula])
-
-  case class Ecuacion(ladoIzquierdo: LadoEcuacion, ladoDerecho: LadoEcuacion)
-
-  def atomosDeMolecula( m: Molecula, multiplier: Int = 1 ) : Map[String,Int] = {
-    m.atomos.map( am => am.elemento -> am.cantidad * m.cantidad * multiplier ).toMap
-  }
-
-  def atomosDeLadoDeEcuacion( l : LadoEcuacion, multipliers: Option[List[Int]] = None ) : Map[String,Int] = {
-    val multipliers_ = multipliers.getOrElse(Iterator.continually(1).take(l.moleculas.size).toList)
-    val maps = l.moleculas.zip(multipliers_).map{ case (mol, mul) => atomosDeMolecula(mol,mul) }
-    maps.foldLeft( Map[String,Int]() ){ (m,accum) =>
-      val keys = m.keySet ++ accum.keySet
-      keys.map( k => k -> (m.getOrElse(k,0) + accum.getOrElse(k,0) ) ).toMap
+  case class Molecula(val atomos: List[AtomoEnMolecula], val cantidad: Int = 1){
+    def atomosDeMolecula( multiplier: Int = 1 ) : Map[String,Int] = {
+      atomos.map( am => am.elemento -> am.cantidad * cantidad * multiplier ).toMap
     }
   }
 
-  def esAjustada( e: Ecuacion, multipliers: List[Int] ): Boolean ={
-    val ni = e.ladoIzquierdo.moleculas.size
-    val nd = e.ladoDerecho.moleculas.size
-    assert( ni+nd == multipliers.size )
-    val (mi,md) = multipliers.splitAt(ni)
-    val ai = atomosDeLadoDeEcuacion(e.ladoIzquierdo, Some(mi))
-    val ad = atomosDeLadoDeEcuacion(e.ladoDerecho, Some(md))
-
-    ai == ad
-  }
-
-  def ajusta( e: Ecuacion, maxSum: Int = 10 ) : Option[Ecuacion]= {
-    val it_ = Secuencias.iterator(e.ladoDerecho.moleculas.size + e.ladoIzquierdo.moleculas.size, maxSum )
-    val it = it_.map{ l => l.map(_+1) }
-    val multipliers = it.find( esAjustada(e,_) )
-
-
-    val ret = multipliers.map{ m =>
-      val (mi,md) = m.splitAt(e.ladoIzquierdo.moleculas.size)
-      val li = e.ladoIzquierdo.moleculas.zip(mi).map{ case (mol,mul) =>
-        Molecula(mol.atomos, mol.cantidad*mul)
+  case class LadoEcuacion(moleculas: List[Molecula]){
+    def atomosDeLadoDeEcuacion( multipliers: Option[List[Int]] = None ) : Map[String,Int] = {
+      val multipliers_ = multipliers.getOrElse(Iterator.continually(1).take(moleculas.size).toList)
+      val maps = moleculas.zip(multipliers_).map{ case (mol, mul) => mol.atomosDeMolecula(mul) }
+      maps.foldLeft( Map[String,Int]() ){ (m,accum) =>
+        val keys = m.keySet ++ accum.keySet
+        keys.map( k => k -> (m.getOrElse(k,0) + accum.getOrElse(k,0) ) ).toMap
       }
-      val ld = e.ladoDerecho.moleculas.zip(md).map{ case (mol,mul) =>
-        Molecula(mol.atomos, mol.cantidad*mul)
+    }
+
+  }
+
+  case class Ecuacion(ladoIzquierdo: LadoEcuacion, ladoDerecho: LadoEcuacion) {
+
+
+    override def toString: String = {
+
+      def toStringC(i: Int) = if (i > 1) i.toString else ""
+
+      def toStringA(a: AtomoEnMolecula) = a.elemento + toStringC(a.cantidad)
+
+      def toStringM(m: Molecula) = toStringC(m.cantidad) + m.atomos.map(toStringA(_)).mkString
+
+
+      def toStringL(l: LadoEcuacion) = {
+        l.moleculas.map(toStringM(_)).mkString(" + ")
       }
-      Ecuacion( LadoEcuacion(li), LadoEcuacion(ld) )
+
+      toStringL(ladoIzquierdo) + " <--> " + toStringL(ladoDerecho)
     }
 
-    ret
-
-  }
-
-  def toString( e: Ecuacion ) = {
-
-    def toStringC(i: Int) = if( i > 1 ) i.toString else ""
-
-    def toStringA(a: AtomoEnMolecula ) = a.elemento + toStringC( a.cantidad )
-
-    def toStringM(m: Molecula ) =  toStringC(m.cantidad) + m.atomos.map(toStringA(_)).mkString
-
-
-    def toStringL(l: LadoEcuacion ) = {
-      l.moleculas.map( toStringM(_) ).mkString(" + ")
+    def esAjustada(multipliers: List[Int]): Boolean = {
+      val ni = ladoIzquierdo.moleculas.size
+      val nd = ladoDerecho.moleculas.size
+      assert(ni + nd == multipliers.size)
+      val (mi, md) = multipliers.splitAt(ni)
+      val ai = ladoIzquierdo.atomosDeLadoDeEcuacion(Some(mi))
+      val ad = ladoDerecho.atomosDeLadoDeEcuacion(Some(md))
+      ai == ad
     }
-    toStringL(e.ladoIzquierdo) + " <--> " + toStringL(e.ladoDerecho)
+
+    def ajusta(maxSum: Int = 10): Option[Ecuacion] = {
+      val it_ = Secuencias.iterator(ladoDerecho.moleculas.size + ladoIzquierdo.moleculas.size, maxSum)
+      val it = it_.map { l => l.map(_ + 1) }
+      val multipliers = it.find(esAjustada(_))
+
+
+      multipliers.map { m =>
+        val (mi, md) = m.splitAt(ladoIzquierdo.moleculas.size)
+        val li = ladoIzquierdo.moleculas.zip(mi).map { case (mol, mul) =>
+          Molecula(mol.atomos, mol.cantidad * mul)
+        }
+        val ld = ladoDerecho.moleculas.zip(md).map { case (mol, mul) =>
+          Molecula(mol.atomos, mol.cantidad * mul)
+        }
+        Ecuacion(LadoEcuacion(li), LadoEcuacion(ld))
+      }
+    }
   }
 
 
-  def ajustaEcuacion( s: String ) : (Boolean,Option[String]) = {
+  def parse( s: String ) :  String Either Ecuacion = {
     val parser = new EcuacionMolecularParser
     import parser._
-    val result = parser.parse(parser.ecuacion, s )
-
-    result match {
-      case Success(ecuacion, _) =>
-        println( EcuacionMolecular.toString(ecuacion) )
-        val e = ajusta(ecuacion,20)
-        val ret = e.map( ec => EcuacionMolecular.toString(ec) )
-        (true,ret)
-      case NoSuccess(msg,_) =>
-        (false,Some(msg))
+    parser.parse(parser.ecuacion, s) match{
+      case Success(ecuacion, _) => Right(ecuacion)
+      case NoSuccess(msg,_) => Left(msg)
     }
   }
+
 
 }
 
@@ -159,13 +154,6 @@ object Secuencias{
   }
 }
 
-object ProbarSecuencia {//extends App{
-  import Secuencias._
-
-  for( s <- Secuencias.iterator(3,3) ) println( s.mkString(","))
-
-
-}
 
 
 
@@ -185,7 +173,7 @@ class EcuacionMolecularParser extends RegexParsers {
     case a ~ n => AtomoEnMolecula(a, n.getOrElse(1))
   } | failure( "Se esperaba un símbolo atómico y un número opcional")
 
-  def molecula: Parser[Molecula] = blanco ~> (numero.? ~ rep(atomoEnMolecula)) <~ blanco ^^ {
+  def molecula: Parser[Molecula] = blanco ~> (numero.? ~ rep1(atomoEnMolecula)) <~ blanco ^^ {
     case n ~ as => Molecula(as, n.getOrElse(1))
   } | failure( "Una molécula son varios símbolos atómicos, cada uno con un número opcional")
 
@@ -201,15 +189,16 @@ class EcuacionMolecularParser extends RegexParsers {
 
 }
 
-object ProbarEcuacion {//extends App {
-
-
-  import EcuacionMolecular._
-
-
-  def test = {
-    val result = ajustaEcuacion(" HCl + MnO2 <-->  MnCl2 + H2O + Cl2")
-
-    println( result )
+object Probar{
+  def testEcuacion = {
+    import EcuacionMolecular._
+    val ec: Either[String, Option[Ecuacion]] = EcuacionMolecular.parse(" HCl + MnO2 <-->  MnCl2 + H2O + Cl2").map( _.ajusta() )
+    println( ec )
   }
+
+  def testSecuencia = {
+    import Secuencias._
+    for( s <- Secuencias.iterator(3,3) ) println( s.mkString(","))
+  }
+
 }
