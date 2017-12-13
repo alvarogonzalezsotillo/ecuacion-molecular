@@ -3,7 +3,7 @@ package tutorial.webapp
 
 import org.scalajs.dom
 import dom.document
-import org.scalajs.jquery.jQuery
+import org.scalajs.jquery._
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSExportTopLevel
@@ -11,35 +11,22 @@ import scala.util.{Left, Right}
 
 object TutorialApp {
   def main(args: Array[String]): Unit = {
-    println("Hello world!")
-    println( document )
     if( !scala.scalajs.js.isUndefined(document) ){
-      appendPar(document.body, "Hello World")
       jQuery(() => setupUI())
+    }
+    else{
+      println( "Browser or nodejs required" )
     }
   }
 
-  def appendPar(targetNode: dom.Node, text: String): Unit = {
-    val parNode = document.createElement("p")
-    val textNode = document.createTextNode(text)
-    parNode.appendChild(textNode)
-    targetNode.appendChild(parNode)
-  }
-
-  @JSExportTopLevel("addClickedMessage")
-  def addClickedMessage(): Unit = {
-    val s = jQuery("#ecuacion").value()
-    appendPar(document.body, "You clicked the button! : " + s)
-  }
 
   def setupUI(): Unit = {
-    jQuery("#click-me-button").click( () => addClickedMessage() )
-    jQuery("body").append("<p>Hello World</p>")
 
     val ecuacionNormalizadaDiv = jQuery("#ecuacion-normalizada")
+    val ecuacionTex = jQuery("#ecuacion")
 
-    jQuery("#ecuacion").keyup{ () =>
-      val s = jQuery("#ecuacion").value()
+    ecuacionTex.keyup{ () =>
+      val s = ecuacionTex.value()
       val ec = EcuacionMolecular.parse(s.toString)
       val msg = ec.map(_.ajusta()) match {
         case Left(msg) => msg
@@ -49,6 +36,13 @@ object TutorialApp {
         }
       }
       ecuacionNormalizadaDiv.text(msg)
+    }
+
+    val ejemplos = jQuery("ejemplo")
+    ejemplos.click{ (e: JQueryEventObject, a: js.Any)=>
+      val t = jQuery(e.target)
+      ecuacionTex.value(t.text.toString)
+      ecuacionTex.keyup()
     }
   }
 }

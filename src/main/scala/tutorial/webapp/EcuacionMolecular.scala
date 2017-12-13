@@ -49,7 +49,7 @@ object EcuacionMolecular{
         l.moleculas.map(toStringM(_)).mkString(" + ")
       }
 
-      toStringL(ladoIzquierdo) + " <--> " + toStringL(ladoDerecho)
+      toStringL(ladoIzquierdo) + " = " + toStringL(ladoDerecho)
     }
 
     def esAjustada(multipliers: List[Int]): Boolean = {
@@ -62,7 +62,7 @@ object EcuacionMolecular{
       ai == ad
     }
 
-    def ajusta(maxSum: Int = 10): Option[Ecuacion] = {
+    def ajusta(maxSum: Int = 100): Option[Ecuacion] = {
       val it_ = Secuencias.iterator(ladoDerecho.moleculas.size + ladoIzquierdo.moleculas.size, maxSum)
       val it = it_.map { l => l.map(_ + 1) }
       val multipliers = it.find(esAjustada(_))
@@ -127,7 +127,7 @@ object Secuencias{
     if( siguiente( a, sum ) ){
       return sum
     }
-
+    println( "Paso a suma:" + (sum+1) )
     primero(a,sum+1)
     return sum+1
   }

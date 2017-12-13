@@ -2,11 +2,11 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>The Scala.js Tutorial</title>
+    <title>Ajuste de ecuaciones químicas</title>
+    <link rel="stylesheet" type="text/css" href="index.css">
   </head>
   <body>
 
-  Ejemplo: H2O = H2 + O2
     <!-- Include JavaScript dependencies, webjars -->
     <script type="text/javascript" src="./target/scala-2.12/scala-js-tutorial-jsdeps.js"></script>
 
@@ -14,68 +14,61 @@
     <script type="text/javascript" src="./target/scala-2.12/scala-js-tutorial-fastopt.js"></script>
 
     
-    <button id="click-me-button" type="button">
-      Click me jquery!
-    </button>
 
-    <button type="button" onclick="addClickedMessage()">
-      Click me!
-    </button>
-
-    <input type="text" id="ecuacion"/>
+    Introduce la ecuación, siguiendo los ejemplos <input type="text" id="ecuacion"/>
 
     <div id="ecuacion-normalizada"></div>
 
     <hr/>
+
     
-1 	 H2+ O2 <--> H20 	<br>
-2 	 N2 +  H2  <-->   NH3 	<br>
-3 	 H2O + Na  <--> Na(OH) + H2 	<br>
-4 	 KClO3 <--> KCl + O2 	<br>
-5 	 BaO2 + HCl <--> BaCl2 + H2O2 	<br>
-6 	 H2SO4 + NaCl <-->  Na2SO4 + HCl 	<br>
-7 	 FeS2 <-->  Fe3S4 + S2 	<br>
-8 	 H2SO4 + C  <-->  H20 + SO2 + CO2 	<br>
-9 	 SO2 + O2 <-->  SO3 	<br>
-10 	 NaCl  <--> Na + Cl2 	<br>
-11 	 HCl + MnO2 <-->  MnCl2 + H2O + Cl2 	<br>
-12 	 K2CO3 + C <-->  CO + K 	<br>
-13 	 Ag2SO4 + NaCl <-->  Na2SO4 + AgCl 	<br>
-14 	 NaNO3 + KCl <-->  NaCl + KNO3 	<br>
-15 	 Fe2O3 + CO <-->  CO2 + Fe 	<br>
-16 	 Na2CO3 + H2O  + CO2 <-->  NaHCO3 	<br>
-17 	 FeS2 + O2 <--> Fe2O3 + SO2 	<br>
-18 	 Cr2O3 + Al <-->  Al2O3 + Cr 	<br>
-19 	 Ag + HNO3 <-->  NO + H2O + AgNO3 	<br>
-20 	 CuFeS2 + O2 <-->  SO2 + CuO + FeO 	<br>
-a) Mg + H2SO4 → MgSO4 + H2 <br>
-b) C4H10 + O2 → CO2 + H2O <br>
-c) CaCO3 → CaO + CO2 <br>
-d) Cd + HCl → CdCl2 + H2 <br>
-e) CO + O2 → CO2 <br>
-a) MgCO3 → CO2 + MgO <br>
-b) C6H6 + O2 → CO2 + H2O <br>
-c) Al + HCl → AlCl3 + H2 <br>
-                           d) ZnS + O2 → ZnO + SO2 <br>
- <br>
-                           H2O + Na  Na(OH) + H2 <br>
-KClO3 = KCl + O2 <br>
-BaO2 + HCl = BaCl2 + H2O2 <br>
-H2SO4 + NaCl = Na2SO4 + HCl <br>
-FeS2 = Fe3S4 + S2 <br>
-H2SO4 + C = H20 + SO2 + CO2 <br>
-SO2 + O2 = SO3 <br>
-NaCl = Na + Cl2 <br>
-HCl + MnO2 = MnCl2 + H20 + Cl2 <br>
-K2CO3 + C = CO + K <br>
-Ag2SO4 + NaCl = Na2SO4 + AgCl <br>
-NaNO3 + KCl = NaCl + KNO3 <br>
-Fe2O3 + CO = CO2 + Fe <br>
-Na2CO3 + H2O + CO2 = NaHCO3 <br>
-FeS2 + O2 = Fe2O3 + SO2 <br>
-Cr2O3 + Al = Al2O3 + Cr <br>
-Ag + HNO3 = NO + H2O + AgNO3 <br>
-CuFeS2 + O2 = SO2 + CuO + FeO <br>
+<ejemplo>H2+ O2 = H2O</ejemplo>
+<ejemplo>N2 +  H2  =   NH3</ejemplo>
+<ejemplo>H2O + Na  = Na(OH) + H2</ejemplo>
+<ejemplo>KClO3 = KCl + O2</ejemplo>
+<ejemplo>BaO2 + HCl = BaCl2 + H2O2</ejemplo>
+<ejemplo>H2SO4 + NaCl =  Na2SO4 + HCl</ejemplo>
+<ejemplo>FeS2 =  Fe3S4 + S2</ejemplo>
+<ejemplo>H2SO4 + C  =  H2O + SO2 + CO2</ejemplo>
+<ejemplo>SO2 + O2 =  SO3</ejemplo>
+<ejemplo>NaCl  = Na + Cl2</ejemplo>
+<ejemplo>HCl + MnO2 =  MnCl2 + H2O + Cl2</ejemplo>
+<ejemplo>K2CO3 + C =  CO + K</ejemplo>
+<ejemplo>Ag2SO4 + NaCl =  Na2SO4 + AgCl</ejemplo>
+<ejemplo>NaNO3 + KCl =  NaCl + KNO3</ejemplo>
+<ejemplo>Fe2O3 + CO =  CO2 + Fe</ejemplo>
+<ejemplo>Na2CO3 + H2O  + CO2 =  NaHCO3</ejemplo>
+<ejemplo>FeS2 + O2 = Fe2O3 + SO2</ejemplo>
+<ejemplo>Cr2O3 + Al =  Al2O3 + Cr</ejemplo>
+<ejemplo>Ag + HNO3 =  NO + H2O + AgNO3</ejemplo>
+<ejemplo>CuFeS2 + O2 =  SO2 + CuO + FeO</ejemplo>
+<ejemplo>Mg + H2SO4 = MgSO4 + H2</ejemplo>
+<ejemplo>C4H10 + O2 = CO2 + H2O</ejemplo>
+<ejemplo>CaCO3 = CaO + CO2</ejemplo>
+<ejemplo>Cd + HCl = CdCl2 + H2</ejemplo>
+<ejemplo>CO + O2 = CO2</ejemplo>
+<ejemplo>MgCO3 = CO2 + MgO</ejemplo>
+<ejemplo>C6H6 + O2 = CO2 + H2O</ejemplo>
+<ejemplo>Al + HCl = AlCl3 + H2</ejemplo>
+<ejemplo>ZnS + O2 = ZnO + SO2</ejemplo>
+<ejemplo>H2O + Na = Na(OH) + H2</ejemplo>
+<ejemplo>KClO3 = KCl + O2</ejemplo>
+<ejemplo>BaO2 + HCl = BaCl2 + H2O2</ejemplo>
+<ejemplo>H2SO4 + NaCl = Na2SO4 + HCl</ejemplo>
+<ejemplo>FeS2 = Fe3S4 + S2</ejemplo>
+<ejemplo>H2SO4 + C = H20 + SO2 + CO2</ejemplo>
+<ejemplo>SO2 + O2 = SO3</ejemplo>
+<ejemplo>NaCl = Na + Cl2</ejemplo>
+<ejemplo>HCl + MnO2 = MnCl2 + H20 + Cl2</ejemplo>
+<ejemplo>K2CO3 + C = CO + K</ejemplo>
+<ejemplo>Ag2SO4 + NaCl = Na2SO4 + AgCl</ejemplo>
+<ejemplo>NaNO3 + KCl = NaCl + KNO3</ejemplo>
+<ejemplo>Fe2O3 + CO = CO2 + Fe</ejemplo>
+<ejemplo>Na2CO3 + H2O + CO2 = NaHCO3</ejemplo>
+<ejemplo>FeS2 + O2 = Fe2O3 + SO2</ejemplo>
+<ejemplo>Cr2O3 + Al = Al2O3 + Cr</ejemplo>
+<ejemplo>Ag + HNO3 = NO + H2O + AgNO3</ejemplo>
+<ejemplo>CuFeS2 + O2 = SO2 + CuO + FeO</ejemplo>
 
  
     

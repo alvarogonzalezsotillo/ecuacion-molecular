@@ -1865,6 +1865,10 @@ $c_Ltutorial_webapp_Secuencias$.prototype.supersiguiente__p1__AI__I = (function(
   if (this.siguiente__p1__AI__I__I__Z(a, sum, 0)) {
     return sum
   };
+  var x$1 = ("Paso a suma:" + ((1 + sum) | 0));
+  var this$5 = $m_s_Console$();
+  var this$6 = $as_Ljava_io_PrintStream(this$5.outVar$2.v$1);
+  this$6.java$lang$JSConsoleBasedPrintStream$$printString__T__V((x$1 + "\n"));
   this.primero__p1__scm_IndexedSeq__I__V($m_s_Predef$().wrapIntArray__AI__scm_WrappedArray(a), ((1 + sum) | 0));
   return ((1 + sum) | 0)
 });
@@ -1967,22 +1971,17 @@ $c_Ltutorial_webapp_TutorialApp$.prototype.init___ = (function() {
   return this
 });
 $c_Ltutorial_webapp_TutorialApp$.prototype.setupUI__V = (function() {
-  (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)("#click-me-button").click((function($this) {
-    return (function() {
-      $this.addClickedMessage__V()
-    })
-  })(this));
-  (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)("body").append("<p>Hello World</p>");
   var ecuacionNormalizadaDiv = (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)("#ecuacion-normalizada");
-  (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)("#ecuacion").keyup((function(this$2, ecuacionNormalizadaDiv$1) {
+  var ecuacionTex = (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)("#ecuacion");
+  ecuacionTex.keyup((function($this, ecuacionNormalizadaDiv$1, ecuacionTex$1) {
     return (function() {
-      var s = (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)("#ecuacion").val();
+      var s = ecuacionTex$1.val();
       var ec = $m_Ltutorial_webapp_EcuacionMolecular$().parse__T__s_util_Either($objectToString(s));
       if ($is_s_util_Right(ec)) {
         var x2 = $as_s_util_Right(ec);
         var b = x2.value$2;
         var x$1 = $as_Ltutorial_webapp_EcuacionMolecular$Ecuacion(b);
-        var x1 = new $c_s_util_Right().init___O(x$1.ajusta__I__s_Option(10))
+        var x1 = new $c_s_util_Right().init___O(x$1.ajusta__I__s_Option(100))
       } else {
         var x1 = ec
       };
@@ -2010,35 +2009,29 @@ $c_Ltutorial_webapp_TutorialApp$.prototype.setupUI__V = (function() {
       };
       return ecuacionNormalizadaDiv$1.text(msg$2)
     })
-  })(this, ecuacionNormalizadaDiv))
-});
-$c_Ltutorial_webapp_TutorialApp$.prototype.addClickedMessage__V = (function() {
-  var s = (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)("#ecuacion").val();
-  this.appendPar__Lorg_scalajs_dom_raw_Node__T__V($m_Lorg_scalajs_dom_package$().document__Lorg_scalajs_dom_raw_HTMLDocument().body, ("You clicked the button! : " + s))
+  })(this, ecuacionNormalizadaDiv, ecuacionTex));
+  var ejemplos = (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)("ejemplo");
+  ejemplos.click((function(this$2, ecuacionTex$2) {
+    return (function(e$2, a$2) {
+      var t = (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)(e$2.target);
+      ecuacionTex$2.val($as_T(t.text()));
+      return ecuacionTex$2.keyup()
+    })
+  })(this, ecuacionTex))
 });
 $c_Ltutorial_webapp_TutorialApp$.prototype.main__AT__V = (function(args) {
-  var this$2 = $m_s_Console$();
-  var this$3 = $as_Ljava_io_PrintStream(this$2.outVar$2.v$1);
-  this$3.java$lang$JSConsoleBasedPrintStream$$printString__T__V("Hello world!\n");
-  var x = $m_Lorg_scalajs_dom_package$().document__Lorg_scalajs_dom_raw_HTMLDocument();
-  var this$5 = $m_s_Console$();
-  var this$6 = $as_Ljava_io_PrintStream(this$5.outVar$2.v$1);
-  this$6.java$lang$JSConsoleBasedPrintStream$$printString__T__V((x + "\n"));
   var v = $m_Lorg_scalajs_dom_package$().document__Lorg_scalajs_dom_raw_HTMLDocument();
   if ((!(v === (void 0)))) {
-    this.appendPar__Lorg_scalajs_dom_raw_Node__T__V($m_Lorg_scalajs_dom_package$().document__Lorg_scalajs_dom_raw_HTMLDocument().body, "Hello World");
     (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)((function($this) {
       return (function() {
         $this.setupUI__V()
       })
     })(this))
+  } else {
+    var this$3 = $m_s_Console$();
+    var this$4 = $as_Ljava_io_PrintStream(this$3.outVar$2.v$1);
+    this$4.java$lang$JSConsoleBasedPrintStream$$printString__T__V("Browser or nodejs required\n")
   }
-});
-$c_Ltutorial_webapp_TutorialApp$.prototype.appendPar__Lorg_scalajs_dom_raw_Node__T__V = (function(targetNode, text) {
-  var parNode = $m_Lorg_scalajs_dom_package$().document__Lorg_scalajs_dom_raw_HTMLDocument().createElement("p");
-  var textNode = $m_Lorg_scalajs_dom_package$().document__Lorg_scalajs_dom_raw_HTMLDocument().createTextNode(text);
-  parNode.appendChild(textNode);
-  targetNode.appendChild(parNode)
 });
 var $d_Ltutorial_webapp_TutorialApp$ = new $TypeData().initClass({
   Ltutorial_webapp_TutorialApp$: 0
@@ -9657,7 +9650,7 @@ $c_Ltutorial_webapp_EcuacionMolecular$Ecuacion.prototype.productElement__I__O = 
   }
 });
 $c_Ltutorial_webapp_EcuacionMolecular$Ecuacion.prototype.toString__T = (function() {
-  return ((this.toStringL$1__p1__Ltutorial_webapp_EcuacionMolecular$LadoEcuacion__T(this.ladoIzquierdo$1) + " <--> ") + this.toStringL$1__p1__Ltutorial_webapp_EcuacionMolecular$LadoEcuacion__T(this.ladoDerecho$1))
+  return ((this.toStringL$1__p1__Ltutorial_webapp_EcuacionMolecular$LadoEcuacion__T(this.ladoIzquierdo$1) + " = ") + this.toStringL$1__p1__Ltutorial_webapp_EcuacionMolecular$LadoEcuacion__T(this.ladoDerecho$1))
 });
 $c_Ltutorial_webapp_EcuacionMolecular$Ecuacion.prototype.esAjustada__sci_List__Z = (function(multipliers) {
   var this$1 = this.ladoIzquierdo$1.moleculas$1;
@@ -26918,9 +26911,6 @@ var $d_scm_IndexedSeqView$$anon$2 = new $TypeData().initClass({
   sc_TraversableViewLike$Sliced: 1
 });
 $c_scm_IndexedSeqView$$anon$2.prototype.$classData = $d_scm_IndexedSeqView$$anon$2;
-$e.addClickedMessage = (function() {
-  $m_Ltutorial_webapp_TutorialApp$().addClickedMessage__V()
-});
 $m_Ltutorial_webapp_TutorialApp$().main__AT__V($makeNativeArrayWrapper($d_T.getArrayOf(), []));
 }).call(this);
 //# sourceMappingURL=scala-js-tutorial-fastopt.js.map
