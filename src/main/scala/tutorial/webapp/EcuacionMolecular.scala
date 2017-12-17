@@ -2,7 +2,7 @@ package tutorial.webapp
 
 import java.io.{PrintStream, Serializable, Writer}
 
-import scala.Option
+import scala.{Option, Serializable}
 import scala.collection.mutable.IndexedSeq
 import scala.util.{Left, Right}
 import scala.util.parsing.combinator.RegexParsers
@@ -13,52 +13,67 @@ import scala.util.parsing.combinator.RegexParsers
 
 object EcuacionMolecular{
 
-  case class AtomoEnMolecula(elemento: String, cantidad: Int = 1)
+  trait Grupo{
+    val cantidad: Int
+    def grupos : Seq[Grupo]
+    def atomos( multiplier: Int = 1 ) : Map[String,Int] = sumaAtomos( grupos.map(_.atomos(cantidad*multiplier)) )
+  }
 
-  case class Molecula(val atomos: List[AtomoEnMolecula], val cantidad: Int = 1){
-    def atomosDeMolecula( multiplier: Int = 1 ) : Map[String,Int] = {
-      atomos.map( am => am.elemento -> am.cantidad * cantidad * multiplier ).toMap
+  object Grupo{
+    def unapply(g: Grupo) = (g.grupos, g.cantidad)
+  }
+
+  private def sumaAtomos( l: Seq[Map[String,Int]] ): Map[String, Int] = {
+    val keys = l.tail.foldLeft(l.head.keySet)( (s1,s2) => s1 ++ s2.keySet ).toIndexedSeq
+    val values = keys.map( k => l.map( _.getOrElse(k,0) ).sum )
+    keys.zip(values).toMap
+  }
+
+  private def toStringC(i: Int) : String = if( i > 1 ) i.toString else ""
+
+  case class Atomo(elemento: String) extends Grupo{
+    override val toString = elemento
+    override val cantidad = 1
+    override val grupos = Seq( GrupoAtomico(Seq(this), cantidad ) )
+    override def atomos( multiplier: Int) = Map(elemento -> cantidad*multiplier)
+  }
+
+  case class GrupoAtomico(override val grupos:  Seq[Grupo], cantidad: Int = 1) extends Grupo{
+    override def toString = grupos.size match {
+      case 1 => grupos.head.toString + toStringC(cantidad)
+      case _ => "(" + grupos.mkString("") + ")" + toStringC(cantidad)
     }
   }
 
-  case class LadoEcuacion(moleculas: List[Molecula]){
-    def atomosDeLadoDeEcuacion( multipliers: Option[List[Int]] = None ) : Map[String,Int] = {
-      val multipliers_ = multipliers.getOrElse(Iterator.continually(1).take(moleculas.size).toList)
-      val maps = moleculas.zip(multipliers_).map{ case (mol, mul) => mol.atomosDeMolecula(mul) }
-      maps.foldLeft( Map[String,Int]() ){ (m,accum) =>
-        val keys = m.keySet ++ accum.keySet
-        keys.map( k => k -> (m.getOrElse(k,0) + accum.getOrElse(k,0) ) ).toMap
-      }
-    }
+  case class Molecula( override val grupos:  Seq[Grupo], cantidad: Int = 1 ) extends Grupo{
+    override def toString = toStringC(cantidad) + grupos.mkString("")
+  }
 
+
+  case class LadoEcuacion(moleculas:  Seq[Molecula]){
+    def atomos( multipliers: Option[ Seq[Int]] = None ) : Map[String,Int] = {
+      val multipliers_ = multipliers.getOrElse( Iterator.continually(1).take(moleculas.size).toList )
+      assert(moleculas.size == multipliers_.size)
+      val atomos = moleculas.zip(multipliers_).map{ case (mol,mul) => mol.atomos(mul) }
+      sumaAtomos(atomos)
+    }
+    override def toString = moleculas.mkString(" + ")
   }
 
   case class Ecuacion(ladoIzquierdo: LadoEcuacion, ladoDerecho: LadoEcuacion) {
 
 
     override def toString: String = {
-
-      def toStringC(i: Int) = if (i > 1) i.toString else ""
-
-      def toStringA(a: AtomoEnMolecula) = a.elemento + toStringC(a.cantidad)
-
-      def toStringM(m: Molecula) = toStringC(m.cantidad) + m.atomos.map(toStringA(_)).mkString
-
-
-      def toStringL(l: LadoEcuacion) = {
-        l.moleculas.map(toStringM(_)).mkString(" + ")
-      }
-
-      toStringL(ladoIzquierdo) + " = " + toStringL(ladoDerecho)
+      ladoIzquierdo.toString + " = " + ladoDerecho.toString
     }
 
-    def esAjustada(multipliers: List[Int]): Boolean = {
+    def esAjustada(multipliers:  Seq[Int]): Boolean = {
       val ni = ladoIzquierdo.moleculas.size
       val nd = ladoDerecho.moleculas.size
       assert(ni + nd == multipliers.size)
       val (mi, md) = multipliers.splitAt(ni)
-      val ai = ladoIzquierdo.atomosDeLadoDeEcuacion(Some(mi))
-      val ad = ladoDerecho.atomosDeLadoDeEcuacion(Some(md))
+      val ai = ladoIzquierdo.atomos(Some(mi))
+      val ad = ladoDerecho.atomos(Some(md))
       ai == ad
     }
 
@@ -71,10 +86,10 @@ object EcuacionMolecular{
       multipliers.map { m =>
         val (mi, md) = m.splitAt(ladoIzquierdo.moleculas.size)
         val li = ladoIzquierdo.moleculas.zip(mi).map { case (mol, mul) =>
-          Molecula(mol.atomos, mol.cantidad * mul)
+          Molecula(mol.grupos, mol.cantidad * mul)
         }
         val ld = ladoDerecho.moleculas.zip(md).map { case (mol, mul) =>
-          Molecula(mol.atomos, mol.cantidad * mul)
+          Molecula(mol.grupos, mol.cantidad * mul)
         }
         Ecuacion(LadoEcuacion(li), LadoEcuacion(ld))
       }
@@ -163,18 +178,26 @@ class EcuacionMolecularParser extends RegexParsers {
 
   def blanco = "\\s*".r
 
-  def atomo: Parser[String] = "[A-Z][a-z]?".r | failure( "Un símbolo atómico es una letra mayúscula con una letra minúscula opcional" )
+  def atomo: Parser[Atomo] = "[A-Z][a-z]?".r ^^ {
+    case s => Atomo(s)
+  }| failure( "Un símbolo atómico es una letra mayúscula con una letra minúscula opcional" )
 
   def numero: Parser[Int] = "[0-9]+".r ^^ {
     case n => n.toInt
   } | failure( "Se esperaba un número")
 
-  def atomoEnMolecula: Parser[AtomoEnMolecula] = atomo ~ numero.? ^^ {
-    case a ~ n => AtomoEnMolecula(a, n.getOrElse(1))
-  } | failure( "Se esperaba un símbolo atómico y un número opcional")
 
-  def molecula: Parser[Molecula] = blanco ~> (numero.? ~ rep1(atomoEnMolecula)) <~ blanco ^^ {
-    case n ~ as => Molecula(as, n.getOrElse(1))
+
+  def grupo : Parser[GrupoAtomico] = (atomo|("\\(".r ~> grupo <~ "\\)".r)) ~ numero.? ^^ {
+    case g ~ c => g match{
+      case a : Atomo => GrupoAtomico(Seq(a), c.getOrElse(1))
+      case g : GrupoAtomico => GrupoAtomico( g.grupos, c.getOrElse(1) )
+    }
+  }
+
+
+  def molecula: Parser[Molecula] = blanco ~> (numero.? ~ rep1(grupo)) <~ blanco ^^ {
+    case n ~ as => Molecula( as, n.getOrElse(1))
   } | failure( "Una molécula son varios símbolos atómicos, cada uno con un número opcional")
 
   def ladoDeEcuacion = molecula ~ rep((blanco ~ "\\+".r ~ blanco) ~> molecula) ^^ {
@@ -189,11 +212,13 @@ class EcuacionMolecularParser extends RegexParsers {
 
 }
 
-object Probar{
+object Probar extends App{
   def testEcuacion = {
     import EcuacionMolecular._
-    val ec: Either[String, Option[Ecuacion]] = EcuacionMolecular.parse(" HCl + MnO2 <-->  MnCl2 + H2O + Cl2").map( _.ajusta() )
-    println( ec )
+    val ecuacion = EcuacionMolecular.parse(" HCl + MnO2 <-->  MnCl2 + H2O + Cl2")
+    println( ecuacion )
+    val ecuacionAjustada: Either[String, Option[Ecuacion]] = ecuacion.map( _.ajusta() )
+    println( ecuacionAjustada )
   }
 
   def testSecuencia = {
@@ -201,4 +226,5 @@ object Probar{
     for( s <- Secuencias.iterator(3,3) ) println( s.mkString(","))
   }
 
+  testEcuacion
 }
