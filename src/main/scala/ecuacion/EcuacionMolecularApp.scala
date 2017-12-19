@@ -1,15 +1,15 @@
-package tutorial.webapp
-
+package ecuacion
 
 import org.scalajs.dom
 import dom.document
 import org.scalajs.jquery._
+import EcuacionMolecular.Ecuacion
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSExportTopLevel
 import scala.util.{Left, Right}
 
-object TutorialApp {
+object EcuacionMolecularApp {
   def main(args: Array[String]): Unit = {
     if( !scala.scalajs.js.isUndefined(document) ){
       jQuery(() => setupUI())
@@ -34,16 +34,17 @@ object TutorialApp {
       val msg = ec.map(_.ajusta()) match {
         case Left(msg) => msg
         case Right(oec) => oec match {
-          case Some(e) => e.toString
+          case Some(e) => e.toHTML
           case None => "No se puede ajustar la ecuación (índices muy altos o átomos no balanceables):" + ec
         }
       }
-      ecuacionNormalizadaDiv.text(msg)
+      ecuacionNormalizadaDiv.html(msg)
     }
 
     // RELLENO DE EJEMPLOS
-    for( e <- Pruebas.ejemplos ) {
-      ejemplosDiv.append(s"<ejemplo>$e</ejemplo")
+    for( e <- EcuacionMolecular.ejemplos ) {
+      val ec = EcuacionMolecular.parse(e).right.get
+      ejemplosDiv.append(s"<ejemplo>${ec.toHTML}</ejemplo")
     }
 
 
