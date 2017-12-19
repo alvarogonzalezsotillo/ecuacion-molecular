@@ -106,6 +106,15 @@ object EcuacionMolecular{
     }
   }
 
+  def parseGrupo( s: String ) : String Either Grupo = {
+    val parser = new EcuacionMolecularParser
+    import parser._
+    parser.parse(parser.grupo, s) match{
+      case Success(ecuacion, _) => Right(ecuacion)
+      case NoSuccess(msg,_) => Left(msg)
+    }
+  }
+
 
 }
 
@@ -142,7 +151,6 @@ object Secuencias{
     if( siguiente( a, sum ) ){
       return sum
     }
-    println( "Paso a suma:" + (sum+1) )
     primero(a,sum+1)
     return sum+1
   }
@@ -188,37 +196,106 @@ class EcuacionMolecularParser extends RegexParsers {
 
 
 
-  def grupo : Parser[GrupoAtomico] = (atomo|("\\(".r ~> grupo <~ "\\)".r)) ~ numero.? ^^ {
-    case g ~ c => g match{
-      case a : Atomo => GrupoAtomico(Seq(a), c.getOrElse(1))
-      case g : GrupoAtomico => GrupoAtomico( g.grupos, c.getOrElse(1) )
-    }
+  def grupo : Parser[GrupoAtomico] = rep1(("(" ~> grupo <~ ")"|atomo) ~ numero.?) ~ numero.? ^^ {
+    case l ~ c =>
+
+      val grupos = l.map { v =>
+        v match {
+          case kk: ~[Grupo, Option[Int]] => GrupoAtomico(Seq(kk._1), kk._2.getOrElse(1))
+        }
+      }
+
+      GrupoAtomico( grupos, c.getOrElse(1))
   }
 
 
+
   def molecula: Parser[Molecula] = blanco ~> (numero.? ~ rep1(grupo)) <~ blanco ^^ {
-    case n ~ as => Molecula( as, n.getOrElse(1))
+    case n ~ as if  as.size == 1 && as.head.cantidad == 1 =>
+      Molecula( as.head.grupos, n.getOrElse(1))
+    case n ~ as =>
+      Molecula( as, n.getOrElse(1))
+
   } | failure( "Una molécula son varios símbolos atómicos, cada uno con un número opcional")
 
-  def ladoDeEcuacion = molecula ~ rep((blanco ~ "\\+".r ~ blanco) ~> molecula) ^^ {
+  def ladoDeEcuacion : Parser[LadoEcuacion] = molecula ~ rep((blanco ~ "\\+".r ~ blanco) ~> molecula) ^^ {
     case m ~ ms => LadoEcuacion(m :: ms)
   } | failure( "Un lado de la ecuación son varias moléculas separadas por +")
 
-  def ladoIzquierdo = ladoDeEcuacion <~ (blanco ~ ("=".r | "<-*>".r) ) // | failure( "Los lados de la ecuación se separan con = o <-->" )
+  def separadorLados : Parser[Any] = blanco <~ ("=".r | "<-*>".r) ~> blanco
 
-  def ecuacion = (ladoIzquierdo <~ blanco) ~ ladoDeEcuacion <~ blanco ^^ {
-    case li ~ ld => Ecuacion(li, ld)
+
+  def ecuacion : Parser[Ecuacion] = (blanco ~> ladoDeEcuacion) ~ separadorLados ~ (ladoDeEcuacion <~ blanco) ^^ {
+    case li ~ _ ~ ld => Ecuacion(li, ld)
   }
 
 }
 
-object Probar extends App{
+
+
+object Pruebas extends App{
+
+  val ejemplos = Seq(
+    "H2+ O2 = H2O",
+      "N2 +  H2  =   NH3",
+      "H2O + Na  = Na(OH) + H2",
+      "KClO3 = KCl + O2",
+      "BaO2 + HCl = BaCl2 + H2O2",
+      "H2SO4 + NaCl =  Na2SO4 + HCl",
+      "FeS2 =  Fe3S4 + S2",
+      "H2SO4 + C  =  H2O + SO2 + CO2",
+      "SO2 + O2 =  SO3",
+      "NaCl  = Na + Cl2",
+      "HCl + MnO2 =  MnCl2 + H2O + Cl2",
+      "K2CO3 + C =  CO + K",
+      "Ag2SO4 + NaCl =  Na2SO4 + AgCl",
+      "NaNO3 + KCl =  NaCl + KNO3",
+      "Fe2O3 + CO =  CO2 + Fe",
+      "Na2CO3 + H2O  + CO2 =  NaHCO3",
+      "FeS2 + O2 = Fe2O3 + SO2",
+      "Cr2O3 + Al =  Al2O3 + Cr",
+      "Ag + HNO3 =  NO + H2O + AgNO3",
+      "CuFeS2 + O2 =  SO2 + CuO + FeO",
+      "Mg + H2SO4 = MgSO4 + H2",
+      "C4H10 + O2 = CO2 + H2O",
+      "CaCO3 = CaO + CO2",
+      "Cd + HCl = CdCl2 + H2",
+      "CO + O2 = CO2",
+      "MgCO3 = CO2 + MgO",
+      "C6H6 + O2 = CO2 + H2O",
+      "Al + HCl = AlCl3 + H2",
+      "ZnS + O2 = ZnO + SO2",
+      "H2O + Na = Na(OH) + H2",
+      "KClO3 = KCl + O2",
+      "BaO2 + HCl = BaCl2 + H2O2",
+      "H2SO4 + NaCl = Na2SO4 + HCl",
+      "FeS2 = Fe3S4 + S2",
+      "H2SO4 + C = H2O + SO2 + CO2",
+      "SO2 + O2 = SO3",
+      "NaCl = Na + Cl2",
+      "HCl + MnO2 = MnCl2 + H20 + Cl2",
+      "K2CO3 + C = CO + K",
+      "Ag2SO4 + NaCl = Na2SO4 + AgCl",
+      "NaNO3 + KCl = NaCl + KNO3",
+      "Fe2O3 + CO = CO2 + Fe",
+      "Na2CO3 + H2O + CO2 = NaHCO3",
+      "FeS2 + O2 = Fe2O3 + SO2",
+      "Cr2O3 + Al = Al2O3 + Cr",
+      "Ag + HNO3 = NO + H2O + AgNO3",
+      "CuFeS2 + O2 = SO2 + CuO + FeO",
+  )
+
   def testEcuacion = {
     import EcuacionMolecular._
-    val ecuacion = EcuacionMolecular.parse(" HCl + MnO2 <-->  MnCl2 + H2O + Cl2")
-    println( ecuacion )
-    val ecuacionAjustada: Either[String, Option[Ecuacion]] = ecuacion.map( _.ajusta() )
-    println( ecuacionAjustada )
+
+    for( e <- ejemplos.par ) {
+      val ecuacion = EcuacionMolecular.parse(e)
+      val ecuacionAjustada = ecuacion.map(_.ajusta())
+      println( "****************")
+      println(e)
+      println(ecuacion.right.get)
+      println(ecuacionAjustada.right.get.get)
+    }
   }
 
   def testSecuencia = {
