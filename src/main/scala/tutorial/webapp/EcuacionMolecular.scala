@@ -233,65 +233,65 @@ class EcuacionMolecularParser extends RegexParsers {
 
 
 
-object Pruebas extends App{
+object Pruebas {
 
   val ejemplos = Seq(
     "H2+ O2 = H2O",
-      "N2 +  H2  =   NH3",
-      "H2O + Na  = Na(OH) + H2",
-      "KClO3 = KCl + O2",
-      "BaO2 + HCl = BaCl2 + H2O2",
-      "H2SO4 + NaCl =  Na2SO4 + HCl",
-      "FeS2 =  Fe3S4 + S2",
-      "H2SO4 + C  =  H2O + SO2 + CO2",
-      "SO2 + O2 =  SO3",
-      "NaCl  = Na + Cl2",
-      "HCl + MnO2 =  MnCl2 + H2O + Cl2",
-      "K2CO3 + C =  CO + K",
-      "Ag2SO4 + NaCl =  Na2SO4 + AgCl",
-      "NaNO3 + KCl =  NaCl + KNO3",
-      "Fe2O3 + CO =  CO2 + Fe",
-      "Na2CO3 + H2O  + CO2 =  NaHCO3",
-      "FeS2 + O2 = Fe2O3 + SO2",
-      "Cr2O3 + Al =  Al2O3 + Cr",
-      "Ag + HNO3 =  NO + H2O + AgNO3",
-      "CuFeS2 + O2 =  SO2 + CuO + FeO",
-      "Mg + H2SO4 = MgSO4 + H2",
-      "C4H10 + O2 = CO2 + H2O",
-      "CaCO3 = CaO + CO2",
-      "Cd + HCl = CdCl2 + H2",
-      "CO + O2 = CO2",
-      "MgCO3 = CO2 + MgO",
-      "C6H6 + O2 = CO2 + H2O",
-      "Al + HCl = AlCl3 + H2",
-      "ZnS + O2 = ZnO + SO2",
-      "H2O + Na = Na(OH) + H2",
-      "KClO3 = KCl + O2",
-      "BaO2 + HCl = BaCl2 + H2O2",
-      "H2SO4 + NaCl = Na2SO4 + HCl",
-      "FeS2 = Fe3S4 + S2",
-      "H2SO4 + C = H2O + SO2 + CO2",
-      "SO2 + O2 = SO3",
-      "NaCl = Na + Cl2",
-      "HCl + MnO2 = MnCl2 + H20 + Cl2",
-      "K2CO3 + C = CO + K",
-      "Ag2SO4 + NaCl = Na2SO4 + AgCl",
-      "NaNO3 + KCl = NaCl + KNO3",
-      "Fe2O3 + CO = CO2 + Fe",
-      "Na2CO3 + H2O + CO2 = NaHCO3",
-      "FeS2 + O2 = Fe2O3 + SO2",
-      "Cr2O3 + Al = Al2O3 + Cr",
-      "Ag + HNO3 = NO + H2O + AgNO3",
-      "CuFeS2 + O2 = SO2 + CuO + FeO",
+    "N2 +  H2  =   NH3",
+    "H2O + Na  = Na(OH) + H2",
+    "KClO3 = KCl + O2",
+    "BaO2 + HCl = BaCl2 + H2O2",
+    "H2SO4 + NaCl =  Na2SO4 + HCl",
+    "FeS2 =  Fe3S4 + S2",
+    "H2SO4 + C  =  H2O + SO2 + CO2",
+    "SO2 + O2 =  SO3",
+    "NaCl  = Na + Cl2",
+    "HCl + MnO2 =  MnCl2 + H2O + Cl2",
+    "K2CO3 + C =  CO + K",
+    "Ag2SO4 + NaCl =  Na2SO4 + AgCl",
+    "NaNO3 + KCl =  NaCl + KNO3",
+    "Fe2O3 + CO =  CO2 + Fe",
+    "Na2CO3 + H2O  + CO2 =  NaHCO3",
+    "FeS2 + O2 = Fe2O3 + SO2",
+    "Cr2O3 + Al =  Al2O3 + Cr",
+    "Ag + HNO3 =  NO + H2O + AgNO3",
+    "CuFeS2 + O2 =  SO2 + CuO + FeO",
+    "Mg + H2SO4 = MgSO4 + H2",
+    "C4H10 + O2 = CO2 + H2O",
+    "CaCO3 = CaO + CO2",
+    "Cd + HCl = CdCl2 + H2",
+    "CO + O2 = CO2",
+    "MgCO3 = CO2 + MgO",
+    "C6H6 + O2 = CO2 + H2O",
+    "Al + HCl = AlCl3 + H2",
+    "ZnS + O2 = ZnO + SO2",
+    "H2O + Na = Na(OH) + H2",
+    "KClO3 = KCl + O2",
+    "BaO2 + HCl = BaCl2 + H2O2",
+    "H2SO4 + NaCl = Na2SO4 + HCl",
+    "FeS2 = Fe3S4 + S2",
+    "H2SO4 + C = H2O + SO2 + CO2",
+    "SO2 + O2 = SO3",
+    "NaCl = Na + Cl2",
+    "HCl + MnO2 = MnCl2 + H20 + Cl2",
+    "K2CO3 + C = CO + K",
+    "Ag2SO4 + NaCl = Na2SO4 + AgCl",
+    "NaNO3 + KCl = NaCl + KNO3",
+    "Fe2O3 + CO = CO2 + Fe",
+    "Na2CO3 + H2O + CO2 = NaHCO3",
+    "FeS2 + O2 = Fe2O3 + SO2",
+    "Cr2O3 + Al = Al2O3 + Cr",
+    "Ag + HNO3 = NO + H2O + AgNO3",
+    "CuFeS2 + O2 = SO2 + CuO + FeO",
   )
 
   def testEcuacion = {
     import EcuacionMolecular._
 
-    for( e <- ejemplos.par ) {
+    for (e <- ejemplos.par) {
       val ecuacion = EcuacionMolecular.parse(e)
       val ecuacionAjustada = ecuacion.map(_.ajusta())
-      println( "****************")
+      println("****************")
       println(e)
       println(ecuacion.right.get)
       println(ecuacionAjustada.right.get.get)
@@ -300,8 +300,11 @@ object Pruebas extends App{
 
   def testSecuencia = {
     import Secuencias._
-    for( s <- Secuencias.iterator(3,3) ) println( s.mkString(","))
+    for (s <- Secuencias.iterator(3, 3)) println(s.mkString(","))
   }
 
-  testEcuacion
+  def main(args: String*) = {
+    testEcuacion
+    0
+  }
 }

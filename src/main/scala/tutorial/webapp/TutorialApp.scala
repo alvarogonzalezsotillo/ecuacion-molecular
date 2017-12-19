@@ -20,11 +20,14 @@ object TutorialApp {
   }
 
 
+
   def setupUI(): Unit = {
 
     val ecuacionNormalizadaDiv = jQuery("#ecuacion-normalizada")
     val ecuacionTex = jQuery("#ecuacion")
+    val ejemplosDiv = jQuery("#ejemplos")
 
+    // LISTENER TEXTO DE ECUACION
     ecuacionTex.keyup{ () =>
       val s = ecuacionTex.value()
       val ec = EcuacionMolecular.parse(s.toString)
@@ -38,6 +41,13 @@ object TutorialApp {
       ecuacionNormalizadaDiv.text(msg)
     }
 
+    // RELLENO DE EJEMPLOS
+    for( e <- Pruebas.ejemplos ) {
+      ejemplosDiv.append(s"<ejemplo>$e</ejemplo")
+    }
+
+
+    // LISTENER DE CLICK EN EJEMPLO
     val ejemplos = jQuery("ejemplo")
     ejemplos.click{ (e: JQueryEventObject, a: js.Any)=>
       val t = jQuery(e.target)
