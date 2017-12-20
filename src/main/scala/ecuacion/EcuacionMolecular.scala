@@ -87,7 +87,7 @@ object EcuacionMolecular{
       ai == ad
     }
 
-    def ajusta(maxSum: Int = 100): Option[Ecuacion] = {
+    def ajusta(maxSum: Int = 30): Option[Ecuacion] = {
       val it_ = Secuencias.iterator(ladoDerecho.moleculas.size + ladoIzquierdo.moleculas.size, maxSum)
       val it = it_.map { l => l.map(_ + 1) }
       val multipliers = it.find(esAjustada(_))

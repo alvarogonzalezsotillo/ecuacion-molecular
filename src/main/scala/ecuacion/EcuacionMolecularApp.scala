@@ -32,10 +32,16 @@ object EcuacionMolecularApp {
       val s = ecuacionTex.value()
       val ec = EcuacionMolecular.parse(s.toString)
       val msg = ec.map(_.ajusta()) match {
-        case Left(msg) => msg
+        case Left(msg) =>
+          ecuacionNormalizadaDiv.addClass("error")
+          msg
         case Right(oec) => oec match {
-          case Some(e) => e.toHTML
-          case None => "No se puede ajustar la ecuación (índices muy altos o átomos no balanceables):" + ec
+          case Some(e) =>
+            ecuacionNormalizadaDiv.removeClass("error")
+            e.toHTML
+          case None =>
+            ecuacionNormalizadaDiv.addClass("error")
+            "No se puede ajustar la ecuación (índices muy altos o átomos no balanceables):" + ec
         }
       }
       ecuacionNormalizadaDiv.html(msg)
@@ -51,7 +57,7 @@ object EcuacionMolecularApp {
     // LISTENER DE CLICK EN EJEMPLO
     val ejemplos = jQuery("ejemplo")
     ejemplos.click{ (e: JQueryEventObject, a: js.Any)=>
-      val t = jQuery(e.target)
+      val t = jQuery(e.target).closest("ejemplo")
       ecuacionTex.value(t.text.toString)
       ecuacionTex.keyup()
     }
