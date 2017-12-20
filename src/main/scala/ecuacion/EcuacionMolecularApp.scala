@@ -34,14 +34,14 @@ object EcuacionMolecularApp {
       val msg = ec.map(_.ajusta()) match {
         case Left(msg) =>
           ecuacionNormalizadaDiv.addClass("error")
-          msg
+          s"Introduce una ecuación, o selecciona un ejemplo ($msg)"
         case Right(oec) => oec match {
           case Some(e) =>
             ecuacionNormalizadaDiv.removeClass("error")
             e.toHTML
           case None =>
             ecuacionNormalizadaDiv.addClass("error")
-            "No se puede ajustar la ecuación (índices muy altos o átomos no balanceables):" + ec
+            s"No se puede ajustar la ecuación (índices muy altos o átomos no balanceables):$ec"
         }
       }
       ecuacionNormalizadaDiv.html(msg)

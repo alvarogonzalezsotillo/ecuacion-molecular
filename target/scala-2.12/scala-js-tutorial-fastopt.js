@@ -1883,7 +1883,7 @@ function $h_Lecuacion_EcuacionMolecular$() {
 $h_Lecuacion_EcuacionMolecular$.prototype = $c_Lecuacion_EcuacionMolecular$.prototype;
 $c_Lecuacion_EcuacionMolecular$.prototype.init___ = (function() {
   $n_Lecuacion_EcuacionMolecular$ = this;
-  this.ejemplos$1 = $as_sc_Seq($m_sc_Seq$().apply__sc_Seq__sc_GenTraversable(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["H(O(OH)2)2 + Fe2 = FeH2 + O2", "H2+ O2 = H2O", "N2 +  H2  =   NH3", "H2O + Na  = Na(OH) + H2", "KClO3 = KCl + O2", "BaO2 + HCl = BaCl2 + H2O2", "H2SO4 + NaCl =  Na2SO4 + HCl", "FeS2 =  Fe3S4 + S2", "H2SO4 + C  =  H2O + SO2 + CO2", "SO2 + O2 =  SO3", "NaCl  = Na + Cl2", "HCl + MnO2 =  MnCl2 + H2O + Cl2", "K2CO3 + C =  CO + K", "Ag2SO4 + NaCl =  Na2SO4 + AgCl", "NaNO3 + KCl =  NaCl + KNO3", "Fe2O3 + CO =  CO2 + Fe", "Na2CO3 + H2O  + CO2 =  NaHCO3", "FeS2 + O2 = Fe2O3 + SO2", "Cr2O3 + Al =  Al2O3 + Cr", "Ag + HNO3 =  NO + H2O + AgNO3", "CuFeS2 + O2 =  SO2 + CuO + FeO", "Mg + H2SO4 = MgSO4 + H2", "C4H10 + O2 = CO2 + H2O", "CaCO3 = CaO + CO2", "Cd + HCl = CdCl2 + H2", "CO + O2 = CO2", "MgCO3 = CO2 + MgO", "C6H6 + O2 = CO2 + H2O", "Al + HCl = AlCl3 + H2", "ZnS + O2 = ZnO + SO2", "H2O + Na = Na(OH) + H2"])));
+  this.ejemplos$1 = $as_sc_Seq($m_sc_Seq$().apply__sc_Seq__sc_GenTraversable(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["H2+ O2 = H2O", "N2 +  H2  =   NH3", "H2O + Na  = Na(OH) + H2", "KClO3 = KCl + O2", "BaO2 + HCl = BaCl2 + H2O2", "H2SO4 + NaCl =  Na2SO4 + HCl", "FeS2 =  Fe3S4 + S2", "H2SO4 + C  =  H2O + SO2 + CO2", "SO2 + O2 =  SO3", "NaCl  = Na + Cl2", "HCl + MnO2 =  MnCl2 + H2O + Cl2", "K2CO3 + C =  CO + K", "Ag2SO4 + NaCl =  Na2SO4 + AgCl", "NaNO3 + KCl =  NaCl + KNO3", "Fe2O3 + CO =  CO2 + Fe", "Na2CO3 + H2O  + CO2 =  NaHCO3", "FeS2 + O2 = Fe2O3 + SO2", "Cr2O3 + Al =  Al2O3 + Cr", "Ag + HNO3 =  NO + H2O + AgNO3", "CuFeS2 + O2 =  SO2 + CuO + FeO", "Mg + H2SO4 = MgSO4 + H2", "C4H10 + O2 = CO2 + H2O", "CaCO3 = CaO + CO2", "Cd + HCl = CdCl2 + H2", "CO + O2 = CO2", "MgCO3 = CO2 + MgO", "C6H6 + O2 = CO2 + H2O", "Al + HCl = AlCl3 + H2", "ZnS + O2 = ZnO + SO2", "H2O + Na = Na(OH) + H2", "H(O(OH)2)2 + Fe2 = FeH2 + O2"])));
   return this
 });
 $c_Lecuacion_EcuacionMolecular$.prototype.ecuacion$EcuacionMolecular$$sumaAtomos__sc_Seq__sci_Map = (function(l) {
@@ -1958,6 +1958,110 @@ function $m_Lecuacion_EcuacionMolecular$() {
     $n_Lecuacion_EcuacionMolecular$ = new $c_Lecuacion_EcuacionMolecular$().init___()
   };
   return $n_Lecuacion_EcuacionMolecular$
+}
+/** @constructor */
+function $c_Lecuacion_EcuacionMolecularApp$() {
+  $c_O.call(this)
+}
+$c_Lecuacion_EcuacionMolecularApp$.prototype = new $h_O();
+$c_Lecuacion_EcuacionMolecularApp$.prototype.constructor = $c_Lecuacion_EcuacionMolecularApp$;
+/** @constructor */
+function $h_Lecuacion_EcuacionMolecularApp$() {
+  /*<skip>*/
+}
+$h_Lecuacion_EcuacionMolecularApp$.prototype = $c_Lecuacion_EcuacionMolecularApp$.prototype;
+$c_Lecuacion_EcuacionMolecularApp$.prototype.init___ = (function() {
+  return this
+});
+$c_Lecuacion_EcuacionMolecularApp$.prototype.setupUI__V = (function() {
+  var ecuacionNormalizadaDiv = (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)("#ecuacion-normalizada");
+  var ecuacionTex = (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)("#ecuacion");
+  var ejemplosDiv = (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)("#ejemplos");
+  ecuacionTex.keyup((function($this, ecuacionNormalizadaDiv$1, ecuacionTex$1) {
+    return (function() {
+      var s = ecuacionTex$1.val();
+      var ec = $m_Lecuacion_EcuacionMolecular$().parse__T__s_util_Either($objectToString(s));
+      if ($is_s_util_Right(ec)) {
+        var x2 = $as_s_util_Right(ec);
+        var b = x2.value$2;
+        var x$1 = $as_Lecuacion_EcuacionMolecular$Ecuacion(b);
+        var x1 = new $c_s_util_Right().init___O(x$1.ajusta__I__s_Option(30))
+      } else {
+        var x1 = ec
+      };
+      if ($is_s_util_Left(x1)) {
+        var x2$1 = $as_s_util_Left(x1);
+        var msg = $as_T(x2$1.value$2);
+        ecuacionNormalizadaDiv$1.addClass("error");
+        var msg$2 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Introduce una ecuaci\u00f3n, o selecciona un ejemplo (", ")"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([msg]))
+      } else {
+        if ((!$is_s_util_Right(x1))) {
+          throw new $c_s_MatchError().init___O(x1)
+        };
+        var x3 = $as_s_util_Right(x1);
+        var oec = $as_s_Option(x3.value$2);
+        if ($is_s_Some(oec)) {
+          var x2$2 = $as_s_Some(oec);
+          var e = $as_Lecuacion_EcuacionMolecular$Ecuacion(x2$2.value$2);
+          ecuacionNormalizadaDiv$1.removeClass("error");
+          var msg$2 = e.toHTML__T()
+        } else {
+          var x = $m_s_None$();
+          if ((!(x === oec))) {
+            throw new $c_s_MatchError().init___O(oec)
+          };
+          ecuacionNormalizadaDiv$1.addClass("error");
+          var msg$2 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["No se puede ajustar la ecuaci\u00f3n (\u00edndices muy altos o \u00e1tomos no balanceables):", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([ec]))
+        }
+      };
+      return ecuacionNormalizadaDiv$1.html(msg$2)
+    })
+  })(this, ecuacionNormalizadaDiv, ecuacionTex));
+  $m_Lecuacion_EcuacionMolecular$().ejemplos$1.foreach__F1__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(this$2, ejemplosDiv$1) {
+    return (function(e$2) {
+      var e$1 = $as_T(e$2);
+      var this$3 = $m_Lecuacion_EcuacionMolecular$().parse__T__s_util_Either(e$1);
+      var ec$1 = $as_Lecuacion_EcuacionMolecular$Ecuacion(new $c_s_util_Either$RightProjection().init___s_util_Either(this$3).get__O());
+      var s$1 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["<ejemplo>", "</ejemplo"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([ec$1.toHTML__T()]));
+      return ejemplosDiv$1.append(s$1)
+    })
+  })(this, ejemplosDiv)));
+  var ejemplos = (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)("ejemplo");
+  ejemplos.click((function(this$3$1, ecuacionTex$2) {
+    return (function(e$3$2, a$2) {
+      var t = (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)(e$3$2.target).closest("ejemplo");
+      ecuacionTex$2.val($as_T(t.text()));
+      return ecuacionTex$2.keyup()
+    })
+  })(this, ecuacionTex))
+});
+$c_Lecuacion_EcuacionMolecularApp$.prototype.main__AT__V = (function(args) {
+  var v = $m_Lorg_scalajs_dom_package$().document__Lorg_scalajs_dom_raw_HTMLDocument();
+  if ((!(v === (void 0)))) {
+    (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)((function($this) {
+      return (function() {
+        $this.setupUI__V()
+      })
+    })(this))
+  } else {
+    var this$3 = $m_s_Console$();
+    var this$4 = $as_Ljava_io_PrintStream(this$3.outVar$2.v$1);
+    this$4.java$lang$JSConsoleBasedPrintStream$$printString__T__V("Browser or nodejs required\n")
+  }
+});
+var $d_Lecuacion_EcuacionMolecularApp$ = new $TypeData().initClass({
+  Lecuacion_EcuacionMolecularApp$: 0
+}, false, "ecuacion.EcuacionMolecularApp$", {
+  Lecuacion_EcuacionMolecularApp$: 1,
+  O: 1
+});
+$c_Lecuacion_EcuacionMolecularApp$.prototype.$classData = $d_Lecuacion_EcuacionMolecularApp$;
+var $n_Lecuacion_EcuacionMolecularApp$ = (void 0);
+function $m_Lecuacion_EcuacionMolecularApp$() {
+  if ((!$n_Lecuacion_EcuacionMolecularApp$)) {
+    $n_Lecuacion_EcuacionMolecularApp$ = new $c_Lecuacion_EcuacionMolecularApp$().init___()
+  };
+  return $n_Lecuacion_EcuacionMolecularApp$
 }
 /** @constructor */
 function $c_Lecuacion_Secuencias$() {
@@ -2103,107 +2207,6 @@ function $m_Lecuacion_Secuencias$() {
     $n_Lecuacion_Secuencias$ = new $c_Lecuacion_Secuencias$().init___()
   };
   return $n_Lecuacion_Secuencias$
-}
-/** @constructor */
-function $c_Lecuacion_TutorialApp$() {
-  $c_O.call(this)
-}
-$c_Lecuacion_TutorialApp$.prototype = new $h_O();
-$c_Lecuacion_TutorialApp$.prototype.constructor = $c_Lecuacion_TutorialApp$;
-/** @constructor */
-function $h_Lecuacion_TutorialApp$() {
-  /*<skip>*/
-}
-$h_Lecuacion_TutorialApp$.prototype = $c_Lecuacion_TutorialApp$.prototype;
-$c_Lecuacion_TutorialApp$.prototype.init___ = (function() {
-  return this
-});
-$c_Lecuacion_TutorialApp$.prototype.setupUI__V = (function() {
-  var ecuacionNormalizadaDiv = (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)("#ecuacion-normalizada");
-  var ecuacionTex = (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)("#ecuacion");
-  var ejemplosDiv = (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)("#ejemplos");
-  ecuacionTex.keyup((function($this, ecuacionNormalizadaDiv$1, ecuacionTex$1) {
-    return (function() {
-      var s = ecuacionTex$1.val();
-      var ec = $m_Lecuacion_EcuacionMolecular$().parse__T__s_util_Either($objectToString(s));
-      if ($is_s_util_Right(ec)) {
-        var x2 = $as_s_util_Right(ec);
-        var b = x2.value$2;
-        var x$1 = $as_Lecuacion_EcuacionMolecular$Ecuacion(b);
-        var x1 = new $c_s_util_Right().init___O(x$1.ajusta__I__s_Option(100))
-      } else {
-        var x1 = ec
-      };
-      if ($is_s_util_Left(x1)) {
-        var x2$1 = $as_s_util_Left(x1);
-        var msg = $as_T(x2$1.value$2);
-        var msg$2 = msg
-      } else {
-        if ((!$is_s_util_Right(x1))) {
-          throw new $c_s_MatchError().init___O(x1)
-        };
-        var x3 = $as_s_util_Right(x1);
-        var oec = $as_s_Option(x3.value$2);
-        if ($is_s_Some(oec)) {
-          var x2$2 = $as_s_Some(oec);
-          var e = $as_Lecuacion_EcuacionMolecular$Ecuacion(x2$2.value$2);
-          var msg$2 = e.toHTML__T()
-        } else {
-          var x = $m_s_None$();
-          if ((!(x === oec))) {
-            throw new $c_s_MatchError().init___O(oec)
-          };
-          var msg$2 = ("No se puede ajustar la ecuaci\u00f3n (\u00edndices muy altos o \u00e1tomos no balanceables):" + ec)
-        }
-      };
-      return ecuacionNormalizadaDiv$1.html(msg$2)
-    })
-  })(this, ecuacionNormalizadaDiv, ecuacionTex));
-  $m_Lecuacion_EcuacionMolecular$().ejemplos$1.foreach__F1__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(this$2, ejemplosDiv$1) {
-    return (function(e$2) {
-      var e$1 = $as_T(e$2);
-      var this$1 = $m_Lecuacion_EcuacionMolecular$().parse__T__s_util_Either(e$1);
-      var ec$1 = $as_Lecuacion_EcuacionMolecular$Ecuacion(new $c_s_util_Either$RightProjection().init___s_util_Either(this$1).get__O());
-      var s$1 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["<ejemplo>", "</ejemplo"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([ec$1.toHTML__T()]));
-      return ejemplosDiv$1.append(s$1)
-    })
-  })(this, ejemplosDiv)));
-  var ejemplos = (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)("ejemplo");
-  ejemplos.click((function(this$3$1, ecuacionTex$2) {
-    return (function(e$3$2, a$2) {
-      var t = (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)(e$3$2.target);
-      ecuacionTex$2.val($as_T(t.text()));
-      return ecuacionTex$2.keyup()
-    })
-  })(this, ecuacionTex))
-});
-$c_Lecuacion_TutorialApp$.prototype.main__AT__V = (function(args) {
-  var v = $m_Lorg_scalajs_dom_package$().document__Lorg_scalajs_dom_raw_HTMLDocument();
-  if ((!(v === (void 0)))) {
-    (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)((function($this) {
-      return (function() {
-        $this.setupUI__V()
-      })
-    })(this))
-  } else {
-    var this$3 = $m_s_Console$();
-    var this$4 = $as_Ljava_io_PrintStream(this$3.outVar$2.v$1);
-    this$4.java$lang$JSConsoleBasedPrintStream$$printString__T__V("Browser or nodejs required\n")
-  }
-});
-var $d_Lecuacion_TutorialApp$ = new $TypeData().initClass({
-  Lecuacion_TutorialApp$: 0
-}, false, "ecuacion.TutorialApp$", {
-  Lecuacion_TutorialApp$: 1,
-  O: 1
-});
-$c_Lecuacion_TutorialApp$.prototype.$classData = $d_Lecuacion_TutorialApp$;
-var $n_Lecuacion_TutorialApp$ = (void 0);
-function $m_Lecuacion_TutorialApp$() {
-  if ((!$n_Lecuacion_TutorialApp$)) {
-    $n_Lecuacion_TutorialApp$ = new $c_Lecuacion_TutorialApp$().init___()
-  };
-  return $n_Lecuacion_TutorialApp$
 }
 /** @constructor */
 function $c_Lorg_scalajs_dom_package$() {
@@ -23084,21 +23087,21 @@ $c_sci_HashSet$HashSet1.prototype.updated0__O__I__I__sci_HashSet = (function(key
     return new $c_sci_HashSet$HashSetCollision1().init___I__sci_ListSet(hash, new $c_sci_ListSet$Node().init___sci_ListSet__O(this$2, elem).$$plus__O__sci_ListSet(key))
   }
 });
-$c_sci_HashSet$HashSet1.prototype.foreach__F1__V = (function(f) {
-  f.apply__O__O(this.key$6)
-});
 $c_sci_HashSet$HashSet1.prototype.init___O__I = (function(key, hash) {
   this.key$6 = key;
   this.hash$6 = hash;
   return this
 });
-$c_sci_HashSet$HashSet1.prototype.size__I = (function() {
-  return 1
+$c_sci_HashSet$HashSet1.prototype.foreach__F1__V = (function(f) {
+  f.apply__O__O(this.key$6)
 });
 $c_sci_HashSet$HashSet1.prototype.iterator__sc_Iterator = (function() {
   $m_sc_Iterator$();
   var elems = new $c_sjs_js_WrappedArray().init___sjs_js_Array([this.key$6]);
   return new $c_sc_IndexedSeqLike$Elements().init___sc_IndexedSeqLike__I__I(elems, 0, $uI(elems.array$6.length))
+});
+$c_sci_HashSet$HashSet1.prototype.size__I = (function() {
+  return 1
 });
 $c_sci_HashSet$HashSet1.prototype.removed0__O__I__I__sci_HashSet = (function(key, hash, level) {
   return (((hash === this.hash$6) && $m_sr_BoxesRunTime$().equals__O__O__Z(key, this.key$6)) ? null : this)
@@ -29396,6 +29399,6 @@ var $d_scm_IndexedSeqView$$anon$2 = new $TypeData().initClass({
   sc_TraversableViewLike$Sliced: 1
 });
 $c_scm_IndexedSeqView$$anon$2.prototype.$classData = $d_scm_IndexedSeqView$$anon$2;
-$m_Lecuacion_TutorialApp$().main__AT__V($makeNativeArrayWrapper($d_T.getArrayOf(), []));
+$m_Lecuacion_EcuacionMolecularApp$().main__AT__V($makeNativeArrayWrapper($d_T.getArrayOf(), []));
 }).call(this);
 //# sourceMappingURL=scala-js-tutorial-fastopt.js.map

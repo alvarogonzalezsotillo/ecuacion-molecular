@@ -176,7 +176,6 @@ object EcuacionMolecular{
   }
 
   val ejemplos = Seq(
-    "H(O(OH)2)2 + Fe2 = FeH2 + O2",
     "H2+ O2 = H2O",
     "N2 +  H2  =   NH3",
     "H2O + Na  = Na(OH) + H2",
@@ -207,6 +206,7 @@ object EcuacionMolecular{
     "Al + HCl = AlCl3 + H2",
     "ZnS + O2 = ZnO + SO2",
     "H2O + Na = Na(OH) + H2",
+    "H(O(OH)2)2 + Fe2 = FeH2 + O2",
   )
 }
 
