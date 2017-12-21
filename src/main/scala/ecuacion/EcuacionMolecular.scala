@@ -1,9 +1,7 @@
 package ecuacion
 
-import java.io.{PrintStream, Serializable, Writer}
 
-import scala.{Option, Serializable}
-import scala.collection.mutable.IndexedSeq
+import scala.collection.immutable.IndexedSeq
 import scala.util.{Left, Right}
 import scala.util.parsing.combinator.RegexParsers
 
@@ -210,40 +208,10 @@ object EcuacionMolecular{
   )
 }
 
-class Fraccion(val num: Integer, val den: Integer){
-
-}
-
-class EcuacionLineal[T]{
-
-  type Matriz = IndexedSeq[IndexedSeq[T]]
-
-  def columnas( implicit m: Matriz ) = m.size.size
-
-  def columna(c: Integer)( implicit m: Matriz ) = m.map( f => f(c) )
-
-  def filas( implicit m: Matriz ) = m.size
-
-  def resolver( implicit m : Matriz ){
-    for( col <- 0 to columnas){
-      val filaSinCero = columna(col).indexAt( _ != 0  )
-
-      filaSinCero.forEach{ f =>
-
-        for( fil <- 0 to filas if fil != f ){
-          val factor = m(fil)(col) / m(f)(col)
-
-          for( c <- 0 to columnas ){
-            m(fil)(c) -= m(f)(c) * factor
-          }
-        }
-      }
-    }
-  }
-
-}
 
 object Secuencias{
+
+  import scala.collection.mutable.IndexedSeq
 
 
   private def primero( a: IndexedSeq[Int], sum: Int ){
