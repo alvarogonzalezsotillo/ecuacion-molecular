@@ -26,6 +26,7 @@ object EcuacionMolecularApp {
     val ecuacionNormalizadaDiv = jQuery("#ecuacion-normalizada")
     val ecuacionTex = jQuery("#ecuacion")
     val ejemplosDiv = jQuery("#ejemplos")
+    val inicioElem = jQuery("#inicio")
 
     // LISTENER TEXTO DE ECUACION
     ecuacionTex.keyup{ () =>
@@ -56,10 +57,14 @@ object EcuacionMolecularApp {
 
     // LISTENER DE CLICK EN EJEMPLO
     val ejemplos = jQuery("ejemplo")
-    ejemplos.click{ (e: JQueryEventObject, a: js.Any)=>
+    ejemplos.click{ (e: JQueryEventObject, _: js.Any)=>
       val t = jQuery(e.target).closest("ejemplo")
+      inicioElem.get(0).scrollIntoView(true)
+      ecuacionNormalizadaDiv.html("Calculando...")
       ecuacionTex.value(t.text.toString)
-      ecuacionTex.keyup()
+      dom.window.setTimeout( { () =>
+        ecuacionTex.keyup()
+      }, 1000)
     }
   }
 }

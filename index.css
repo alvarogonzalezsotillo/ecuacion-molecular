@@ -46,10 +46,9 @@ div.error:before{
     content: "#";
 }
 
-
-@media (min-width: 200px) {
-    body {
-        font-size: 30px;
-    }
+body {
+    font-size: 24px;
 }
+
+
 

@@ -1883,7 +1883,7 @@ function $h_Lecuacion_EcuacionMolecular$() {
 $h_Lecuacion_EcuacionMolecular$.prototype = $c_Lecuacion_EcuacionMolecular$.prototype;
 $c_Lecuacion_EcuacionMolecular$.prototype.init___ = (function() {
   $n_Lecuacion_EcuacionMolecular$ = this;
-  this.ejemplos$1 = $as_sc_Seq($m_sc_Seq$().apply__sc_Seq__sc_GenTraversable(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["H2+ O2 = H2O", "N2 +  H2  =   NH3", "H2O + Na  = Na(OH) + H2", "KClO3 = KCl + O2", "BaO2 + HCl = BaCl2 + H2O2", "H2SO4 + NaCl =  Na2SO4 + HCl", "FeS2 =  Fe3S4 + S2", "H2SO4 + C  =  H2O + SO2 + CO2", "SO2 + O2 =  SO3", "NaCl  = Na + Cl2", "HCl + MnO2 =  MnCl2 + H2O + Cl2", "K2CO3 + C =  CO + K", "Ag2SO4 + NaCl =  Na2SO4 + AgCl", "NaNO3 + KCl =  NaCl + KNO3", "Fe2O3 + CO =  CO2 + Fe", "Na2CO3 + H2O  + CO2 =  NaHCO3", "FeS2 + O2 = Fe2O3 + SO2", "Cr2O3 + Al =  Al2O3 + Cr", "Ag + HNO3 =  NO + H2O + AgNO3", "CuFeS2 + O2 =  SO2 + CuO + FeO", "Mg + H2SO4 = MgSO4 + H2", "C4H10 + O2 = CO2 + H2O", "CaCO3 = CaO + CO2", "Cd + HCl = CdCl2 + H2", "CO + O2 = CO2", "MgCO3 = CO2 + MgO", "C6H6 + O2 = CO2 + H2O", "Al + HCl = AlCl3 + H2", "ZnS + O2 = ZnO + SO2", "H2O + Na = Na(OH) + H2", "H(O(OH)2)2 + Fe2 = FeH2 + O2"])));
+  this.ejemplos$1 = $as_sc_Seq($m_sc_Seq$().apply__sc_Seq__sc_GenTraversable(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["H2+ O2 = H2O", "N2 +  H2  =   NH3", "H2O + Na  = Na(OH) + H2", "KClO3 = KCl + O2", "BaO2 + HCl = BaCl2 + H2O2", "H2SO4 + NaCl =  Na2SO4 + HCl", "FeS2 =  Fe3S4 + S2", "H2SO4 + C  =  H2O + SO2 + CO2", "SO2 + O2 =  SO3", "NaCl  = Na + Cl2", "HCl + MnO2 =  MnCl2 + H2O + Cl2", "K2CO3 + C =  CO + K", "Ag2SO4 + NaCl =  Na2SO4 + AgCl", "NaNO3 + KCl =  NaCl + KNO3", "Fe2O3 + CO =  CO2 + Fe", "Na2CO3 + H2O  + CO2 =  NaHCO3", "FeS2 + O2 = Fe2O3 + SO2", "Cr2O3 + Al =  Al2O3 + Cr", "Ag + HNO3 =  NO + H2O + AgNO3", "CuFeS2 + O2 =  SO2 + CuO + FeO", "Mg + H2SO4 = MgSO4 + H2", "C4H10 + O2 = CO2 + H2O", "CaCO3 = CaO + CO2", "Cd + HCl = CdCl2 + H2", "CO + O2 = CO2", "MgCO3 = CO2 + MgO", "C6H6 + O2 = CO2 + H2O", "Al + HCl = AlCl3 + H2", "ZnS + O2 = ZnO + SO2", "H2O + Na = Na(OH) + H2", "H(O(OH)2)2 + Fe2 = FeH2 + O2", "Na2SO4 + BaCl2 = NaCl + BaSO4", "FeS + O2 = Fe2O3 + SO2", "Al + H2SO4 = Al2(SO4)3 + H2", "N2 + H2 = NH3", "Na + H2O = NaOH + H2(g)", "H2S + O2 = SO2 + H2O", "C5H12 + O2 = CO2 + H2O", "(NH4)2SO4 + NaOH = Na2SO4 + NH3 + H2O", "HCl + MnO2 = Cl2 + MnCl2 + H2O", "Na2CO3 + HCl = NaCl + CO2 + H2O", "H2 + O2 = H2O", "H2SO4 + Al = Al2(SO4)3 + H2(g)", "NaCl + H2SO4 = Na2SO4 + HCl", "CaCO3 + HCl = CaCl2 + CO2 + H2O", "N2 + H2 = NH3", "NaClO3 = NaCl + O2", "C2 H4 + O2 = CO2 + H2 O", "Al2O3 + CO = Al + CO2", "C7H16 + O2 = CO2 + H2O", "K + H2O = KOH + H2", "(NH4)2S + HCl = NH4Cl + H2S", "Zn + HNO3 = Zn (NO3)2 + H2", "CaC2 + H2O = Ca(OH)2 + C2H2", "HCl + Al (OH)3 = Al Cl3 + H2O", "H3PO4 + Ca(OH)2 = Ca(H2 PO4)2 + H2O", "HCl + MnO2 = MnCl2 + Cl2 + H2O", "H2 SO4 + NH4 OH = (NH4)2SO4+ H2O", "HCl + Al2O3 = AlCl3 + H2O", "C15H32 + O2 = CO2 + H2O", "NH3 + O2 = NO + H2O", "ZnS + O2 = ZnO + SO2", "Fe2O3 + CO = CO2 + Fe", "HNO3 + Cu = Cu(NO3)2 + NO2 + H2O", "Na3P + H2O = PH3 + NaOH", "H3 PO4 + NaOH = Na3PO4 + H2O", "Kl + Pb(NO3)2 = Pbl2 + KNO3", "KClO3 = KCI + O2", "C5H12 + O2 = CO2 + H2O", "O2 + Cl2 = Cl2O", "C3H8 + O2 = CO2 + H2O", "K + H2O = KOH + H2", "Cu2O + H2 = Cu + H2O", "C9 H20 + O2 = CO2 + H2O", "2Cu(NO3)2= 2CuO + 4NO2 + O2", "2KOH + H2SO4= K2SO4 + 2H2O", "2Na + 2H2O = 2NaOH + H2", "C6H12  +   O2 =    CO2 +     H2O", "C6H12O6 + O2 = CO2 + H2O", "C3H8O + O2 = CO2 + H2O", "C4H10 + O2 = CO2 + H2O"])));
   return this
 });
 $c_Lecuacion_EcuacionMolecular$.prototype.ecuacion$EcuacionMolecular$$sumaAtomos__sc_Seq__sci_Map = (function(l) {
@@ -1977,6 +1977,7 @@ $c_Lecuacion_EcuacionMolecularApp$.prototype.setupUI__V = (function() {
   var ecuacionNormalizadaDiv = (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)("#ecuacion-normalizada");
   var ecuacionTex = (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)("#ecuacion");
   var ejemplosDiv = (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)("#ejemplos");
+  var inicioElem = (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)("#inicio");
   ecuacionTex.keyup((function($this, ecuacionNormalizadaDiv$1, ecuacionTex$1) {
     return (function() {
       var s = ecuacionTex$1.val();
@@ -2027,13 +2028,19 @@ $c_Lecuacion_EcuacionMolecularApp$.prototype.setupUI__V = (function() {
     })
   })(this, ejemplosDiv)));
   var ejemplos = (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)("ejemplo");
-  ejemplos.click((function(this$3$1, ecuacionTex$2) {
-    return (function(e$3$2, a$2) {
+  ejemplos.click((function(this$3$1, ecuacionNormalizadaDiv$2, ecuacionTex$2, inicioElem$1) {
+    return (function(e$3$2, x$2$2) {
       var t = (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)(e$3$2.target).closest("ejemplo");
+      inicioElem$1.get(0).scrollIntoView(true);
+      ecuacionNormalizadaDiv$2.html("Calculando...");
       ecuacionTex$2.val($as_T(t.text()));
-      return ecuacionTex$2.keyup()
+      return $uI($m_Lorg_scalajs_dom_package$().window__Lorg_scalajs_dom_raw_Window().setTimeout((function(ecuacionTex$1$1) {
+        return (function() {
+          return $m_Lecuacion_EcuacionMolecularApp$().ecuacion$EcuacionMolecularApp$$$anonfun$setupUI$5__Lorg_scalajs_jquery_JQuery__O(ecuacionTex$1$1)
+        })
+      })(ecuacionTex$2), 1000.0))
     })
-  })(this, ecuacionTex))
+  })(this, ecuacionNormalizadaDiv, ecuacionTex, inicioElem))
 });
 $c_Lecuacion_EcuacionMolecularApp$.prototype.main__AT__V = (function(args) {
   var v = $m_Lorg_scalajs_dom_package$().document__Lorg_scalajs_dom_raw_HTMLDocument();
@@ -2048,6 +2055,9 @@ $c_Lecuacion_EcuacionMolecularApp$.prototype.main__AT__V = (function(args) {
     var this$4 = $as_Ljava_io_PrintStream(this$3.outVar$2.v$1);
     this$4.java$lang$JSConsoleBasedPrintStream$$printString__T__V("Browser or nodejs required\n")
   }
+});
+$c_Lecuacion_EcuacionMolecularApp$.prototype.ecuacion$EcuacionMolecularApp$$$anonfun$setupUI$5__Lorg_scalajs_jquery_JQuery__O = (function(ecuacionTex$1) {
+  return ecuacionTex$1.keyup()
 });
 var $d_Lecuacion_EcuacionMolecularApp$ = new $TypeData().initClass({
   Lecuacion_EcuacionMolecularApp$: 0
