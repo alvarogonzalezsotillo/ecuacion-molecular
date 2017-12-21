@@ -2038,7 +2038,7 @@ $c_Lecuacion_EcuacionMolecularApp$.prototype.setupUI__V = (function() {
         return (function() {
           return $m_Lecuacion_EcuacionMolecularApp$().ecuacion$EcuacionMolecularApp$$$anonfun$setupUI$5__Lorg_scalajs_jquery_JQuery__O(ecuacionTex$1$1)
         })
-      })(ecuacionTex$2), 1000.0))
+      })(ecuacionTex$2), 50.0))
     })
   })(this, ecuacionNormalizadaDiv, ecuacionTex, inicioElem))
 });

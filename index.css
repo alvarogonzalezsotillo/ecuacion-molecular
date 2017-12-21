@@ -1,9 +1,11 @@
 body{
     font-family: Arial;
+    font-size: 18px;
 }
 
 ejemplo{
-    display: inline-block;
+    display: block;
+    text-align: center;
     background: #ffd563;
     border: 2px solid #ffbb00;
     border-radius: 5px;
@@ -17,7 +19,7 @@ ejemplo{
     margin-right: auto;
     width: 90%;
     text-align: center;
-    font-size: 24px;
+    font-size: 1.1em;
     margin-top: 2em;
 
 }
@@ -28,7 +30,7 @@ ejemplo{
 }
 
 #ecuacion-normalizada{
-    font-size: 24px;
+    font-size: 1.1em;
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -46,9 +48,12 @@ div.error:before{
     content: "#";
 }
 
-body {
-    font-size: 24px;
+
+@media only screen and (min-width: 500px) {
+    /* MAYOR DE 768px */
+    ejemplo{
+        display: inline-block;
+        text-align: left;
+    }
 }
-
-
 

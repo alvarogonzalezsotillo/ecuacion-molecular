@@ -64,7 +64,7 @@ object EcuacionMolecularApp {
       ecuacionTex.value(t.text.toString)
       dom.window.setTimeout( { () =>
         ecuacionTex.keyup()
-      }, 1000)
+      }, 50)
     }
   }
 }
