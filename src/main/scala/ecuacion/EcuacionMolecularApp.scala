@@ -3,7 +3,6 @@ package ecuacion
 import org.scalajs.dom
 import dom.document
 import org.scalajs.jquery._
-import EcuacionMolecular.Ecuacion
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSExportTopLevel
@@ -31,8 +30,8 @@ object EcuacionMolecularApp {
     // LISTENER TEXTO DE ECUACION
     ecuacionTex.keyup{ () =>
       val s = ecuacionTex.value()
-      val ec = EcuacionMolecular.parse(s.toString)
-      val msg = ec.map(_.ajusta()) match {
+      val ec = EcuacionMolecular(s.toString)
+      val msg = ec.map(AjustadorEcuacionMolecular.apply[Double](_)) match {
         case Left(msg) =>
           ecuacionNormalizadaDiv.addClass("error")
           s"Introduce una ecuación, o selecciona un ejemplo ($msg)"
@@ -50,7 +49,7 @@ object EcuacionMolecularApp {
 
     // RELLENO DE EJEMPLOS
     for( e <- EcuacionMolecular.ejemplos ) {
-      val ec = EcuacionMolecular.parse(e).right.get
+      val ec = EcuacionMolecular(e).right.get
       ejemplosDiv.append(s"<ejemplo>${ec.toHTML}</ejemplo")
     }
 

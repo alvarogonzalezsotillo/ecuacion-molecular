@@ -1,6 +1,8 @@
 package ecuacion
 
 
+import ecuacion.EcuacionMolecular.LadoEcuacion
+
 import scala.collection.immutable.IndexedSeq
 import scala.util.{Left, Right}
 import scala.util.parsing.combinator.RegexParsers
@@ -8,6 +10,28 @@ import scala.util.parsing.combinator.RegexParsers
 /**
   * Created by alvaro on 12/11/17.
   */
+
+class EcuacionMolecular(val ladoIzquierdo: LadoEcuacion, val ladoDerecho: LadoEcuacion) {
+
+  import EcuacionMolecular._
+
+  override def toString = ladoIzquierdo.toString + " = " + ladoDerecho.toString
+
+  def toHTML = ladoIzquierdo.toHTML + " = " + ladoDerecho.toHTML
+
+  def atomos = sumaAtomos( Seq(ladoIzquierdo.atomos(None), ladoDerecho.atomos(None)))
+
+  def esAjustada(multipliers: Option[Seq[Int]] = None ): Boolean = {
+    val ni = ladoIzquierdo.moleculas.size
+    val nd = ladoDerecho.moleculas.size
+    val multipliers_ = multipliers.getOrElse( Iterator.continually(1).take(ni+nd).toSeq )
+    assert(ni + nd == multipliers_.size)
+    val (mi, md) = multipliers_.splitAt(ni)
+    val ai = ladoIzquierdo.atomos(Some(mi))
+    val ad = ladoDerecho.atomos(Some(md))
+    ai == ad
+  }
+}
 
 object EcuacionMolecular{
 
@@ -68,41 +92,6 @@ object EcuacionMolecular{
     def toHTML = moleculas.tail.foldLeft(moleculas.head.toHTML){ case (h,m) => h + " + " + m.toHTML }
   }
 
-  case class Ecuacion(ladoIzquierdo: LadoEcuacion, ladoDerecho: LadoEcuacion) {
-
-
-    override def toString = ladoIzquierdo.toString + " = " + ladoDerecho.toString
-
-    def toHTML = ladoIzquierdo.toHTML + " = " + ladoDerecho.toHTML
-
-    def esAjustada(multipliers:  Seq[Int]): Boolean = {
-      val ni = ladoIzquierdo.moleculas.size
-      val nd = ladoDerecho.moleculas.size
-      assert(ni + nd == multipliers.size)
-      val (mi, md) = multipliers.splitAt(ni)
-      val ai = ladoIzquierdo.atomos(Some(mi))
-      val ad = ladoDerecho.atomos(Some(md))
-      ai == ad
-    }
-
-    def ajusta(maxSum: Int = 30): Option[Ecuacion] = {
-      val it_ = Secuencias.iterator(ladoDerecho.moleculas.size + ladoIzquierdo.moleculas.size, maxSum)
-      val it = it_.map { l => l.map(_ + 1) }
-      val multipliers = it.find(esAjustada(_))
-
-
-      multipliers.map { m =>
-        val (mi, md) = m.splitAt(ladoIzquierdo.moleculas.size)
-        val li = ladoIzquierdo.moleculas.zip(mi).map { case (mol, mul) =>
-          Molecula(mol.grupos, mol.cantidad * mul)
-        }
-        val ld = ladoDerecho.moleculas.zip(md).map { case (mol, mul) =>
-          Molecula(mol.grupos, mol.cantidad * mul)
-        }
-        Ecuacion(LadoEcuacion(li), LadoEcuacion(ld))
-      }
-    }
-  }
 
   class EcuacionMolecularParser extends RegexParsers {
 
@@ -148,26 +137,18 @@ object EcuacionMolecular{
     def separadorLados : Parser[Any] = blanco <~ ("=".r | "<-*>".r) ~> blanco
 
 
-    def ecuacion : Parser[Ecuacion] = (blanco ~> ladoDeEcuacion) ~ separadorLados ~ (ladoDeEcuacion <~ blanco) ^^ {
-      case li ~ _ ~ ld => Ecuacion(li, ld)
+    def ecuacion : Parser[EcuacionMolecular] = (blanco ~> ladoDeEcuacion) ~ separadorLados ~ (ladoDeEcuacion <~ blanco) ^^ {
+      case li ~ _ ~ ld => EcuacionMolecular(li, ld)
     }
 
   }
 
+  def apply( li: LadoEcuacion, ld: LadoEcuacion ) = new EcuacionMolecular(li,ld)
 
-  def parse( s: String ) :  String Either Ecuacion = {
+  def apply( s: String ) :  String Either EcuacionMolecular = {
     val parser = new EcuacionMolecularParser
     import parser._
     parser.parse(parser.ecuacion, s) match{
-      case Success(ecuacion, _) => Right(ecuacion)
-      case NoSuccess(msg,_) => Left(msg)
-    }
-  }
-
-  def parseGrupo( s: String ) : String Either Grupo = {
-    val parser = new EcuacionMolecularParser
-    import parser._
-    parser.parse(parser.grupo, s) match{
       case Success(ecuacion, _) => Right(ecuacion)
       case NoSuccess(msg,_) => Left(msg)
     }
@@ -259,66 +240,6 @@ object EcuacionMolecular{
 }
 
 
-object Secuencias{
-
-  import scala.collection.mutable.IndexedSeq
-
-
-  private def primero( a: IndexedSeq[Int], sum: Int ){
-    a(0) = sum
-    for( i <- 1 until a.size ) a(i) = 0
-  }
-
-  private def siguiente( a: Array[Int], sum: Int, pos: Int = 0 ) : Boolean = {
-    assert( pos < a.length )
-    if( pos < a.length-1) {
-      // INTENTO CAMBIAR LA COLA
-      if (siguiente(a, sum - a(pos), pos + 1)) {
-        return true
-      }
-
-      // SI NO CAMBIA, DEBO BAJAR UNA UNIDAD LA POSICION
-      if( a(pos) > 0 ) {
-        a(pos) -= 1
-        val slice = a.view.slice(pos+1,a.length)
-        primero( slice , sum - a(pos) )
-        return true
-      }
-    }
-    return false
-
-  }
-
-  private def supersiguiente( a: Array[Int] ) : Int = {
-    val sum = a.sum
-    if( siguiente( a, sum ) ){
-      return sum
-    }
-    primero(a,sum+1)
-    return sum+1
-  }
-
-  private def pruebaSimple() {
-    val sum = 3
-    val s = new Array[Int](3)
-    primero(s, sum)
-    println(s.mkString(","))
-    while (siguiente(s, sum)) {
-      println(s.mkString(","))
-    }
-  }
-
-  def iterator( size: Int, maxSum: Int ) = {
-    val s = new Array[Int](size)
-    primero(s,1)
-    val ret = Iterator.iterate(s.toList){ v =>
-      val a = v.toArray
-      supersiguiente(a)
-      a.toList
-    }
-    ret.takeWhile( _.sum <= maxSum )
-  }
-}
 
 
 
