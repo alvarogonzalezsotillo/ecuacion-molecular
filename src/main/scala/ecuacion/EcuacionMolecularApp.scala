@@ -31,7 +31,7 @@ object EcuacionMolecularApp {
     ecuacionTex.keyup{ () =>
       val s = ecuacionTex.value()
       val ec = EcuacionMolecular(s.toString)
-      val msg = ec.map(AjustadorEcuacionMolecular.apply[Double](_)) match {
+      val msg = ec.map(AjustadorEcuacionMolecular(_)) match {
         case Left(msg) =>
           ecuacionNormalizadaDiv.addClass("error")
           s"Introduce una ecuación, o selecciona un ejemplo ($msg)"

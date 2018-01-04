@@ -9,11 +9,11 @@ object EcuacionMolecularTest extends App {
     import EcuacionMolecular._
 
     for (e <- ejemplos) {
-      val ecuacion = EcuacionMolecular(e)
-      val ecuacionAjustada = ecuacion.map(AjustadorEcuacionMolecular.apply[Double](_))
-      println("****************")
+      println("******************************************************************************************")
       println(e)
+      val ecuacion = EcuacionMolecular(e)
       println(ecuacion.right.get)
+      val ecuacionAjustada = ecuacion.map(AjustadorEcuacionMolecular(_))
       println(ecuacionAjustada.right.get.get)
     }
   }
