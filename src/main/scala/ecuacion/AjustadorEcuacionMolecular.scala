@@ -144,6 +144,10 @@ class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fraction
 
   assert( values.forall( _.size == values(0).size ) )
 
+  val uno = fractional.fromInt(1)
+  val menosuno = fractional.fromInt(-1)
+  val cero = fractional.fromInt(0)
+
   val rows = values
   val columns = (0 until rows(0).size ).map{ c =>
     (0 until rows.size).map( r => values(r)(c) )
@@ -155,14 +159,36 @@ class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fraction
     values(r)(c)
   }
 
+  def solve( freeTerms: IndexedSeq[T] = Iterator.continually(cero).take(rows.size).toIndexedSeq, firstVariableHint : T = uno ) = {
+
+    import fractional.mkNumericOps
+
+    val matDiag = valuesCopy()
+    val variables = Array.fill[Option[T]]( matDiag(0).size )(None)
+    variables(0) = Some(uno)
+
+    while( variables.find( _.isEmpty ).isDefined ){
+      for( fila <- matDiag ) {
+        val a = fila.indexWhere(_ != cero)
+        val b = fila.indexWhere(_ != cero, a + 1)
+
+        for( (i1,i2) <- Seq( (a,b), (b,a)) if i1 != -1 && i2 != -1 ){
+          if (variables(i1).isDefined && variables(i2).isEmpty) {
+            val factor = fila(i1)/fila(i2)
+            variables(i2) = variables(i1).map(_ * factor)
+          }
+        }
+      }
+    }
+
+    variables
+  }
+
   def diagonalize( implicit exp: Explicador ) : Mat[T] = {
 
     def log( s: String ) = println(s)
 
     import fractional.mkNumericOps
-    val uno = fractional.fromInt(1)
-    val menosuno = fractional.fromInt(-1)
-    val cero = fractional.fromInt(0)
 
     val m: Array[Array[T]] = valuesCopy()
 
