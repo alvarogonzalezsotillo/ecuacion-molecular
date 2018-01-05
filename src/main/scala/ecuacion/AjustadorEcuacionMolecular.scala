@@ -10,6 +10,10 @@ import scala.reflect.ClassTag
 object AjustadorEcuacionMolecular {
 
   def log( s: String ) = println(s)
+
+  implicit val explicador = new Explicador {
+    override def explica(a : Any) = log(a.toString)
+  }
   
   def apply( ecuacion: EcuacionMolecular, maxSum: Int = 30 ): Option[EcuacionMolecular] = {
     //ajustaTanteo(ecuacion,maxSum)
@@ -80,46 +84,17 @@ object AjustadorEcuacionMolecular {
 
     printM( "Matriz original:" + e.toString, mat )
 
-    def diagonaliza( m: Array[Array[Racional]]): Unit ={
+    val matDiag = new Mat(mat).diagonalize.valuesCopy
 
-      import fractional.mkNumericOps
-
-      val columns = (m(0).size min m.size)
-      log( s"columns:$columns")
-
-      for( col <- 0 until columns ){
-        //log( s"diagonalizando columna $col")
-        val fil = m.indexWhere{ fila =>
-          //log( "Mirando fila:" + fila.mkString((",")) )
-          val noEsCero = fila(col) != cero
-          val anteriores = fila.take(col)
-          //log( "anteriores:" + anteriores.mkString(","))
-          val anterioresCero = anteriores.forall( _ == cero )
-          //log( s"  noEsCero:$noEsCero  anterioresCero:$anterioresCero" )
-          noEsCero && anterioresCero
-        }
-        //log( s"  col: $col  fil:$fil")
-        for( f <- 0 until m.size if f != fil && fil != -1 ){
-
-          val factor = m(f)(col) / m(fil)(col)
-          for( c <- col until m(0).size ) {
-            m(f)(c) = m(f)(c) - m(fil)(c) * factor
-          }
-        }
-
-        printM( s"Tras diagonalizar columna $col con la fila:$fil", m )
-      }
-    }
-
-    diagonaliza(mat)
-    printM( "Matriz diagonalizada:", mat )
+    printM( "Matriz diagonalizada:", matDiag )
 
 
-    val variables = Array.fill[Option[Racional]]( mat(0).size )(None)
+
+    val variables = Array.fill[Option[Racional]]( matDiag(0).size )(None)
     variables(0) = Some(uno)
 
     while( variables.find( _.isEmpty ).isDefined ){
-      for( fila <- mat ) {
+      for( fila <- matDiag ) {
         val a = fila.indexWhere(_ != cero)
         val b = fila.indexWhere(_ != cero, a + 1)
 
@@ -157,4 +132,68 @@ object AjustadorEcuacionMolecular {
     assert( ret.esAjustada() )
     Some(ret)
   }
+}
+
+trait Explicador{
+  def explica( a : Any )
+}
+
+class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fractional[T], ct: ClassTag[T]){
+
+  def this( a : Array[Array[T]] )(implicit f: Fractional[T], ct: ClassTag[T] ) = this( a.map( _.toIndexedSeq) )
+
+  assert( values.forall( _.size == values(0).size ) )
+
+  val rows = values
+  val columns = (0 until rows(0).size ).map{ c =>
+    (0 until rows.size).map( r => values(r)(c) )
+  }
+
+  def apply(row: Int)(col: Int) = values(row)(col)
+
+  def valuesCopy() = Array.tabulate[T](rows.size,columns.size){ (r, c) =>
+    values(r)(c)
+  }
+
+  def diagonalize( implicit exp: Explicador ) : Mat[T] = {
+
+    def log( s: String ) = println(s)
+
+    import fractional.mkNumericOps
+    val uno = fractional.fromInt(1)
+    val menosuno = fractional.fromInt(-1)
+    val cero = fractional.fromInt(0)
+
+    val m: Array[Array[T]] = valuesCopy()
+
+
+    val columns = (m(0).size min m.size)
+    log( s"columns:$columns")
+
+    for( col <- 0 until columns ){
+      //log( s"diagonalizando columna $col")
+      val fil = m.indexWhere{ fila =>
+        //log( "Mirando fila:" + fila.mkString((",")) )
+        val noEsCero = fila(col) != cero
+        val anteriores = fila.take(col)
+        //log( "anteriores:" + anteriores.mkString(","))
+        val anterioresCero = anteriores.forall( _ == cero )
+        //log( s"  noEsCero:$noEsCero  anterioresCero:$anterioresCero" )
+        noEsCero && anterioresCero
+      }
+      //log( s"  col: $col  fil:$fil")
+      for( f <- 0 until m.size if f != fil && fil != -1 ){
+
+        val factor = m(f)(col) / m(fil)(col)
+        for( c <- col until m(0).size ) {
+          m(f)(c) = m(f)(c) - m(fil)(c) * factor
+        }
+      }
+
+
+    }
+    new Mat(m)
+
+  }
+
 }
