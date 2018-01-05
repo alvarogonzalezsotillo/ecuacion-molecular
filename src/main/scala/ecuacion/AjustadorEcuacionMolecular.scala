@@ -56,11 +56,7 @@ object AjustadorEcuacionMolecular {
 
     implicit val fractional = Racional.FractionalRacional
     import fractional._
-    val uno = fractional.fromInt(1)
     val menosuno = fractional.fromInt(-1)
-    val cero = fractional.fromInt(0)
-
-
 
     val atomos = e.atomos.keySet.toArray
 
@@ -84,28 +80,13 @@ object AjustadorEcuacionMolecular {
 
     printM( "Matriz original:" + e.toString, mat )
 
-    val matDiag = new Mat(mat).diagonalize.valuesCopy
+    val matrizDiagonalizada = new Mat(mat).diagonalize
+    val matDiag = matrizDiagonalizada.valuesCopy()
 
     printM( "Matriz diagonalizada:", matDiag )
 
+    val variables = matrizDiagonalizada.solve()
 
-
-    val variables = Array.fill[Option[Racional]]( matDiag(0).size )(None)
-    variables(0) = Some(uno)
-
-    while( variables.find( _.isEmpty ).isDefined ){
-      for( fila <- matDiag ) {
-        val a = fila.indexWhere(_ != cero)
-        val b = fila.indexWhere(_ != cero, a + 1)
-
-        for( (i1,i2) <- Seq( (a,b), (b,a)) if i1 != -1 && i2 != -1 ){
-          if (variables(i1).isDefined && variables(i2).isEmpty) {
-            val factor = fila(i1)/fila(i2)
-            variables(i2) = variables(i1).map(_ * factor)
-          }
-        }
-      }
-    }
 
     log( "Variables fraccionadas:" + variables.mkString(", "))
 
@@ -159,6 +140,7 @@ class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fraction
     values(r)(c)
   }
 
+
   def solve( freeTerms: IndexedSeq[T] = Iterator.continually(cero).take(rows.size).toIndexedSeq, firstVariableHint : T = uno ) = {
 
     import fractional.mkNumericOps
@@ -167,7 +149,9 @@ class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fraction
     val variables = Array.fill[Option[T]]( matDiag(0).size )(None)
     variables(0) = Some(uno)
 
-    while( variables.find( _.isEmpty ).isDefined ){
+    var changed = true
+    while( changed ){
+      changed = false
       for( fila <- matDiag ) {
         val a = fila.indexWhere(_ != cero)
         val b = fila.indexWhere(_ != cero, a + 1)
@@ -176,10 +160,13 @@ class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fraction
           if (variables(i1).isDefined && variables(i2).isEmpty) {
             val factor = fila(i1)/fila(i2)
             variables(i2) = variables(i1).map(_ * factor)
+            changed = true
           }
         }
       }
     }
+
+    //ax + by = c  x = (c - by)/a
 
     variables
   }
