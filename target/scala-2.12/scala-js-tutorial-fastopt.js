@@ -1848,7 +1848,8 @@ function $f_scm_HashTable$HashUtils__improve__I__I__I($thiz, hcode, seed) {
 }
 /** @constructor */
 function $c_Lecuacion_AjustadorEcuacionMolecular$() {
-  $c_O.call(this)
+  $c_O.call(this);
+  this.explicador$1 = null
 }
 $c_Lecuacion_AjustadorEcuacionMolecular$.prototype = new $h_O();
 $c_Lecuacion_AjustadorEcuacionMolecular$.prototype.constructor = $c_Lecuacion_AjustadorEcuacionMolecular$;
@@ -1858,6 +1859,8 @@ function $h_Lecuacion_AjustadorEcuacionMolecular$() {
 }
 $h_Lecuacion_AjustadorEcuacionMolecular$.prototype = $c_Lecuacion_AjustadorEcuacionMolecular$.prototype;
 $c_Lecuacion_AjustadorEcuacionMolecular$.prototype.init___ = (function() {
+  $n_Lecuacion_AjustadorEcuacionMolecular$ = this;
+  this.explicador$1 = new $c_Lecuacion_AjustadorEcuacionMolecular$$anon$1().init___();
   return this
 });
 $c_Lecuacion_AjustadorEcuacionMolecular$.prototype.lado$1__p1__Lecuacion_EcuacionMolecular$LadoEcuacion__Lecuacion_Racional$FractionalRacional$__AT__AALecuacion_Racional = (function(l, fractional$1, atomos$1) {
@@ -1899,6 +1902,38 @@ $c_Lecuacion_AjustadorEcuacionMolecular$.prototype.lado$1__p1__Lecuacion_Ecuacio
   };
   return $makeNativeArrayWrapper($d_Lecuacion_Racional.getArrayOf().getArrayOf(), elems$2)
 });
+$c_Lecuacion_AjustadorEcuacionMolecular$.prototype.apply__Lecuacion_EcuacionMolecular__I__s_Option = (function(ecuacion, maxSum) {
+  try {
+    var x1 = new $c_s_util_Success().init___O(this.ajustaAlgebraico__p1__Lecuacion_EcuacionMolecular__s_Option(ecuacion))
+  } catch (e) {
+    var e$2 = $m_sjsr_package$().wrapJavaScriptException__O__jl_Throwable(e);
+    if ((e$2 !== null)) {
+      matchEnd8: {
+        var x1;
+        var o11 = $m_s_util_control_NonFatal$().unapply__jl_Throwable__s_Option(e$2);
+        if ((!o11.isEmpty__Z())) {
+          var e$3 = $as_jl_Throwable(o11.get__O());
+          var x1 = new $c_s_util_Failure().init___jl_Throwable(e$3);
+          break matchEnd8
+        };
+        throw $m_sjsr_package$().unwrapJavaScriptException__jl_Throwable__O(e$2)
+      }
+    } else {
+      var x1;
+      throw e
+    }
+  };
+  if ($is_s_util_Success(x1)) {
+    var x2 = $as_s_util_Success(x1);
+    var p3 = $as_s_Option(x2.value$2);
+    if ($is_s_Some(p3)) {
+      var x4 = $as_s_Some(p3);
+      var ec = $as_Lecuacion_EcuacionMolecular(x4.value$2);
+      return new $c_s_Some().init___O(ec)
+    }
+  };
+  return $m_s_None$()
+});
 $c_Lecuacion_AjustadorEcuacionMolecular$.prototype.printM$1__p1__T__AO__V = (function(msg, m) {
   var this$2 = $m_s_Console$();
   var this$3 = $as_Ljava_io_PrintStream(this$2.outVar$2.v$1);
@@ -1922,110 +1957,6 @@ $c_Lecuacion_AjustadorEcuacionMolecular$.prototype.printM$1__p1__T__AO__V = (fun
   var this$16 = $as_Ljava_io_PrintStream(this$15.outVar$2.v$1);
   this$16.java$lang$JSConsoleBasedPrintStream$$printString__T__V("*********\n")
 });
-$c_Lecuacion_AjustadorEcuacionMolecular$.prototype.diagonaliza$1__p1__AALecuacion_Racional__Lecuacion_Racional$FractionalRacional$__Lecuacion_Racional__V = (function(m, fractional$1, cero$1) {
-  var xs = m.get(0);
-  var x = xs.u.length;
-  var that = m.u.length;
-  var columns = ((x < that) ? x : that);
-  var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["columns:", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([columns]));
-  var this$10 = $m_s_Console$();
-  var this$11 = $as_Ljava_io_PrintStream(this$10.outVar$2.v$1);
-  this$11.java$lang$JSConsoleBasedPrintStream$$printString__T__V((s + "\n"));
-  var isEmpty$4 = (columns <= 0);
-  var scala$collection$immutable$Range$$lastElement$4 = (((-1) + columns) | 0);
-  if ((!isEmpty$4)) {
-    var i = 0;
-    while (true) {
-      var v1 = i;
-      var len = m.u.length;
-      var i$1 = 0;
-      while (true) {
-        if ((i$1 < len)) {
-          var index = i$1;
-          var arg1 = m.get(index);
-          var fila = $asArrayOf_Lecuacion_Racional(arg1, 1);
-          var x$1 = fila.get(v1);
-          var noEsCero = (!((x$1 === null) ? (cero$1 === null) : x$1.equals__O__Z(cero$1)));
-          var x$2 = ((v1 > 0) ? v1 : 0);
-          var y = fila.u.length;
-          var hi$2 = ((x$2 < y) ? x$2 : y);
-          var size = ((hi$2 > 0) ? hi$2 : 0);
-          var result = $m_jl_reflect_Array$().newInstance__jl_Class__I__O($objectGetClass(fila).getComponentType__jl_Class(), size);
-          if ((size > 0)) {
-            $m_s_Array$().copy__O__I__O__I__I__V(fila, 0, result, 0, size)
-          };
-          var anteriores = $asArrayOf_Lecuacion_Racional(result, 1);
-          var i$2 = 0;
-          while (true) {
-            if ((i$2 < anteriores.u.length)) {
-              var index$1 = i$2;
-              var arg1$1 = anteriores.get(index$1);
-              var x$4 = $as_Lecuacion_Racional(arg1$1);
-              var jsx$2 = (((x$4 === null) ? (cero$1 === null) : x$4.equals__O__Z(cero$1)) === true)
-            } else {
-              var jsx$2 = false
-            };
-            if (jsx$2) {
-              i$2 = ((1 + i$2) | 0)
-            } else {
-              break
-            }
-          };
-          var anterioresCero = (i$2 === anteriores.u.length);
-          var jsx$1 = (!(noEsCero && anterioresCero))
-        } else {
-          var jsx$1 = false
-        };
-        if (jsx$1) {
-          i$1 = ((1 + i$1) | 0)
-        } else {
-          break
-        }
-      };
-      var n = i$1;
-      var fil = ((n >= m.u.length) ? (-1) : n);
-      var end = m.u.length;
-      var this$39 = new $c_sci_Range().init___I__I__I(0, end, 1);
-      var p = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(this$2$1, fil$1) {
-        return (function(f$2) {
-          var f = $uI(f$2);
-          return ((f !== fil$1) && (fil$1 !== (-1)))
-        })
-      })(this, fil));
-      new $c_sc_TraversableLike$WithFilter().init___sc_TraversableLike__F1(this$39, p).foreach__F1__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(this$3$1, fractional$1$1, m$1, fil$2, col) {
-        return (function(f$3$2) {
-          var f$3 = $uI(f$3$2);
-          var lhs = m$1.get(f$3).get(col);
-          var factor = $as_Lecuacion_Racional(new $c_s_math_Fractional$FractionalOps().init___s_math_Fractional__O(fractional$1$1, lhs).$$div__O__O(m$1.get(fil$2).get(col)));
-          var xs$1 = m$1.get(0);
-          var end$1 = xs$1.u.length;
-          var isEmpty$4$1 = (col >= end$1);
-          var scala$collection$immutable$Range$$lastElement$4$1 = (((-1) + end$1) | 0);
-          if ((!isEmpty$4$1)) {
-            var i$3 = col;
-            while (true) {
-              var v1$1 = i$3;
-              var jsx$4 = m$1.get(f$3);
-              var lhs$1 = m$1.get(f$3).get(v1$1);
-              var jsx$3 = new $c_s_math_Fractional$FractionalOps().init___s_math_Fractional__O(fractional$1$1, lhs$1);
-              var lhs$2 = m$1.get(fil$2).get(v1$1);
-              jsx$4.set(v1$1, $as_Lecuacion_Racional(jsx$3.$$minus__O__O(new $c_s_math_Fractional$FractionalOps().init___s_math_Fractional__O(fractional$1$1, lhs$2).$$times__O__O(factor))));
-              if ((i$3 === scala$collection$immutable$Range$$lastElement$4$1)) {
-                break
-              };
-              i$3 = ((1 + i$3) | 0)
-            }
-          }
-        })
-      })(this, fractional$1, m, fil, v1)));
-      this.printM$1__p1__T__AO__V(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Tras diagonalizar columna ", " con la fila:", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([v1, fil])), m);
-      if ((i === scala$collection$immutable$Range$$lastElement$4)) {
-        break
-      };
-      i = ((1 + i) | 0)
-    }
-  }
-});
 $c_Lecuacion_AjustadorEcuacionMolecular$.prototype.ajustaAlgebraico__p1__Lecuacion_EcuacionMolecular__s_Option = (function(e) {
   var jsx$1 = $m_s_Predef$();
   var this$2 = e.ladoDerecho$1.atomos__s_Option__sci_Map($m_s_None$());
@@ -2034,18 +1965,16 @@ $c_Lecuacion_AjustadorEcuacionMolecular$.prototype.ajustaAlgebraico__p1__Lecuaci
   var x$2 = new $c_sci_MapLike$ImmutableDefaultKeySet().init___sci_MapLike(this$4);
   jsx$1.assert__Z__V($f_sc_GenSetLike__equals__O__Z(x, x$2));
   var fractional = $m_Lecuacion_Racional$FractionalRacional$();
-  var uno = new $c_Lecuacion_Racional().init___I__I(1, 1);
   var menosuno = new $c_Lecuacion_Racional().init___I__I((-1), 1);
-  var cero = new $c_Lecuacion_Racional().init___I__I(0, 1);
-  var this$8 = e.atomos__sci_Map();
-  var this$10 = new $c_sci_MapLike$ImmutableDefaultKeySet().init___sci_MapLike(this$8);
-  var len = this$10.$$outer$4.size__I();
+  var this$6 = e.atomos__sci_Map();
+  var this$8 = new $c_sci_MapLike$ImmutableDefaultKeySet().init___sci_MapLike(this$6);
+  var len = this$8.$$outer$4.size__I();
   var result = $newArrayObject($d_T.getArrayOf(), [len]);
-  $f_sc_TraversableOnce__copyToArray__O__I__V(this$10, result, 0);
+  $f_sc_TraversableOnce__copyToArray__O__I__V(this$8, result, 0);
   var s = e.toString__T();
-  var this$12 = $m_s_Console$();
-  var this$13 = $as_Ljava_io_PrintStream(this$12.outVar$2.v$1);
-  this$13.java$lang$JSConsoleBasedPrintStream$$printString__T__V((s + "\n"));
+  var this$10 = $m_s_Console$();
+  var this$11 = $as_Ljava_io_PrintStream(this$10.outVar$2.v$1);
+  this$11.java$lang$JSConsoleBasedPrintStream$$printString__T__V((s + "\n"));
   var jsx$2 = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Atomos:", ""]));
   var b = new $c_scm_StringBuilder().init___();
   var elem$1 = false;
@@ -2067,23 +1996,23 @@ $c_Lecuacion_AjustadorEcuacionMolecular$.prototype.ajustaAlgebraico__p1__Lecuaci
   };
   b.append__T__scm_StringBuilder("");
   var s$1 = jsx$2.s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([b.underlying$5.java$lang$StringBuilder$$content$f]));
-  var this$19 = $m_s_Console$();
-  var this$20 = $as_Ljava_io_PrintStream(this$19.outVar$2.v$1);
-  this$20.java$lang$JSConsoleBasedPrintStream$$printString__T__V((s$1 + "\n"));
+  var this$17 = $m_s_Console$();
+  var this$18 = $as_Ljava_io_PrintStream(this$17.outVar$2.v$1);
+  this$18.java$lang$JSConsoleBasedPrintStream$$printString__T__V((s$1 + "\n"));
   var xs = this.lado$1__p1__Lecuacion_EcuacionMolecular$LadoEcuacion__Lecuacion_Racional$FractionalRacional$__AT__AALecuacion_Racional(e.ladoIzquierdo$1, fractional, result);
-  var this$24 = new $c_scm_ArrayOps$ofRef().init___AO(xs);
+  var this$22 = new $c_scm_ArrayOps$ofRef().init___AO(xs);
   var that = $m_s_Predef$().wrapRefArray__AO__scm_WrappedArray(this.lado$1__p1__Lecuacion_EcuacionMolecular$LadoEcuacion__Lecuacion_Racional$FractionalRacional$__AT__AALecuacion_Racional(e.ladoDerecho$1, fractional, result));
   if ((that !== null)) {
     var elems$2 = null;
     elems$2 = [];
     var i$1 = 0;
-    var $$this = this$24.repr$1;
+    var $$this = this$22.repr$1;
     var x$1 = $$this.u.length;
     var that$1 = that.length__I();
     var len$2 = ((x$1 < that$1) ? x$1 : that$1);
     while ((i$1 < len$2)) {
       var index$1 = i$1;
-      var $$this$1 = this$24.repr$1;
+      var $$this$1 = this$22.repr$1;
       var elem = new $c_T2().init___O__O($$this$1.get(index$1), that.apply__I__O(i$1));
       elems$2.push(elem);
       i$1 = ((1 + i$1) | 0)
@@ -2092,8 +2021,8 @@ $c_Lecuacion_AjustadorEcuacionMolecular$.prototype.ajustaAlgebraico__p1__Lecuaci
   } else {
     var elems$2$1 = null;
     elems$2$1 = [];
-    var $$this$2 = this$24.repr$1;
-    var these = new $c_sc_IndexedSeqLike$Elements().init___sc_IndexedSeqLike__I__I(this$24, 0, $$this$2.u.length);
+    var $$this$2 = this$22.repr$1;
+    var these = new $c_sc_IndexedSeqLike$Elements().init___sc_IndexedSeqLike__I__I(this$22, 0, $$this$2.u.length);
     var those = new $c_sc_IndexedSeqLike$Elements().init___sc_IndexedSeqLike__I__I(that, 0, that.length__I());
     while ((these.hasNext__Z() && those.hasNext__Z())) {
       var elem$2 = new $c_T2().init___O__O(these.next__O(), those.next__O());
@@ -2120,7 +2049,7 @@ $c_Lecuacion_AjustadorEcuacionMolecular$.prototype.ajustaAlgebraico__p1__Lecuaci
     };
     var i$3 = $asArrayOf_Lecuacion_Racional(x0$3.$$und1__O(), 1);
     var d = $asArrayOf_Lecuacion_Racional(x0$3.$$und2__O(), 1);
-    var this$50 = new $c_scm_ArrayOps$ofRef().init___AO(d);
+    var this$48 = new $c_scm_ArrayOps$ofRef().init___AO(d);
     var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this, fractional$1, menosuno$1) {
       return (function(x$3$2) {
         var x$3 = $as_Lecuacion_Racional(x$3$2);
@@ -2128,18 +2057,18 @@ $c_Lecuacion_AjustadorEcuacionMolecular$.prototype.ajustaAlgebraico__p1__Lecuaci
       })
     })(this, fractional, menosuno));
     var b$1 = new $c_scm_ArrayBuilder$generic().init___jl_Class($d_Lecuacion_Racional.getClassOf());
-    $f_scm_Builder__sizeHint__sc_TraversableLike__V(b$1, this$50);
+    $f_scm_Builder__sizeHint__sc_TraversableLike__V(b$1, this$48);
     var f$2 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this$1, f$1, b$2) {
       return (function(x$2$1) {
         return b$2.$$plus$eq__O__scm_Builder(f$1.apply__O__O(x$2$1))
       })
-    })(this$50, f, b$1));
-    $f_sc_IndexedSeqOptimized__foreach__F1__V(this$50, f$2);
+    })(this$48, f, b$1));
+    $f_sc_IndexedSeqOptimized__foreach__F1__V(this$48, f$2);
     var xs$2 = $asArrayOf_O(b$1.result__O(), 1);
     var elems$2$3 = null;
     elems$2$3 = [];
-    var this$59 = new $c_scm_WrappedArray$ofRef().init___AO(xs$2);
-    this$59.length__I();
+    var this$57 = new $c_scm_WrappedArray$ofRef().init___AO(xs$2);
+    this$57.length__I();
     var x1$1 = i$3.u.length;
     switch (x1$1) {
       case (-1): {
@@ -2170,284 +2099,162 @@ $c_Lecuacion_AjustadorEcuacionMolecular$.prototype.ajustaAlgebraico__p1__Lecuaci
   };
   var mat = $makeNativeArrayWrapper($d_Lecuacion_Racional.getArrayOf().getArrayOf(), elems$2$2);
   this.printM$1__p1__T__AO__V(("Matriz original:" + e.toString__T()), mat);
-  this.diagonaliza$1__p1__AALecuacion_Racional__Lecuacion_Racional$FractionalRacional$__Lecuacion_Racional__V(mat, fractional, cero);
-  this.printM$1__p1__T__AO__V("Matriz diagonalizada:", mat);
-  var xs$5 = mat.get(0);
-  var n = xs$5.u.length;
-  var elems$2$4 = null;
-  elems$2$4 = [];
-  var i$6 = 0;
-  while ((i$6 < n)) {
-    var elem$4 = $m_s_None$();
-    elems$2$4.push(elem$4);
-    i$6 = ((1 + i$6) | 0)
-  };
-  var variables = $makeNativeArrayWrapper($d_s_Option.getArrayOf(), elems$2$4);
-  variables.set(0, new $c_s_Some().init___O(uno));
-  while (true) {
-    var len$6 = variables.u.length;
-    var i$7 = 0;
-    while (true) {
-      if ((i$7 < len$6)) {
-        var index$3 = i$7;
-        var arg1$4 = variables.get(index$3);
-        var x$5 = $as_s_Option(arg1$4);
-        var jsx$3 = (!x$5.isEmpty__Z())
-      } else {
-        var jsx$3 = false
-      };
-      if (jsx$3) {
-        i$7 = ((1 + i$7) | 0)
-      } else {
-        break
-      }
-    };
-    var i$8 = i$7;
-    if (((i$8 < variables.u.length) ? new $c_s_Some().init___O(variables.get(i$8)) : $m_s_None$()).isDefined__Z()) {
-      var i$9 = 0;
-      var len$7 = mat.u.length;
-      while ((i$9 < len$7)) {
-        var index$4 = i$9;
-        var arg1$5 = mat.get(index$4);
-        var fila = $asArrayOf_Lecuacion_Racional(arg1$5, 1);
-        var len$8 = fila.u.length;
-        var i$10 = 0;
-        while (true) {
-          if ((i$10 < len$8)) {
-            var index$5 = i$10;
-            var arg1$6 = fila.get(index$5);
-            var x$6 = $as_Lecuacion_Racional(arg1$6);
-            var jsx$4 = (!(!((x$6 !== null) && x$6.equals__O__Z(cero))))
-          } else {
-            var jsx$4 = false
-          };
-          if (jsx$4) {
-            i$10 = ((1 + i$10) | 0)
-          } else {
-            break
-          }
-        };
-        var n$1 = i$10;
-        var a = ((n$1 >= fila.u.length) ? (-1) : n$1);
-        var from$3 = ((1 + a) | 0);
-        var start = ((from$3 > 0) ? from$3 : 0);
-        var len$9 = fila.u.length;
-        var i$11 = start;
-        while (true) {
-          if ((i$11 < len$9)) {
-            var index$6 = i$11;
-            var arg1$7 = fila.get(index$6);
-            var x$7 = $as_Lecuacion_Racional(arg1$7);
-            var jsx$5 = (!(!((x$7 !== null) && x$7.equals__O__Z(cero))))
-          } else {
-            var jsx$5 = false
-          };
-          if (jsx$5) {
-            i$11 = ((1 + i$11) | 0)
-          } else {
-            break
-          }
-        };
-        var n$2 = ((start + ((i$11 - start) | 0)) | 0);
-        var b$3 = ((n$2 >= fila.u.length) ? (-1) : n$2);
-        $as_sc_TraversableLike($m_sc_Seq$().apply__sc_Seq__sc_GenTraversable(new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_s_Tuple2$mcII$sp().init___I__I(a, b$3), new $c_s_Tuple2$mcII$sp().init___I__I(b$3, a)]))).withFilter__F1__scg_FilterMonadic(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(this$3$1) {
-          return (function(check$ifrefutable$1$2) {
-            var check$ifrefutable$1 = $as_T2(check$ifrefutable$1$2);
-            return (check$ifrefutable$1 !== null)
-          })
-        })(this))).withFilter__F1__scg_FilterMonadic(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(this$4$1) {
-          return (function(x$9$2) {
-            var x$9 = $as_T2(x$9$2);
-            if ((x$9 !== null)) {
-              var i1 = x$9.$$und1$mcI$sp__I();
-              var i2 = x$9.$$und2$mcI$sp__I();
-              return ((i1 !== (-1)) && (i2 !== (-1)))
-            } else {
-              throw new $c_s_MatchError().init___O(x$9)
-            }
-          })
-        })(this))).foreach__F1__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(this$5$1, fractional$1$1, variables$1, fila$1) {
-          return (function(x$10$2) {
-            var x$10 = $as_T2(x$10$2);
-            if ((x$10 !== null)) {
-              var i1$1 = x$10.$$und1$mcI$sp__I();
-              var i2$1 = x$10.$$und2$mcI$sp__I();
-              if ((variables$1.get(i1$1).isDefined__Z() && variables$1.get(i2$1).isEmpty__Z())) {
-                var lhs = fila$1.get(i1$1);
-                var factor = $as_Lecuacion_Racional(new $c_s_math_Fractional$FractionalOps().init___s_math_Fractional__O(fractional$1$1, lhs).$$div__O__O(fila$1.get(i2$1)));
-                var this$89 = variables$1.get(i1$1);
-                if (this$89.isEmpty__Z()) {
-                  var jsx$6 = $m_s_None$()
-                } else {
-                  var arg1$8 = this$89.get__O();
-                  var x$8 = $as_Lecuacion_Racional(arg1$8);
-                  var jsx$6 = new $c_s_Some().init___O($as_Lecuacion_Racional(new $c_s_math_Fractional$FractionalOps().init___s_math_Fractional__O(fractional$1$1, x$8).$$times__O__O(factor)))
-                };
-                variables$1.set(i2$1, jsx$6)
-              }
-            } else {
-              throw new $c_s_MatchError().init___O(x$10)
-            }
-          })
-        })(this, fractional, variables, fila)));
-        i$9 = ((1 + i$9) | 0)
-      }
-    } else {
-      break
-    }
-  };
-  var b$4 = new $c_scm_StringBuilder().init___();
+  var matrizDiagonalizada = new $c_Lecuacion_Mat().init___AO__s_math_Fractional__s_reflect_ClassTag(mat, fractional, new $c_s_reflect_ClassTag$GenericClassTag().init___jl_Class($d_Lecuacion_Racional.getClassOf())).diagonalize__Lecuacion_Explicador__Lecuacion_Mat(this.explicador$1);
+  var matDiag = $asArrayOf_Lecuacion_Racional(matrizDiagonalizada.valuesCopy__AO(), 2);
+  this.printM$1__p1__T__AO__V("Matriz diagonalizada:", matDiag);
+  var variables = matrizDiagonalizada.solveWithoutFreeTerms__O__As_Option(matrizDiagonalizada.uno$1);
+  var b$3 = new $c_scm_StringBuilder().init___();
   var elem$1$1 = false;
   elem$1$1 = true;
-  b$4.append__T__scm_StringBuilder("");
-  var i$12 = 0;
-  var len$10 = variables.u.length;
-  while ((i$12 < len$10)) {
-    var index$7 = i$12;
-    var arg1$9 = variables.get(index$7);
+  b$3.append__T__scm_StringBuilder("");
+  var i$6 = 0;
+  var len$6 = variables.u.length;
+  while ((i$6 < len$6)) {
+    var index$3 = i$6;
+    var arg1$4 = variables.get(index$3);
     if (elem$1$1) {
-      b$4.append__O__scm_StringBuilder(arg1$9);
+      b$3.append__O__scm_StringBuilder(arg1$4);
       elem$1$1 = false
     } else {
-      b$4.append__T__scm_StringBuilder(", ");
-      b$4.append__O__scm_StringBuilder(arg1$9)
+      b$3.append__T__scm_StringBuilder(", ");
+      b$3.append__O__scm_StringBuilder(arg1$4)
     };
-    i$12 = ((1 + i$12) | 0)
+    i$6 = ((1 + i$6) | 0)
   };
-  b$4.append__T__scm_StringBuilder("");
-  var s$2 = ("Variables fraccionadas:" + b$4.underlying$5.java$lang$StringBuilder$$content$f);
-  var this$95 = $m_s_Console$();
-  var this$96 = $as_Ljava_io_PrintStream(this$95.outVar$2.v$1);
-  this$96.java$lang$JSConsoleBasedPrintStream$$printString__T__V((s$2 + "\n"));
-  var elems$2$5 = null;
-  elems$2$5 = [];
+  b$3.append__T__scm_StringBuilder("");
+  var s$2 = ("Variables fraccionadas:" + b$3.underlying$5.java$lang$StringBuilder$$content$f);
+  var this$67 = $m_s_Console$();
+  var this$68 = $as_Ljava_io_PrintStream(this$67.outVar$2.v$1);
+  this$68.java$lang$JSConsoleBasedPrintStream$$printString__T__V((s$2 + "\n"));
+  var elems$2$4 = null;
+  elems$2$4 = [];
   var x1$2 = variables.u.length;
   switch (x1$2) {
     case (-1): {
       break
     }
   };
-  var i$13 = 0;
-  var len$11 = variables.u.length;
-  while ((i$13 < len$11)) {
-    var index$8 = i$13;
-    var arg1$10 = variables.get(index$8);
-    var x$11 = $as_s_Option(arg1$10);
-    var elem$5 = $as_Lecuacion_Racional(x$11.get__O());
-    var unboxedElem$2 = ((elem$5 === null) ? null : elem$5);
-    elems$2$5.push(unboxedElem$2);
-    i$13 = ((1 + i$13) | 0)
+  var i$7 = 0;
+  var len$7 = variables.u.length;
+  while ((i$7 < len$7)) {
+    var index$4 = i$7;
+    var arg1$5 = variables.get(index$4);
+    var x$4 = $as_s_Option(arg1$5);
+    var elem$4 = $as_Lecuacion_Racional(x$4.get__O());
+    var unboxedElem$2 = ((elem$4 === null) ? null : elem$4);
+    elems$2$4.push(unboxedElem$2);
+    i$7 = ((1 + i$7) | 0)
   };
-  var s$3 = $makeNativeArrayWrapper($d_Lecuacion_Racional.getArrayOf(), elems$2$5);
-  var jsx$7 = $m_Lecuacion_Racional$();
-  var this$107 = $m_s_Array$();
+  var s$3 = $makeNativeArrayWrapper($d_Lecuacion_Racional.getArrayOf(), elems$2$4);
+  var jsx$3 = $m_Lecuacion_Racional$();
+  var this$79 = $m_s_Array$();
   new $c_s_Predef$DummyImplicit().init___();
-  new $c_s_FallbackArrayBuilding$$anon$1().init___s_FallbackArrayBuilding(this$107);
-  var b$5 = $m_scm_ArraySeq$().newBuilder__scm_Builder();
+  new $c_s_FallbackArrayBuilding$$anon$1().init___s_FallbackArrayBuilding(this$79);
+  var b$4 = $m_scm_ArraySeq$().newBuilder__scm_Builder();
   var x1$3 = s$3.u.length;
   switch (x1$3) {
     case (-1): {
       break
     }
     default: {
-      b$5.sizeHint__I__V(x1$3)
+      b$4.sizeHint__I__V(x1$3)
     }
   };
-  var i$14 = 0;
-  var len$12 = s$3.u.length;
-  while ((i$14 < len$12)) {
-    var index$9 = i$14;
-    var arg1$11 = s$3.get(index$9);
-    var x$12 = $as_Lecuacion_Racional(arg1$11);
-    b$5.$$plus$eq__O__scm_Builder(x$12.den$1);
-    i$14 = ((1 + i$14) | 0)
+  var i$8 = 0;
+  var len$8 = s$3.u.length;
+  while ((i$8 < len$8)) {
+    var index$5 = i$8;
+    var arg1$6 = s$3.get(index$5);
+    var x$5 = $as_Lecuacion_Racional(arg1$6);
+    b$4.$$plus$eq__O__scm_Builder(x$5.den$1);
+    i$8 = ((1 + i$8) | 0)
   };
-  var mcm = jsx$7.mcm__sc_Seq__I($as_sc_Seq(b$5.result__O()));
-  var elems$2$6 = null;
-  elems$2$6 = [];
+  var mcm = jsx$3.mcm__sc_Seq__I($as_sc_Seq(b$4.result__O()));
+  var elems$2$5 = null;
+  elems$2$5 = [];
   var x1$4 = s$3.u.length;
   switch (x1$4) {
     case (-1): {
       break
     }
   };
-  var i$15 = 0;
-  var len$13 = s$3.u.length;
-  while ((i$15 < len$13)) {
-    var index$10 = i$15;
-    var arg1$12 = s$3.get(index$10);
-    var r = $as_Lecuacion_Racional(arg1$12);
-    var elem$6 = (($imul(r.num$1, mcm) / r.den$1) | 0);
-    elems$2$6.push(elem$6);
-    i$15 = ((1 + i$15) | 0)
+  var i$9 = 0;
+  var len$9 = s$3.u.length;
+  while ((i$9 < len$9)) {
+    var index$6 = i$9;
+    var arg1$7 = s$3.get(index$6);
+    var r = $as_Lecuacion_Racional(arg1$7);
+    var elem$5 = (($imul(r.num$1, mcm) / r.den$1) | 0);
+    elems$2$5.push(elem$5);
+    i$9 = ((1 + i$9) | 0)
   };
-  var xs$6 = $makeNativeArrayWrapper($d_I.getArrayOf(), elems$2$6);
-  var elems$2$7 = null;
-  elems$2$7 = [];
-  var x1$5 = xs$6.u.length;
+  var xs$5 = $makeNativeArrayWrapper($d_I.getArrayOf(), elems$2$5);
+  var elems$2$6 = null;
+  elems$2$6 = [];
+  var x1$5 = xs$5.u.length;
   switch (x1$5) {
     case (-1): {
       break
     }
   };
-  var i$16 = 0;
-  var len$14 = xs$6.u.length;
-  while ((i$16 < len$14)) {
-    var idx = i$16;
-    var arg1$13 = xs$6.get(idx);
-    var elem$7 = ((arg1$13 < 0) ? ((-arg1$13) | 0) : arg1$13);
-    elems$2$7.push(elem$7);
-    i$16 = ((1 + i$16) | 0)
+  var i$10 = 0;
+  var len$10 = xs$5.u.length;
+  while ((i$10 < len$10)) {
+    var idx = i$10;
+    var arg1$8 = xs$5.get(idx);
+    var elem$6 = ((arg1$8 < 0) ? ((-arg1$8) | 0) : arg1$8);
+    elems$2$6.push(elem$6);
+    i$10 = ((1 + i$10) | 0)
   };
-  var variablesEnteras = $makeNativeArrayWrapper($d_I.getArrayOf(), elems$2$7);
-  var b$6 = new $c_scm_StringBuilder().init___();
+  var variablesEnteras = $makeNativeArrayWrapper($d_I.getArrayOf(), elems$2$6);
+  var b$5 = new $c_scm_StringBuilder().init___();
   var elem$1$2 = false;
   elem$1$2 = true;
-  b$6.append__T__scm_StringBuilder("");
-  var i$17 = 0;
-  var len$15 = variablesEnteras.u.length;
-  while ((i$17 < len$15)) {
-    var idx$1 = i$17;
-    var arg1$14 = variablesEnteras.get(idx$1);
+  b$5.append__T__scm_StringBuilder("");
+  var i$11 = 0;
+  var len$11 = variablesEnteras.u.length;
+  while ((i$11 < len$11)) {
+    var idx$1 = i$11;
+    var arg1$9 = variablesEnteras.get(idx$1);
     if (elem$1$2) {
-      b$6.append__O__scm_StringBuilder(arg1$14);
+      b$5.append__O__scm_StringBuilder(arg1$9);
       elem$1$2 = false
     } else {
-      b$6.append__T__scm_StringBuilder(",");
-      b$6.append__O__scm_StringBuilder(arg1$14)
+      b$5.append__T__scm_StringBuilder(",");
+      b$5.append__O__scm_StringBuilder(arg1$9)
     };
-    i$17 = ((1 + i$17) | 0)
+    i$11 = ((1 + i$11) | 0)
   };
-  b$6.append__T__scm_StringBuilder("");
-  var s$4 = ("variablesEnteras:" + b$6.underlying$5.java$lang$StringBuilder$$content$f);
-  var this$135 = $m_s_Console$();
-  var this$136 = $as_Ljava_io_PrintStream(this$135.outVar$2.v$1);
-  this$136.java$lang$JSConsoleBasedPrintStream$$printString__T__V((s$4 + "\n"));
-  var n$3 = e.ladoIzquierdo$1.moleculas$1.size__I();
-  var x$4 = ((n$3 > 0) ? n$3 : 0);
+  b$5.append__T__scm_StringBuilder("");
+  var s$4 = ("variablesEnteras:" + b$5.underlying$5.java$lang$StringBuilder$$content$f);
+  var this$107 = $m_s_Console$();
+  var this$108 = $as_Ljava_io_PrintStream(this$107.outVar$2.v$1);
+  this$108.java$lang$JSConsoleBasedPrintStream$$printString__T__V((s$4 + "\n"));
+  var n = e.ladoIzquierdo$1.moleculas$1.size__I();
+  var x$6 = ((n > 0) ? n : 0);
   var y = variablesEnteras.u.length;
-  var hi = ((x$4 < y) ? x$4 : y);
+  var hi = ((x$6 < y) ? x$6 : y);
   var size$1 = ((hi > 0) ? hi : 0);
   var result$1 = $newArrayObject($d_I.getArrayOf(), [size$1]);
   if ((size$1 > 0)) {
     $m_s_Array$().copy__O__I__O__I__I__V(variablesEnteras, 0, result$1, 0, size$1)
   };
   var until = variablesEnteras.u.length;
-  var lo = ((n$3 > 0) ? n$3 : 0);
-  var x$13 = ((until > 0) ? until : 0);
+  var lo = ((n > 0) ? n : 0);
+  var x$7 = ((until > 0) ? until : 0);
   var y$1 = variablesEnteras.u.length;
-  var hi$1 = ((x$13 < y$1) ? x$13 : y$1);
-  var x$14 = ((hi$1 - lo) | 0);
-  var size$2 = ((x$14 > 0) ? x$14 : 0);
+  var hi$1 = ((x$7 < y$1) ? x$7 : y$1);
+  var x$8 = ((hi$1 - lo) | 0);
+  var size$2 = ((x$8 > 0) ? x$8 : 0);
   var result$2 = $newArrayObject($d_I.getArrayOf(), [size$2]);
   if ((size$2 > 0)) {
     $m_s_Array$().copy__O__I__O__I__I__V(variablesEnteras, lo, result$2, 0, size$2)
   };
-  var jsx$11 = e.ladoIzquierdo$1.moleculas$1;
-  var jsx$10 = $m_s_Predef$().wrapIntArray__AI__scm_WrappedArray(result$1);
-  var this$155 = $m_sc_Seq$();
-  var jsx$9 = $as_sc_TraversableLike(jsx$11.zip__sc_GenIterable__scg_CanBuildFrom__O(jsx$10, this$155.ReusableCBFInstance$2));
-  var jsx$8 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(this$9$1) {
+  var jsx$7 = e.ladoIzquierdo$1.moleculas$1;
+  var jsx$6 = $m_s_Predef$().wrapIntArray__AI__scm_WrappedArray(result$1);
+  var this$127 = $m_sc_Seq$();
+  var jsx$5 = $as_sc_TraversableLike(jsx$7.zip__sc_GenIterable__scg_CanBuildFrom__O(jsx$6, this$127.ReusableCBFInstance$2));
+  var jsx$4 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(this$6$1) {
     return (function(x0$4$2) {
       var x0$4 = $as_T2(x0$4$2);
       if ((x0$4 !== null)) {
@@ -2459,13 +2266,13 @@ $c_Lecuacion_AjustadorEcuacionMolecular$.prototype.ajustaAlgebraico__p1__Lecuaci
       }
     })
   })(this));
-  var this$156 = $m_sc_Seq$();
-  var li = $as_sc_Seq(jsx$9.map__F1__scg_CanBuildFrom__O(jsx$8, this$156.ReusableCBFInstance$2));
-  var jsx$15 = e.ladoDerecho$1.moleculas$1;
-  var jsx$14 = $m_s_Predef$().wrapIntArray__AI__scm_WrappedArray(result$2);
-  var this$157 = $m_sc_Seq$();
-  var jsx$13 = $as_sc_TraversableLike(jsx$15.zip__sc_GenIterable__scg_CanBuildFrom__O(jsx$14, this$157.ReusableCBFInstance$2));
-  var jsx$12 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(this$10$1) {
+  var this$128 = $m_sc_Seq$();
+  var li = $as_sc_Seq(jsx$5.map__F1__scg_CanBuildFrom__O(jsx$4, this$128.ReusableCBFInstance$2));
+  var jsx$11 = e.ladoDerecho$1.moleculas$1;
+  var jsx$10 = $m_s_Predef$().wrapIntArray__AI__scm_WrappedArray(result$2);
+  var this$129 = $m_sc_Seq$();
+  var jsx$9 = $as_sc_TraversableLike(jsx$11.zip__sc_GenIterable__scg_CanBuildFrom__O(jsx$10, this$129.ReusableCBFInstance$2));
+  var jsx$8 = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(this$7$1) {
     return (function(x0$5$2) {
       var x0$5 = $as_T2(x0$5$2);
       if ((x0$5 !== null)) {
@@ -2477,16 +2284,16 @@ $c_Lecuacion_AjustadorEcuacionMolecular$.prototype.ajustaAlgebraico__p1__Lecuaci
       }
     })
   })(this));
-  var this$158 = $m_sc_Seq$();
-  var ld = $as_sc_Seq(jsx$13.map__F1__scg_CanBuildFrom__O(jsx$12, this$158.ReusableCBFInstance$2));
+  var this$130 = $m_sc_Seq$();
+  var ld = $as_sc_Seq(jsx$9.map__F1__scg_CanBuildFrom__O(jsx$8, this$130.ReusableCBFInstance$2));
   $m_Lecuacion_EcuacionMolecular$();
   var li$1 = new $c_Lecuacion_EcuacionMolecular$LadoEcuacion().init___sc_Seq(li);
   var ld$1 = new $c_Lecuacion_EcuacionMolecular$LadoEcuacion().init___sc_Seq(ld);
   var ret = new $c_Lecuacion_EcuacionMolecular().init___Lecuacion_EcuacionMolecular$LadoEcuacion__Lecuacion_EcuacionMolecular$LadoEcuacion(li$1, ld$1);
   var s$5 = ("ret:" + ret.toString__T());
-  var this$161 = $m_s_Console$();
-  var this$162 = $as_Ljava_io_PrintStream(this$161.outVar$2.v$1);
-  this$162.java$lang$JSConsoleBasedPrintStream$$printString__T__V((s$5 + "\n"));
+  var this$133 = $m_s_Console$();
+  var this$134 = $as_Ljava_io_PrintStream(this$133.outVar$2.v$1);
+  this$134.java$lang$JSConsoleBasedPrintStream$$printString__T__V((s$5 + "\n"));
   $m_s_Predef$().assert__Z__V(ret.esAjustada__s_Option__Z($m_s_None$()));
   return new $c_s_Some().init___O(ret)
 });
@@ -2596,7 +2403,7 @@ function $h_Lecuacion_EcuacionMolecular$() {
 $h_Lecuacion_EcuacionMolecular$.prototype = $c_Lecuacion_EcuacionMolecular$.prototype;
 $c_Lecuacion_EcuacionMolecular$.prototype.init___ = (function() {
   $n_Lecuacion_EcuacionMolecular$ = this;
-  this.ejemplos$1 = $as_sc_Seq($m_sc_Seq$().apply__sc_Seq__sc_GenTraversable(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["H2+ O2 = H2O", "N2 +  H2  =   NH3", "H2O + Na  = Na(OH) + H2", "KClO3 = KCl + O2", "BaO2 + HCl = BaCl2 + H2O2", "H2SO4 + NaCl =  Na2SO4 + HCl", "FeS2 =  Fe3S4 + S2", "H2SO4 + C  =  H2O + SO2 + CO2", "SO2 + O2 =  SO3", "NaCl  = Na + Cl2", "HCl + MnO2 =  MnCl2 + H2O + Cl2", "K2CO3 + C =  CO + K", "Ag2SO4 + NaCl =  Na2SO4 + AgCl", "NaNO3 + KCl =  NaCl + KNO3", "Fe2O3 + CO =  CO2 + Fe", "Na2CO3 + H2O  + CO2 =  NaHCO3", "FeS2 + O2 = Fe2O3 + SO2", "Cr2O3 + Al =  Al2O3 + Cr", "Ag + HNO3 =  NO + H2O + AgNO3", "CuFeS2 + O2 =  SO2 + CuO + FeO", "Mg + H2SO4 = MgSO4 + H2", "C4H10 + O2 = CO2 + H2O", "CaCO3 = CaO + CO2", "Cd + HCl = CdCl2 + H2", "CO + O2 = CO2", "MgCO3 = CO2 + MgO", "C6H6 + O2 = CO2 + H2O", "Al + HCl = AlCl3 + H2", "ZnS + O2 = ZnO + SO2", "H2O + Na = Na(OH) + H2", "H(O(OH)2)2 + Fe2 = FeH2 + O2", "Na2SO4 + BaCl2 = NaCl + BaSO4", "FeS + O2 = Fe2O3 + SO2", "Al + H2SO4 = Al2(SO4)3 + H2", "N2 + H2 = NH3", "Na + H2O = NaOH + H2(g)", "H2S + O2 = SO2 + H2O", "C5H12 + O2 = CO2 + H2O", "(NH4)2SO4 + NaOH = Na2SO4 + NH3 + H2O", "HCl + MnO2 = Cl2 + MnCl2 + H2O", "Na2CO3 + HCl = NaCl + CO2 + H2O", "H2 + O2 = H2O", "H2SO4 + Al = Al2(SO4)3 + H2(g)", "NaCl + H2SO4 = Na2SO4 + HCl", "CaCO3 + HCl = CaCl2 + CO2 + H2O", "N2 + H2 = NH3", "NaClO3 = NaCl + O2", "C2 H4 + O2 = CO2 + H2 O", "Al2O3 + CO = Al + CO2", "C7H16 + O2 = CO2 + H2O", "K + H2O = KOH + H2", "(NH4)2S + HCl = NH4Cl + H2S", "Zn + HNO3 = Zn (NO3)2 + H2", "CaC2 + H2O = Ca(OH)2 + C2H2", "HCl + Al (OH)3 = Al Cl3 + H2O", "H3PO4 + Ca(OH)2 = Ca(H2 PO4)2 + H2O", "HCl + MnO2 = MnCl2 + Cl2 + H2O", "H2 SO4 + NH4 OH = (NH4)2SO4+ H2O", "HCl + Al2O3 = AlCl3 + H2O", "C15H32 + O2 = CO2 + H2O", "NH3 + O2 = NO + H2O", "ZnS + O2 = ZnO + SO2", "Fe2O3 + CO = CO2 + Fe", "HNO3 + Cu = Cu(NO3)2 + NO2 + H2O", "Na3P + H2O = PH3 + NaOH", "H3 PO4 + NaOH = Na3PO4 + H2O", "KClO3 = KCl + O2", "C5H12 + O2 = CO2 + H2O", "O2 + Cl2 = Cl2O", "C3H8 + O2 = CO2 + H2O", "K + H2O = KOH + H2", "Cu2O + H2 = Cu + H2O", "C9 H20 + O2 = CO2 + H2O", "2Cu(NO3)2= 2CuO + 4NO2 + O2", "2KOH + H2SO4= K2SO4 + 2H2O", "2Na + 2H2O = 2NaOH + H2", "C6H12  +   O2 =    CO2 +     H2O", "C6H12O6 + O2 = CO2 + H2O", "C3H8O + O2 = CO2 + H2O", "C4H10 + O2 = CO2 + H2O"])));
+  this.ejemplos$1 = $as_sc_Seq($m_sc_Seq$().apply__sc_Seq__sc_GenTraversable(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["H2+ O2 = H2O", "N2 +  H2  =   NH3", "H2O + Na  = Na(OH) + H2", "KClO3 = KCl + O2", "BaO2 + HCl = BaCl2 + H2O2", "H2SO4 + NaCl =  Na2SO4 + HCl", "FeS2 =  Fe3S4 + S2", "H2SO4 + C  =  H2O + SO2 + CO2", "SO2 + O2 =  SO3", "NaCl  = Na + Cl2", "HCl + MnO2 =  MnCl2 + H2O + Cl2", "K2CO3 + C =  CO + K", "Ag2SO4 + NaCl =  Na2SO4 + AgCl", "NaNO3 + KCl =  NaCl + KNO3", "Fe2O3 + CO =  CO2 + Fe", "Na2CO3 + H2O  + CO2 =  NaHCO3", "FeS2 + O2 = Fe2O3 + SO2", "Cr2O3 + Al =  Al2O3 + Cr", "Ag + HNO3 =  NO + H2O + AgNO3", "CuFeS2 + O2 =  SO2 + CuO + FeO", "Mg + H2SO4 = MgSO4 + H2", "C4H10 + O2 = CO2 + H2O", "CaCO3 = CaO + CO2", "Cd + HCl = CdCl2 + H2", "CO + O2 = CO2", "MgCO3 = CO2 + MgO", "C6H6 + O2 = CO2 + H2O", "Al + HCl = AlCl3 + H2", "ZnS + O2 = ZnO + SO2", "H2O + Na = Na(OH) + H2", "H(O(OH)2)2 + Fe2 = FeH2 + O2", "Na2SO4 + BaCl2 = NaCl + BaSO4", "FeS + O2 = Fe2O3 + SO2", "Al + H2SO4 = Al2(SO4)3 + H2", "N2 + H2 = NH3", "Na + H2O = NaOH + H2(g)", "H2S + O2 = SO2 + H2O", "C5H12 + O2 = CO2 + H2O", "(NH4)2SO4 + NaOH = Na2SO4 + NH3 + H2O", "HCl + MnO2 = Cl2 + MnCl2 + H2O", "Na2CO3 + HCl = NaCl + CO2 + H2O", "H2 + O2 = H2O", "H2SO4 + Al = Al2(SO4)3 + H2(g)", "NaCl + H2SO4 = Na2SO4 + HCl", "CaCO3 + HCl = CaCl2 + CO2 + H2O", "N2 + H2 = NH3", "NaClO3 = NaCl + O2", "C2 H4 + O2 = CO2 + H2 O", "Al2O3 + CO = Al + CO2", "C7H16 + O2 = CO2 + H2O", "K + H2O = KOH + H2", "(NH4)2S + HCl = NH4Cl + H2S", "Zn + HNO3 = Zn (NO3)2 + H2", "CaC2 + H2O = Ca(OH)2 + C2H2", "HCl + Al (OH)3 = Al Cl3 + H2O", "H3PO4 + Ca(OH)2 = Ca(H2 PO4)2 + H2O", "HCl + MnO2 = MnCl2 + Cl2 + H2O", "H2 SO4 + NH4 OH = (NH4)2SO4+ H2O", "HCl + Al2O3 = AlCl3 + H2O", "C15H32 + O2 = CO2 + H2O", "NH3 + O2 = NO + H2O", "ZnS + O2 = ZnO + SO2", "Fe2O3 + CO = CO2 + Fe", "HNO3 + Cu = Cu(NO3)2 + NO2 + H2O", "Na3P + H2O = PH3 + NaOH", "H3 PO4 + NaOH = Na3PO4 + H2O", "KClO3 = KCl + O2", "C5H12 + O2 = CO2 + H2O", "O2 + Cl2 = Cl2O", "C3H8 + O2 = CO2 + H2O", "K + H2O = KOH + H2", "Cu2O + H2 = Cu + H2O", "C9 H20 + O2 = CO2 + H2O", "2Cu(NO3)2= 2CuO + 4NO2 + O2", "2KOH + H2SO4= K2SO4 + 2H2O", "2Na + 2H2O = 2NaOH + H2", "C6H12  +   O2 =    CO2 +     H2O", "C6H12O6 + O2 = CO2 + H2O", "C3H8O + O2 = CO2 + H2O", "C4H10 + O2 = CO2 + H2O", "H2O = HO2"])));
   return this
 });
 $c_Lecuacion_EcuacionMolecular$.prototype.ecuacion$EcuacionMolecular$$sumaAtomos__sc_Seq__sci_Map = (function(l) {
@@ -2699,8 +2506,7 @@ $c_Lecuacion_EcuacionMolecularApp$.prototype.setupUI__V = (function() {
         var x2 = $as_s_util_Right(ec);
         var b = x2.value$2;
         var x$1 = $as_Lecuacion_EcuacionMolecular(b);
-        var this$1 = $m_Lecuacion_AjustadorEcuacionMolecular$();
-        var x1 = new $c_s_util_Right().init___O(this$1.ajustaAlgebraico__p1__Lecuacion_EcuacionMolecular__s_Option(x$1))
+        var x1 = new $c_s_util_Right().init___O($m_Lecuacion_AjustadorEcuacionMolecular$().apply__Lecuacion_EcuacionMolecular__I__s_Option(x$1, ($m_Lecuacion_AjustadorEcuacionMolecular$(), 30)))
       } else {
         var x1 = ec
       };
@@ -2732,7 +2538,7 @@ $c_Lecuacion_EcuacionMolecularApp$.prototype.setupUI__V = (function() {
       return ecuacionNormalizadaDiv$1.html(msg$2)
     })
   })(this, ecuacionNormalizadaDiv, ecuacionTex));
-  $m_Lecuacion_EcuacionMolecular$().ejemplos$1.foreach__F1__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(this$2$1, ejemplosDiv$1) {
+  $m_Lecuacion_EcuacionMolecular$().ejemplos$1.foreach__F1__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(this$2, ejemplosDiv$1) {
     return (function(e$2) {
       var e$1 = $as_T(e$2);
       var this$3 = $m_Lecuacion_EcuacionMolecular$().apply__T__s_util_Either(e$1);
@@ -2787,6 +2593,383 @@ function $m_Lecuacion_EcuacionMolecularApp$() {
   };
   return $n_Lecuacion_EcuacionMolecularApp$
 }
+/** @constructor */
+function $c_Lecuacion_Mat() {
+  $c_O.call(this);
+  this.values$1 = null;
+  this.fractional$1 = null;
+  this.ct$1 = null;
+  this.uno$1 = null;
+  this.menosuno$1 = null;
+  this.cero$1 = null;
+  this.rows$1 = null;
+  this.columns$1 = null
+}
+$c_Lecuacion_Mat.prototype = new $h_O();
+$c_Lecuacion_Mat.prototype.constructor = $c_Lecuacion_Mat;
+/** @constructor */
+function $h_Lecuacion_Mat() {
+  /*<skip>*/
+}
+$h_Lecuacion_Mat.prototype = $c_Lecuacion_Mat.prototype;
+$c_Lecuacion_Mat.prototype.solveWithoutFreeTerms__O__As_Option = (function(firstVariableHint) {
+  var matDiag = this.valuesCopy__AO();
+  var this$1 = $m_s_Predef$().genericArrayOps__O__scm_ArrayOps(matDiag.get(0));
+  var n = this$1.length__I();
+  var elems$2 = null;
+  elems$2 = [];
+  var i = 0;
+  while ((i < n)) {
+    var elem = $m_s_None$();
+    elems$2.push(elem);
+    i = ((1 + i) | 0)
+  };
+  var variables = $makeNativeArrayWrapper($d_s_Option.getArrayOf(), elems$2);
+  variables.set(0, new $c_s_Some().init___O(this.uno$1));
+  var changed = new $c_sr_BooleanRef().init___Z(true);
+  while (changed.elem$1) {
+    changed.elem$1 = false;
+    var i$1 = 0;
+    var len = matDiag.u.length;
+    while ((i$1 < len)) {
+      var index = i$1;
+      var arg1 = matDiag.get(index);
+      var this$10 = $m_s_Predef$().genericArrayOps__O__scm_ArrayOps(arg1);
+      var len$1 = this$10.length__I();
+      var i$2 = 0;
+      while (true) {
+        if ((i$2 < len$1)) {
+          var arg1$1 = this$10.apply__I__O(i$2);
+          var jsx$1 = $m_sr_BoxesRunTime$().equals__O__O__Z(arg1$1, this.cero$1)
+        } else {
+          var jsx$1 = false
+        };
+        if (jsx$1) {
+          i$2 = ((1 + i$2) | 0)
+        } else {
+          break
+        }
+      };
+      var n$1 = i$2;
+      var a = $f_sc_IndexedSeqOptimized__negLength__psc_IndexedSeqOptimized__I__I(this$10, n$1);
+      var this$13 = $m_s_Predef$().genericArrayOps__O__scm_ArrayOps(arg1);
+      var from = ((1 + a) | 0);
+      var start = ((from > 0) ? from : 0);
+      var len$2 = this$13.length__I();
+      var i$3 = start;
+      while (true) {
+        if ((i$3 < len$2)) {
+          var arg1$2 = this$13.apply__I__O(i$3);
+          var jsx$2 = $m_sr_BoxesRunTime$().equals__O__O__Z(arg1$2, this.cero$1)
+        } else {
+          var jsx$2 = false
+        };
+        if (jsx$2) {
+          i$3 = ((1 + i$3) | 0)
+        } else {
+          break
+        }
+      };
+      var n$2 = ((start + ((i$3 - start) | 0)) | 0);
+      var b = $f_sc_IndexedSeqOptimized__negLength__psc_IndexedSeqOptimized__I__I(this$13, n$2);
+      $as_sc_TraversableLike($m_sc_Seq$().apply__sc_Seq__sc_GenTraversable(new $c_sjs_js_WrappedArray().init___sjs_js_Array([new $c_s_Tuple2$mcII$sp().init___I__I(a, b), new $c_s_Tuple2$mcII$sp().init___I__I(b, a)]))).withFilter__F1__scg_FilterMonadic(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(this$3$1) {
+        return (function(check$ifrefutable$1$2) {
+          var check$ifrefutable$1 = $as_T2(check$ifrefutable$1$2);
+          return (check$ifrefutable$1 !== null)
+        })
+      })(this))).withFilter__F1__scg_FilterMonadic(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(this$4$1) {
+        return (function(x$12$2) {
+          var x$12 = $as_T2(x$12$2);
+          if ((x$12 !== null)) {
+            var i1 = x$12.$$und1$mcI$sp__I();
+            var i2 = x$12.$$und2$mcI$sp__I();
+            return ((i1 !== (-1)) && (i2 !== (-1)))
+          } else {
+            throw new $c_s_MatchError().init___O(x$12)
+          }
+        })
+      })(this))).foreach__F1__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(this$5$1, variables$1, changed$1, fila) {
+        return (function(x$13$2) {
+          var x$13 = $as_T2(x$13$2);
+          if ((x$13 !== null)) {
+            var i1$1 = x$13.$$und1$mcI$sp__I();
+            var i2$1 = x$13.$$und2$mcI$sp__I();
+            if ((variables$1.get(i1$1).isDefined__Z() && variables$1.get(i2$1).isEmpty__Z())) {
+              var this$16 = this$5$1.fractional$1;
+              var lhs = $m_sr_ScalaRunTime$().array$undapply__O__I__O(fila, i1$1);
+              var factor = new $c_s_math_Fractional$FractionalOps().init___s_math_Fractional__O(this$16, lhs).$$div__O__O($m_sr_ScalaRunTime$().array$undapply__O__I__O(fila, i2$1));
+              var this$17 = variables$1.get(i1$1);
+              if (this$17.isEmpty__Z()) {
+                var jsx$3 = $m_s_None$()
+              } else {
+                var arg1$3 = this$17.get__O();
+                var this$19 = this$5$1.fractional$1;
+                var this$18 = this$5$1.fractional$1;
+                var lhs$1 = new $c_s_math_Fractional$FractionalOps().init___s_math_Fractional__O(this$18, arg1$3).unary$und$minus__O();
+                var jsx$3 = new $c_s_Some().init___O(new $c_s_math_Fractional$FractionalOps().init___s_math_Fractional__O(this$19, lhs$1).$$times__O__O(factor))
+              };
+              variables$1.set(i2$1, jsx$3);
+              changed$1.elem$1 = true
+            }
+          } else {
+            throw new $c_s_MatchError().init___O(x$13)
+          }
+        })
+      })(this, variables, changed, arg1)));
+      i$1 = ((1 + i$1) | 0)
+    }
+  };
+  return variables
+});
+$c_Lecuacion_Mat.prototype.valuesCopy__AO = (function() {
+  var n1 = this.rows$1.size__I();
+  var n2 = this.columns$1.size__I();
+  var evidence$15 = this.ct$1;
+  var jsx$2 = $m_s_reflect_ClassTag$();
+  var clazz = evidence$15.runtimeClass__jl_Class();
+  if (((clazz !== null) && (clazz === $d_V.getClassOf()))) {
+    var jsx$1 = $d_sr_BoxedUnit.getArrayOf().getClassOf()
+  } else {
+    var this$3 = $m_jl_reflect_Array$().newInstance__jl_Class__I__O(clazz, 0);
+    var jsx$1 = $objectGetClass(this$3)
+  };
+  var evidence$14 = jsx$2.apply__jl_Class__s_reflect_ClassTag(jsx$1);
+  var elems$2 = null;
+  var elementClass = evidence$14.runtimeClass__jl_Class();
+  var isCharArrayBuilder$2 = (elementClass === $d_C.getClassOf());
+  elems$2 = [];
+  var i = 0;
+  while ((i < n1)) {
+    var arg1 = i;
+    var elems$2$1 = null;
+    var elementClass$1 = evidence$15.runtimeClass__jl_Class();
+    var isCharArrayBuilder$2$1 = (elementClass$1 === $d_C.getClassOf());
+    elems$2$1 = [];
+    var i$1 = 0;
+    while ((i$1 < n2)) {
+      var arg1$1 = i$1;
+      var elem = $as_sc_SeqLike(this.values$1.apply__I__O(arg1)).apply__I__O(arg1$1);
+      if (isCharArrayBuilder$2$1) {
+        if ((elem === null)) {
+          var unboxedElem = 0
+        } else {
+          var this$10 = $as_jl_Character(elem);
+          var unboxedElem = this$10.value$1
+        }
+      } else {
+        var unboxedElem = ((elem === null) ? elementClass$1.data$1.zero : elem)
+      };
+      elems$2$1.push(unboxedElem);
+      i$1 = ((1 + i$1) | 0)
+    };
+    var elemRuntimeClass = ((elementClass$1 === $d_V.getClassOf()) ? $d_sr_BoxedUnit.getClassOf() : (((elementClass$1 === $d_sr_Null$.getClassOf()) || (elementClass$1 === $d_sr_Nothing$.getClassOf())) ? $d_O.getClassOf() : elementClass$1));
+    var elem$1 = $makeNativeArrayWrapper(elemRuntimeClass.data$1.getArrayOf(), elems$2$1);
+    if (isCharArrayBuilder$2) {
+      var this$12 = $as_jl_Character(elem$1);
+      var unboxedElem$1 = this$12.value$1
+    } else {
+      var unboxedElem$1 = elem$1
+    };
+    elems$2.push(unboxedElem$1);
+    i = ((1 + i) | 0)
+  };
+  var elemRuntimeClass$1 = ((elementClass === $d_V.getClassOf()) ? $d_sr_BoxedUnit.getClassOf() : (((elementClass === $d_sr_Null$.getClassOf()) || (elementClass === $d_sr_Nothing$.getClassOf())) ? $d_O.getClassOf() : elementClass));
+  return $asArrayOf_O($makeNativeArrayWrapper(elemRuntimeClass$1.data$1.getArrayOf(), elems$2), 1)
+});
+$c_Lecuacion_Mat.prototype.init___sc_IndexedSeq__s_math_Fractional__s_reflect_ClassTag = (function(values, fractional, ct) {
+  this.values$1 = values;
+  this.fractional$1 = fractional;
+  this.ct$1 = ct;
+  $m_s_Predef$().assert__Z__V(values.forall__F1__Z(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this) {
+    return (function(x$8$2) {
+      var x$8 = $as_sc_IndexedSeq(x$8$2);
+      return (x$8.size__I() === $as_sc_SeqLike($this.values$1.apply__I__O(0)).size__I())
+    })
+  })(this))));
+  this.uno$1 = new $c_Lecuacion_Racional().init___I__I(1, 1);
+  this.menosuno$1 = new $c_Lecuacion_Racional().init___I__I((-1), 1);
+  this.cero$1 = new $c_Lecuacion_Racional().init___I__I(0, 1);
+  this.rows$1 = values;
+  var end = $as_sc_SeqLike(this.rows$1.apply__I__O(0)).size__I();
+  var isEmpty$4 = (end <= 0);
+  if (isEmpty$4) {
+    var scala$collection$immutable$Range$$numRangeElements$4 = 0
+  } else {
+    var hi = (end >> 31);
+    var scala$collection$immutable$Range$$numRangeElements$4 = (((hi === 0) ? (((-2147483648) ^ end) > (-1)) : (hi > 0)) ? (-1) : end)
+  };
+  var scala$collection$immutable$Range$$lastElement$4 = (((-1) + end) | 0);
+  $m_sci_IndexedSeq$();
+  $m_sc_IndexedSeq$();
+  $m_sci_IndexedSeq$();
+  $m_sci_Vector$();
+  var b = new $c_sci_VectorBuilder().init___();
+  if ((scala$collection$immutable$Range$$numRangeElements$4 < 0)) {
+    $m_sci_Range$().scala$collection$immutable$Range$$fail__I__I__I__Z__sr_Nothing$(0, end, 1, false)
+  };
+  switch (scala$collection$immutable$Range$$numRangeElements$4) {
+    case (-1): {
+      break
+    }
+  };
+  if ((!isEmpty$4)) {
+    var i = 0;
+    while (true) {
+      var arg1 = i;
+      var end$1 = this.rows$1.size__I();
+      var this$14 = new $c_sci_Range().init___I__I__I(0, end$1, 1);
+      var f = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this$1, c) {
+        return (function(r$2) {
+          var r = $uI(r$2);
+          return $as_sc_SeqLike($this$1.values$1.apply__I__O(r)).apply__I__O(c)
+        })
+      })(this, arg1));
+      $m_sci_IndexedSeq$();
+      var bf$1 = $m_sc_IndexedSeq$().ReusableCBF$6;
+      var elem = $as_sci_IndexedSeq($f_sc_TraversableLike__map__F1__scg_CanBuildFrom__O(this$14, f, bf$1));
+      b.$$plus$eq__O__sci_VectorBuilder(elem);
+      if ((i === scala$collection$immutable$Range$$lastElement$4)) {
+        break
+      };
+      i = ((1 + i) | 0)
+    }
+  };
+  this.columns$1 = b.result__sci_Vector();
+  return this
+});
+$c_Lecuacion_Mat.prototype.diagonalize__Lecuacion_Explicador__Lecuacion_Mat = (function(exp) {
+  var m = this.valuesCopy__AO();
+  var this$1 = $m_s_Predef$().genericArrayOps__O__scm_ArrayOps(m.get(0));
+  var x = this$1.length__I();
+  var that = m.u.length;
+  var columns = ((x < that) ? x : that);
+  var isEmpty$4 = (columns <= 0);
+  var scala$collection$immutable$Range$$lastElement$4 = (((-1) + columns) | 0);
+  if ((!isEmpty$4)) {
+    var i = 0;
+    while (true) {
+      var v1 = i;
+      var len = m.u.length;
+      var i$1 = 0;
+      while (true) {
+        if ((i$1 < len)) {
+          var index = i$1;
+          var arg1 = m.get(index);
+          var noEsCero = (!$m_sr_BoxesRunTime$().equals__O__O__Z($m_sr_ScalaRunTime$().array$undapply__O__I__O(arg1, v1), this.cero$1));
+          var this$16 = $m_s_Predef$().genericArrayOps__O__scm_ArrayOps(arg1);
+          var anteriores = $f_scm_ArrayOps__slice__I__I__O(this$16, 0, v1);
+          var this$17 = $m_s_Predef$().genericArrayOps__O__scm_ArrayOps(anteriores);
+          var i$2 = 0;
+          while (true) {
+            if ((i$2 < this$17.length__I())) {
+              var arg1$1 = this$17.apply__I__O(i$2);
+              var jsx$2 = ($m_sr_BoxesRunTime$().equals__O__O__Z(arg1$1, this.cero$1) === true)
+            } else {
+              var jsx$2 = false
+            };
+            if (jsx$2) {
+              i$2 = ((1 + i$2) | 0)
+            } else {
+              break
+            }
+          };
+          var anterioresCero = (i$2 === this$17.length__I());
+          var jsx$1 = (!(noEsCero && anterioresCero))
+        } else {
+          var jsx$1 = false
+        };
+        if (jsx$1) {
+          i$1 = ((1 + i$1) | 0)
+        } else {
+          break
+        }
+      };
+      var n = i$1;
+      var fil = ((n >= m.u.length) ? (-1) : n);
+      var a = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["Para diagonalizar la columna ", ", utilizaremos la fila ", ""])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([v1, fil]));
+      $m_Lecuacion_AjustadorEcuacionMolecular$();
+      var this$21 = $m_s_Console$();
+      var this$22 = $as_Ljava_io_PrintStream(this$21.outVar$2.v$1);
+      this$22.java$lang$JSConsoleBasedPrintStream$$printString__T__V((a + "\n"));
+      var end = m.u.length;
+      var this$28 = new $c_sci_Range().init___I__I__I(0, end, 1);
+      var p = new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(this$2$1, fil$1) {
+        return (function(f$2) {
+          var f = $uI(f$2);
+          return ((f !== fil$1) && (fil$1 !== (-1)))
+        })
+      })(this, fil));
+      new $c_sc_TraversableLike$WithFilter().init___sc_TraversableLike__F1(this$28, p).foreach__F1__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function(this$3$1, m$1, fil$2, col) {
+        return (function(f$3$2) {
+          var f$3 = $uI(f$3$2);
+          var this$29 = this$3$1.fractional$1;
+          var lhs = $m_sr_ScalaRunTime$().array$undapply__O__I__O(m$1.get(f$3), col);
+          var factor = new $c_s_math_Fractional$FractionalOps().init___s_math_Fractional__O(this$29, lhs).$$div__O__O($m_sr_ScalaRunTime$().array$undapply__O__I__O(m$1.get(fil$2), col));
+          var this$31 = $m_s_Predef$().genericArrayOps__O__scm_ArrayOps(m$1.get(0));
+          var end$1 = this$31.length__I();
+          var isEmpty$4$1 = (col >= end$1);
+          var scala$collection$immutable$Range$$lastElement$4$1 = (((-1) + end$1) | 0);
+          if ((!isEmpty$4$1)) {
+            var i$3 = col;
+            while (true) {
+              var v1$1 = i$3;
+              var jsx$5 = $m_sr_ScalaRunTime$();
+              var jsx$4 = m$1.get(f$3);
+              var this$37 = this$3$1.fractional$1;
+              var lhs$1 = $m_sr_ScalaRunTime$().array$undapply__O__I__O(m$1.get(f$3), v1$1);
+              var jsx$3 = new $c_s_math_Fractional$FractionalOps().init___s_math_Fractional__O(this$37, lhs$1);
+              var this$38 = this$3$1.fractional$1;
+              var lhs$2 = $m_sr_ScalaRunTime$().array$undapply__O__I__O(m$1.get(fil$2), v1$1);
+              jsx$5.array$undupdate__O__I__O__V(jsx$4, v1$1, jsx$3.$$minus__O__O(new $c_s_math_Fractional$FractionalOps().init___s_math_Fractional__O(this$38, lhs$2).$$times__O__O(factor)));
+              if ((i$3 === scala$collection$immutable$Range$$lastElement$4$1)) {
+                break
+              };
+              i$3 = ((1 + i$3) | 0)
+            }
+          }
+        })
+      })(this, m, fil, v1)));
+      if ((i === scala$collection$immutable$Range$$lastElement$4)) {
+        break
+      };
+      i = ((1 + i) | 0)
+    }
+  };
+  return new $c_Lecuacion_Mat().init___AO__s_math_Fractional__s_reflect_ClassTag(m, this.fractional$1, this.ct$1)
+});
+$c_Lecuacion_Mat.prototype.init___AO__s_math_Fractional__s_reflect_ClassTag = (function(a, f, ct) {
+  var jsx$1 = $m_s_Predef$();
+  var elems$2 = null;
+  elems$2 = [];
+  var x1 = a.u.length;
+  switch (x1) {
+    case (-1): {
+      break
+    }
+  };
+  var i = 0;
+  var len = a.u.length;
+  while ((i < len)) {
+    var index = i;
+    var arg1 = a.get(index);
+    var this$9 = $m_s_Predef$().genericArrayOps__O__scm_ArrayOps(arg1);
+    var this$10 = $m_s_Predef$();
+    var cbf = new $c_s_LowPriorityImplicits$$anon$4().init___s_LowPriorityImplicits(this$10);
+    var elem = $as_sci_IndexedSeq($f_sc_TraversableLike__to__scg_CanBuildFrom__O(this$9, cbf));
+    var unboxedElem = ((elem === null) ? null : elem);
+    elems$2.push(unboxedElem);
+    i = ((1 + i) | 0)
+  };
+  $c_Lecuacion_Mat.prototype.init___sc_IndexedSeq__s_math_Fractional__s_reflect_ClassTag.call(this, jsx$1.wrapRefArray__AO__scm_WrappedArray($makeNativeArrayWrapper($d_sci_IndexedSeq.getArrayOf(), elems$2)), f, ct);
+  return this
+});
+var $d_Lecuacion_Mat = new $TypeData().initClass({
+  Lecuacion_Mat: 0
+}, false, "ecuacion.Mat", {
+  Lecuacion_Mat: 1,
+  O: 1
+});
+$c_Lecuacion_Mat.prototype.$classData = $d_Lecuacion_Mat;
 /** @constructor */
 function $c_Lecuacion_Racional() {
   $c_O.call(this);
@@ -3618,6 +3801,9 @@ $h_s_math_Numeric$Ops.prototype = $c_s_math_Numeric$Ops.prototype;
 $c_s_math_Numeric$Ops.prototype.$$times__O__O = (function(rhs) {
   return this.$$outer$1.times__O__O__O(this.lhs$1, rhs)
 });
+$c_s_math_Numeric$Ops.prototype.unary$und$minus__O = (function() {
+  return this.$$outer$1.negate__O__O(this.lhs$1)
+});
 $c_s_math_Numeric$Ops.prototype.init___s_math_Numeric__O = (function($$outer, lhs) {
   this.lhs$1 = lhs;
   if (($$outer === null)) {
@@ -3907,6 +4093,52 @@ var $d_s_util_control_Breaks = new $TypeData().initClass({
   O: 1
 });
 $c_s_util_control_Breaks.prototype.$classData = $d_s_util_control_Breaks;
+function $is_s_util_control_ControlThrowable(obj) {
+  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.s_util_control_ControlThrowable)))
+}
+function $as_s_util_control_ControlThrowable(obj) {
+  return (($is_s_util_control_ControlThrowable(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "scala.util.control.ControlThrowable"))
+}
+function $isArrayOf_s_util_control_ControlThrowable(obj, depth) {
+  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.s_util_control_ControlThrowable)))
+}
+function $asArrayOf_s_util_control_ControlThrowable(obj, depth) {
+  return (($isArrayOf_s_util_control_ControlThrowable(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lscala.util.control.ControlThrowable;", depth))
+}
+/** @constructor */
+function $c_s_util_control_NonFatal$() {
+  $c_O.call(this)
+}
+$c_s_util_control_NonFatal$.prototype = new $h_O();
+$c_s_util_control_NonFatal$.prototype.constructor = $c_s_util_control_NonFatal$;
+/** @constructor */
+function $h_s_util_control_NonFatal$() {
+  /*<skip>*/
+}
+$h_s_util_control_NonFatal$.prototype = $c_s_util_control_NonFatal$.prototype;
+$c_s_util_control_NonFatal$.prototype.init___ = (function() {
+  return this
+});
+$c_s_util_control_NonFatal$.prototype.apply__jl_Throwable__Z = (function(t) {
+  return (!($is_jl_VirtualMachineError(t) || ($is_jl_ThreadDeath(t) || ($is_jl_InterruptedException(t) || ($is_jl_LinkageError(t) || $is_s_util_control_ControlThrowable(t))))))
+});
+$c_s_util_control_NonFatal$.prototype.unapply__jl_Throwable__s_Option = (function(t) {
+  return (this.apply__jl_Throwable__Z(t) ? new $c_s_Some().init___O(t) : $m_s_None$())
+});
+var $d_s_util_control_NonFatal$ = new $TypeData().initClass({
+  s_util_control_NonFatal$: 0
+}, false, "scala.util.control.NonFatal$", {
+  s_util_control_NonFatal$: 1,
+  O: 1
+});
+$c_s_util_control_NonFatal$.prototype.$classData = $d_s_util_control_NonFatal$;
+var $n_s_util_control_NonFatal$ = (void 0);
+function $m_s_util_control_NonFatal$() {
+  if ((!$n_s_util_control_NonFatal$)) {
+    $n_s_util_control_NonFatal$ = new $c_s_util_control_NonFatal$().init___()
+  };
+  return $n_s_util_control_NonFatal$
+}
 /** @constructor */
 function $c_s_util_hashing_MurmurHash3() {
   $c_O.call(this)
@@ -6057,6 +6289,28 @@ function $m_sr_Statics$() {
   return $n_sr_Statics$
 }
 /** @constructor */
+function $c_Lecuacion_AjustadorEcuacionMolecular$$anon$1() {
+  $c_O.call(this)
+}
+$c_Lecuacion_AjustadorEcuacionMolecular$$anon$1.prototype = new $h_O();
+$c_Lecuacion_AjustadorEcuacionMolecular$$anon$1.prototype.constructor = $c_Lecuacion_AjustadorEcuacionMolecular$$anon$1;
+/** @constructor */
+function $h_Lecuacion_AjustadorEcuacionMolecular$$anon$1() {
+  /*<skip>*/
+}
+$h_Lecuacion_AjustadorEcuacionMolecular$$anon$1.prototype = $c_Lecuacion_AjustadorEcuacionMolecular$$anon$1.prototype;
+$c_Lecuacion_AjustadorEcuacionMolecular$$anon$1.prototype.init___ = (function() {
+  return this
+});
+var $d_Lecuacion_AjustadorEcuacionMolecular$$anon$1 = new $TypeData().initClass({
+  Lecuacion_AjustadorEcuacionMolecular$$anon$1: 0
+}, false, "ecuacion.AjustadorEcuacionMolecular$$anon$1", {
+  Lecuacion_AjustadorEcuacionMolecular$$anon$1: 1,
+  O: 1,
+  Lecuacion_Explicador: 1
+});
+$c_Lecuacion_AjustadorEcuacionMolecular$$anon$1.prototype.$classData = $d_Lecuacion_AjustadorEcuacionMolecular$$anon$1;
+/** @constructor */
 function $c_jl_Number() {
   $c_O.call(this)
 }
@@ -6755,17 +7009,17 @@ $c_s_util_parsing_combinator_Parsers$Parser.prototype.append__F0__s_util_parsing
   })(this, p0, p$lzy));
   return new $c_s_util_parsing_combinator_Parsers$$anon$3().init___s_util_parsing_combinator_Parsers__F1(this$1, f)
 });
-$c_s_util_parsing_combinator_Parsers$Parser.prototype.p$8__p1__F0__sr_LazyRef__s_util_parsing_combinator_Parsers$Parser = (function(q$3, p$lzy$4) {
-  return (p$lzy$4.$$undinitialized$1 ? $as_s_util_parsing_combinator_Parsers$Parser(p$lzy$4.$$undvalue$1) : this.p$lzycompute$4__p1__F0__sr_LazyRef__s_util_parsing_combinator_Parsers$Parser(q$3, p$lzy$4))
+$c_s_util_parsing_combinator_Parsers$Parser.prototype.p$8__p1__F0__sr_LazyRef__s_util_parsing_combinator_Parsers$Parser = (function(q$2, p$lzy$4) {
+  return (p$lzy$4.$$undinitialized$1 ? $as_s_util_parsing_combinator_Parsers$Parser(p$lzy$4.$$undvalue$1) : this.p$lzycompute$4__p1__F0__sr_LazyRef__s_util_parsing_combinator_Parsers$Parser(q$2, p$lzy$4))
 });
 $c_s_util_parsing_combinator_Parsers$Parser.prototype.$$up$up__F1__s_util_parsing_combinator_Parsers$Parser = (function(f) {
   return this.map__F1__s_util_parsing_combinator_Parsers$Parser(f).named__T__s_util_parsing_combinator_Parsers$Parser((this.toString__T() + "^^"))
 });
-$c_s_util_parsing_combinator_Parsers$Parser.prototype.p$lzycompute$4__p1__F0__sr_LazyRef__s_util_parsing_combinator_Parsers$Parser = (function(q$3, p$lzy$4) {
+$c_s_util_parsing_combinator_Parsers$Parser.prototype.p$lzycompute$4__p1__F0__sr_LazyRef__s_util_parsing_combinator_Parsers$Parser = (function(q$2, p$lzy$4) {
   if ((p$lzy$4 === null)) {
     throw new $c_jl_NullPointerException().init___()
   };
-  return (p$lzy$4.$$undinitialized$1 ? $as_s_util_parsing_combinator_Parsers$Parser(p$lzy$4.$$undvalue$1) : $as_s_util_parsing_combinator_Parsers$Parser(p$lzy$4.initialize__O__O(q$3.apply__O())))
+  return (p$lzy$4.$$undinitialized$1 ? $as_s_util_parsing_combinator_Parsers$Parser(p$lzy$4.$$undvalue$1) : $as_s_util_parsing_combinator_Parsers$Parser(p$lzy$4.initialize__O__O(q$2.apply__O())))
 });
 $c_s_util_parsing_combinator_Parsers$Parser.prototype.$$tilde$greater__F0__s_util_parsing_combinator_Parsers$Parser = (function(q) {
   var p$lzy = new $c_sr_LazyRef().init___();
@@ -6819,8 +7073,8 @@ $c_s_util_parsing_combinator_Parsers$Parser.prototype.$$tilde__F0__s_util_parsin
     })
   })(this, q, p$lzy))).named__T__s_util_parsing_combinator_Parsers$Parser("~")
 });
-$c_s_util_parsing_combinator_Parsers$Parser.prototype.p$6__p1__F0__sr_LazyRef__s_util_parsing_combinator_Parsers$Parser = (function(q$2, p$lzy$2) {
-  return (p$lzy$2.$$undinitialized$1 ? $as_s_util_parsing_combinator_Parsers$Parser(p$lzy$2.$$undvalue$1) : this.p$lzycompute$2__p1__F0__sr_LazyRef__s_util_parsing_combinator_Parsers$Parser(q$2, p$lzy$2))
+$c_s_util_parsing_combinator_Parsers$Parser.prototype.p$6__p1__F0__sr_LazyRef__s_util_parsing_combinator_Parsers$Parser = (function(q$3, p$lzy$2) {
+  return (p$lzy$2.$$undinitialized$1 ? $as_s_util_parsing_combinator_Parsers$Parser(p$lzy$2.$$undvalue$1) : this.p$lzycompute$2__p1__F0__sr_LazyRef__s_util_parsing_combinator_Parsers$Parser(q$3, p$lzy$2))
 });
 $c_s_util_parsing_combinator_Parsers$Parser.prototype.flatMap__F1__s_util_parsing_combinator_Parsers$Parser = (function(f) {
   var this$1 = this.$$outer$1;
@@ -6832,11 +7086,11 @@ $c_s_util_parsing_combinator_Parsers$Parser.prototype.flatMap__F1__s_util_parsin
   })(this, f));
   return new $c_s_util_parsing_combinator_Parsers$$anon$3().init___s_util_parsing_combinator_Parsers__F1(this$1, f$2)
 });
-$c_s_util_parsing_combinator_Parsers$Parser.prototype.p$lzycompute$2__p1__F0__sr_LazyRef__s_util_parsing_combinator_Parsers$Parser = (function(q$2, p$lzy$2) {
+$c_s_util_parsing_combinator_Parsers$Parser.prototype.p$lzycompute$2__p1__F0__sr_LazyRef__s_util_parsing_combinator_Parsers$Parser = (function(q$3, p$lzy$2) {
   if ((p$lzy$2 === null)) {
     throw new $c_jl_NullPointerException().init___()
   };
-  return (p$lzy$2.$$undinitialized$1 ? $as_s_util_parsing_combinator_Parsers$Parser(p$lzy$2.$$undvalue$1) : $as_s_util_parsing_combinator_Parsers$Parser(p$lzy$2.initialize__O__O(q$2.apply__O())))
+  return (p$lzy$2.$$undinitialized$1 ? $as_s_util_parsing_combinator_Parsers$Parser(p$lzy$2.$$undvalue$1) : $as_s_util_parsing_combinator_Parsers$Parser(p$lzy$2.initialize__O__O(q$3.apply__O())))
 });
 $c_s_util_parsing_combinator_Parsers$Parser.prototype.p$5__p1__F0__sr_LazyRef__s_util_parsing_combinator_Parsers$Parser = (function(p0$2, p$lzy$1) {
   return (p$lzy$1.$$undinitialized$1 ? $as_s_util_parsing_combinator_Parsers$Parser(p$lzy$1.$$undvalue$1) : this.p$lzycompute$1__p1__F0__sr_LazyRef__s_util_parsing_combinator_Parsers$Parser(p0$2, p$lzy$1))
@@ -10036,6 +10290,30 @@ var $d_jl_Integer = new $TypeData().initClass({
 }, (void 0), (void 0), (function(x) {
   return $isInt(x)
 }));
+function $is_jl_InterruptedException(obj) {
+  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.jl_InterruptedException)))
+}
+function $as_jl_InterruptedException(obj) {
+  return (($is_jl_InterruptedException(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "java.lang.InterruptedException"))
+}
+function $isArrayOf_jl_InterruptedException(obj, depth) {
+  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.jl_InterruptedException)))
+}
+function $asArrayOf_jl_InterruptedException(obj, depth) {
+  return (($isArrayOf_jl_InterruptedException(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Ljava.lang.InterruptedException;", depth))
+}
+function $is_jl_LinkageError(obj) {
+  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.jl_LinkageError)))
+}
+function $as_jl_LinkageError(obj) {
+  return (($is_jl_LinkageError(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "java.lang.LinkageError"))
+}
+function $isArrayOf_jl_LinkageError(obj, depth) {
+  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.jl_LinkageError)))
+}
+function $asArrayOf_jl_LinkageError(obj, depth) {
+  return (($isArrayOf_jl_LinkageError(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Ljava.lang.LinkageError;", depth))
+}
 function $isArrayOf_jl_Long(obj, depth) {
   return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.jl_Long)))
 }
@@ -10144,6 +10422,30 @@ var $d_jl_StringBuilder = new $TypeData().initClass({
   Ljava_io_Serializable: 1
 });
 $c_jl_StringBuilder.prototype.$classData = $d_jl_StringBuilder;
+function $is_jl_ThreadDeath(obj) {
+  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.jl_ThreadDeath)))
+}
+function $as_jl_ThreadDeath(obj) {
+  return (($is_jl_ThreadDeath(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "java.lang.ThreadDeath"))
+}
+function $isArrayOf_jl_ThreadDeath(obj, depth) {
+  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.jl_ThreadDeath)))
+}
+function $asArrayOf_jl_ThreadDeath(obj, depth) {
+  return (($isArrayOf_jl_ThreadDeath(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Ljava.lang.ThreadDeath;", depth))
+}
+function $is_jl_VirtualMachineError(obj) {
+  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.jl_VirtualMachineError)))
+}
+function $as_jl_VirtualMachineError(obj) {
+  return (($is_jl_VirtualMachineError(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "java.lang.VirtualMachineError"))
+}
+function $isArrayOf_jl_VirtualMachineError(obj, depth) {
+  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.jl_VirtualMachineError)))
+}
+function $asArrayOf_jl_VirtualMachineError(obj, depth) {
+  return (($isArrayOf_jl_VirtualMachineError(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Ljava.lang.VirtualMachineError;", depth))
+}
 /** @constructor */
 function $c_s_Array$() {
   $c_s_FallbackArrayBuilding.call(this)
@@ -11703,6 +12005,17 @@ var $d_s_util_Either$RightProjection = new $TypeData().initClass({
   Ljava_io_Serializable: 1
 });
 $c_s_util_Either$RightProjection.prototype.$classData = $d_s_util_Either$RightProjection;
+/** @constructor */
+function $c_s_util_Try() {
+  $c_O.call(this)
+}
+$c_s_util_Try.prototype = new $h_O();
+$c_s_util_Try.prototype.constructor = $c_s_util_Try;
+/** @constructor */
+function $h_s_util_Try() {
+  /*<skip>*/
+}
+$h_s_util_Try.prototype = $c_s_util_Try.prototype;
 /** @constructor */
 function $c_s_util_control_BreakControl() {
   $c_jl_Throwable.call(this)
@@ -13660,6 +13973,85 @@ var $d_s_StringContext$InvalidEscapeException = new $TypeData().initClass({
 });
 $c_s_StringContext$InvalidEscapeException.prototype.$classData = $d_s_StringContext$InvalidEscapeException;
 /** @constructor */
+function $c_s_util_Failure() {
+  $c_s_util_Try.call(this);
+  this.exception$2 = null
+}
+$c_s_util_Failure.prototype = new $h_s_util_Try();
+$c_s_util_Failure.prototype.constructor = $c_s_util_Failure;
+/** @constructor */
+function $h_s_util_Failure() {
+  /*<skip>*/
+}
+$h_s_util_Failure.prototype = $c_s_util_Failure.prototype;
+$c_s_util_Failure.prototype.productPrefix__T = (function() {
+  return "Failure"
+});
+$c_s_util_Failure.prototype.productArity__I = (function() {
+  return 1
+});
+$c_s_util_Failure.prototype.equals__O__Z = (function(x$1) {
+  if ((this === x$1)) {
+    return true
+  } else if ($is_s_util_Failure(x$1)) {
+    var Failure$1 = $as_s_util_Failure(x$1);
+    var x = this.exception$2;
+    var x$2 = Failure$1.exception$2;
+    return ((x === null) ? (x$2 === null) : x.equals__O__Z(x$2))
+  } else {
+    return false
+  }
+});
+$c_s_util_Failure.prototype.productElement__I__O = (function(x$1) {
+  switch (x$1) {
+    case 0: {
+      return this.exception$2;
+      break
+    }
+    default: {
+      throw new $c_jl_IndexOutOfBoundsException().init___T(("" + x$1))
+    }
+  }
+});
+$c_s_util_Failure.prototype.toString__T = (function() {
+  return $m_sr_ScalaRunTime$().$$undtoString__s_Product__T(this)
+});
+$c_s_util_Failure.prototype.init___jl_Throwable = (function(exception) {
+  this.exception$2 = exception;
+  return this
+});
+$c_s_util_Failure.prototype.hashCode__I = (function() {
+  var this$2 = $m_s_util_hashing_MurmurHash3$();
+  return this$2.productHash__s_Product__I__I(this, (-889275714))
+});
+$c_s_util_Failure.prototype.productIterator__sc_Iterator = (function() {
+  return new $c_sr_ScalaRunTime$$anon$1().init___s_Product(this)
+});
+function $is_s_util_Failure(obj) {
+  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.s_util_Failure)))
+}
+function $as_s_util_Failure(obj) {
+  return (($is_s_util_Failure(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "scala.util.Failure"))
+}
+function $isArrayOf_s_util_Failure(obj, depth) {
+  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.s_util_Failure)))
+}
+function $asArrayOf_s_util_Failure(obj, depth) {
+  return (($isArrayOf_s_util_Failure(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lscala.util.Failure;", depth))
+}
+var $d_s_util_Failure = new $TypeData().initClass({
+  s_util_Failure: 0
+}, false, "scala.util.Failure", {
+  s_util_Failure: 1,
+  s_util_Try: 1,
+  O: 1,
+  s_Product: 1,
+  s_Equals: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_s_util_Failure.prototype.$classData = $d_s_util_Failure;
+/** @constructor */
 function $c_s_util_Left() {
   $c_s_util_Either.call(this);
   this.value$2 = null
@@ -13813,6 +14205,83 @@ var $d_s_util_Right = new $TypeData().initClass({
   Ljava_io_Serializable: 1
 });
 $c_s_util_Right.prototype.$classData = $d_s_util_Right;
+/** @constructor */
+function $c_s_util_Success() {
+  $c_s_util_Try.call(this);
+  this.value$2 = null
+}
+$c_s_util_Success.prototype = new $h_s_util_Try();
+$c_s_util_Success.prototype.constructor = $c_s_util_Success;
+/** @constructor */
+function $h_s_util_Success() {
+  /*<skip>*/
+}
+$h_s_util_Success.prototype = $c_s_util_Success.prototype;
+$c_s_util_Success.prototype.productPrefix__T = (function() {
+  return "Success"
+});
+$c_s_util_Success.prototype.productArity__I = (function() {
+  return 1
+});
+$c_s_util_Success.prototype.equals__O__Z = (function(x$1) {
+  if ((this === x$1)) {
+    return true
+  } else if ($is_s_util_Success(x$1)) {
+    var Success$1 = $as_s_util_Success(x$1);
+    return $m_sr_BoxesRunTime$().equals__O__O__Z(this.value$2, Success$1.value$2)
+  } else {
+    return false
+  }
+});
+$c_s_util_Success.prototype.productElement__I__O = (function(x$1) {
+  switch (x$1) {
+    case 0: {
+      return this.value$2;
+      break
+    }
+    default: {
+      throw new $c_jl_IndexOutOfBoundsException().init___T(("" + x$1))
+    }
+  }
+});
+$c_s_util_Success.prototype.toString__T = (function() {
+  return $m_sr_ScalaRunTime$().$$undtoString__s_Product__T(this)
+});
+$c_s_util_Success.prototype.init___O = (function(value) {
+  this.value$2 = value;
+  return this
+});
+$c_s_util_Success.prototype.hashCode__I = (function() {
+  var this$2 = $m_s_util_hashing_MurmurHash3$();
+  return this$2.productHash__s_Product__I__I(this, (-889275714))
+});
+$c_s_util_Success.prototype.productIterator__sc_Iterator = (function() {
+  return new $c_sr_ScalaRunTime$$anon$1().init___s_Product(this)
+});
+function $is_s_util_Success(obj) {
+  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.s_util_Success)))
+}
+function $as_s_util_Success(obj) {
+  return (($is_s_util_Success(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "scala.util.Success"))
+}
+function $isArrayOf_s_util_Success(obj, depth) {
+  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.s_util_Success)))
+}
+function $asArrayOf_s_util_Success(obj, depth) {
+  return (($isArrayOf_s_util_Success(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lscala.util.Success;", depth))
+}
+var $d_s_util_Success = new $TypeData().initClass({
+  s_util_Success: 0
+}, false, "scala.util.Success", {
+  s_util_Success: 1,
+  s_util_Try: 1,
+  O: 1,
+  s_Product: 1,
+  s_Equals: 1,
+  s_Serializable: 1,
+  Ljava_io_Serializable: 1
+});
+$c_s_util_Success.prototype.$classData = $d_s_util_Success;
 /** @constructor */
 function $c_s_util_parsing_combinator_Parsers$Success() {
   $c_s_util_parsing_combinator_Parsers$ParseResult.call(this);
@@ -15473,6 +15942,9 @@ function $f_s_math_Numeric$IntIsIntegral__minus__I__I__I($thiz, x, y) {
 }
 function $f_s_math_Numeric$IntIsIntegral__plus__I__I__I($thiz, x, y) {
   return ((x + y) | 0)
+}
+function $f_s_math_Numeric$IntIsIntegral__negate__I__I($thiz, x) {
+  return ((-x) | 0)
 }
 /** @constructor */
 function $c_s_reflect_AnyValManifest() {
@@ -17165,6 +17637,10 @@ $c_Lecuacion_Racional$FractionalRacional$.prototype.times__O__O__O = (function(x
   var y$1 = $as_Lecuacion_Racional(y);
   return x$1.times__Lecuacion_Racional__Lecuacion_Racional(y$1)
 });
+$c_Lecuacion_Racional$FractionalRacional$.prototype.negate__O__O = (function(x) {
+  var x$1 = $as_Lecuacion_Racional(x);
+  return x$1.negate__Lecuacion_Racional()
+});
 $c_Lecuacion_Racional$FractionalRacional$.prototype.toInt__O__I = (function(x) {
   var x$1 = $as_Lecuacion_Racional(x);
   return x$1.toInt__I()
@@ -18498,12 +18974,16 @@ $c_s_math_Numeric$IntIsIntegral$.prototype.times__O__O__O = (function(x, y) {
   var y$1 = $uI(y);
   return $f_s_math_Numeric$IntIsIntegral__times__I__I__I(this, x$1, y$1)
 });
-$c_s_math_Numeric$IntIsIntegral$.prototype.fromInt__I__O = (function(x) {
-  return x
+$c_s_math_Numeric$IntIsIntegral$.prototype.negate__O__O = (function(x) {
+  var x$1 = $uI(x);
+  return $f_s_math_Numeric$IntIsIntegral__negate__I__I(this, x$1)
 });
 $c_s_math_Numeric$IntIsIntegral$.prototype.toInt__O__I = (function(x) {
   var x$1 = $uI(x);
   return x$1
+});
+$c_s_math_Numeric$IntIsIntegral$.prototype.fromInt__I__O = (function(x) {
+  return x
 });
 var $d_s_math_Numeric$IntIsIntegral$ = new $TypeData().initClass({
   s_math_Numeric$IntIsIntegral$: 0
@@ -18623,6 +19103,18 @@ function $f_sc_SeqLike__lengthCompare__I__I($thiz, len) {
 }
 function $f_sc_SeqLike__isEmpty__Z($thiz) {
   return ($thiz.lengthCompare__I__I(0) === 0)
+}
+function $is_sc_SeqLike(obj) {
+  return (!(!((obj && obj.$classData) && obj.$classData.ancestors.sc_SeqLike)))
+}
+function $as_sc_SeqLike(obj) {
+  return (($is_sc_SeqLike(obj) || (obj === null)) ? obj : $throwClassCastException(obj, "scala.collection.SeqLike"))
+}
+function $isArrayOf_sc_SeqLike(obj, depth) {
+  return (!(!(((obj && obj.$classData) && (obj.$classData.arrayDepth === depth)) && obj.$classData.arrayBase.ancestors.sc_SeqLike)))
+}
+function $asArrayOf_sc_SeqLike(obj, depth) {
+  return (($isArrayOf_sc_SeqLike(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lscala.collection.SeqLike;", depth))
 }
 function $is_sc_convert_Wrappers$MutableSetWrapper(obj) {
   return (!(!((obj && obj.$classData) && obj.$classData.ancestors.sc_convert_Wrappers$MutableSetWrapper)))
@@ -18750,6 +19242,9 @@ function $f_sc_IndexedSeqOptimized__foldl__psc_IndexedSeqOptimized__I__I__O__F2_
 }
 function $f_sc_IndexedSeqOptimized__tail__O($thiz) {
   return ($f_sc_IndexedSeqOptimized__isEmpty__Z($thiz) ? $f_sc_TraversableLike__tail__O($thiz) : $thiz.slice__I__I__O(1, $thiz.length__I()))
+}
+function $f_sc_IndexedSeqOptimized__negLength__psc_IndexedSeqOptimized__I__I($thiz, n) {
+  return ((n >= $thiz.length__I()) ? (-1) : n)
 }
 function $f_sc_IndexedSeqOptimized__copyToArray__O__I__I__V($thiz, xs, start, len) {
   var i = 0;
@@ -21266,6 +21761,38 @@ function $isArrayOf_sci_IndexedSeq(obj, depth) {
 function $asArrayOf_sci_IndexedSeq(obj, depth) {
   return (($isArrayOf_sci_IndexedSeq(obj, depth) || (obj === null)) ? obj : $throwArrayCastException(obj, "Lscala.collection.immutable.IndexedSeq;", depth))
 }
+var $d_sci_IndexedSeq = new $TypeData().initClass({
+  sci_IndexedSeq: 0
+}, true, "scala.collection.immutable.IndexedSeq", {
+  sci_IndexedSeq: 1,
+  sci_Seq: 1,
+  sci_Iterable: 1,
+  sci_Traversable: 1,
+  sc_Traversable: 1,
+  sc_TraversableLike: 1,
+  scg_HasNewBuilder: 1,
+  scg_FilterMonadic: 1,
+  sc_TraversableOnce: 1,
+  sc_GenTraversableOnce: 1,
+  sc_GenTraversableLike: 1,
+  sc_Parallelizable: 1,
+  sc_GenTraversable: 1,
+  scg_GenericTraversableTemplate: 1,
+  s_Immutable: 1,
+  sc_Iterable: 1,
+  sc_GenIterable: 1,
+  sc_GenIterableLike: 1,
+  sc_IterableLike: 1,
+  s_Equals: 1,
+  sc_Seq: 1,
+  s_PartialFunction: 1,
+  F1: 1,
+  sc_GenSeq: 1,
+  sc_GenSeqLike: 1,
+  sc_SeqLike: 1,
+  sc_IndexedSeq: 1,
+  sc_IndexedSeqLike: 1
+});
 /** @constructor */
 function $c_sc_MapLike$DefaultKeySet() {
   $c_sc_AbstractSet.call(this);

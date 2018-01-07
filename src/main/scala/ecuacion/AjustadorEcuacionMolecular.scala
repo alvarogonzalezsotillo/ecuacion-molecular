@@ -3,6 +3,7 @@ package ecuacion
 import ecuacion.EcuacionMolecular.{LadoEcuacion, Molecula}
 
 import scala.reflect.ClassTag
+import scala.util.{Success, Try}
 
 /**
   * Created by alvaro on 23/12/17.
@@ -17,7 +18,10 @@ object AjustadorEcuacionMolecular {
   
   def apply( ecuacion: EcuacionMolecular, maxSum: Int = 30 ): Option[EcuacionMolecular] = {
     //ajustaTanteo(ecuacion,maxSum)
-    ajustaAlgebraico(ecuacion)
+    Try(ajustaAlgebraico(ecuacion)) match{
+      case Success(Some(ec)) => Some(ec)
+      case _ => None
+    }
   }
 
   private def ajustaTanteo(e: EcuacionMolecular, maxSum: Int = 30): Option[EcuacionMolecular] = {
@@ -85,7 +89,7 @@ object AjustadorEcuacionMolecular {
 
     printM( "Matriz diagonalizada:", matDiag )
 
-    val variables = matrizDiagonalizada.solve()
+    val variables = matrizDiagonalizada.solveWithoutFreeTerms()
 
 
     log( "Variables fraccionadas:" + variables.mkString(", "))
@@ -141,7 +145,7 @@ class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fraction
   }
 
 
-  def solve( freeTerms: IndexedSeq[T] = Iterator.continually(cero).take(rows.size).toIndexedSeq, firstVariableHint : T = uno ) = {
+  def solveWithoutFreeTerms(firstVariableHint : T = uno ) = {
 
     import fractional.mkNumericOps
 
@@ -159,14 +163,14 @@ class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fraction
         for( (i1,i2) <- Seq( (a,b), (b,a)) if i1 != -1 && i2 != -1 ){
           if (variables(i1).isDefined && variables(i2).isEmpty) {
             val factor = fila(i1)/fila(i2)
-            variables(i2) = variables(i1).map(_ * factor)
+            //fi1*vi1 + fi2*vi2 = 0   vi2 =  -vi1*fi1/fi2
+            variables(i2) = variables(i1).map( -_ * factor)
             changed = true
           }
         }
       }
     }
 
-    //ax + by = c  x = (c - by)/a
 
     variables
   }
@@ -181,10 +185,8 @@ class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fraction
 
 
     val columns = (m(0).size min m.size)
-    log( s"columns:$columns")
 
     for( col <- 0 until columns ){
-      //log( s"diagonalizando columna $col")
       val fil = m.indexWhere{ fila =>
         //log( "Mirando fila:" + fila.mkString((",")) )
         val noEsCero = fila(col) != cero
@@ -194,7 +196,8 @@ class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fraction
         //log( s"  noEsCero:$noEsCero  anterioresCero:$anterioresCero" )
         noEsCero && anterioresCero
       }
-      //log( s"  col: $col  fil:$fil")
+      exp.explica( s"Para diagonalizar la columna $col, utilizaremos la fila $fil" )
+
       for( f <- 0 until m.size if f != fil && fil != -1 ){
 
         val factor = m(f)(col) / m(fil)(col)

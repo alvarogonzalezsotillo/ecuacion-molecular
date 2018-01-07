@@ -42,11 +42,9 @@ ejemplo{
 
 div.error{
     color: #ff00ff;
+    border: 2px solid red;
 }
 
-div.error:before{
-    content: "#";
-}
 
 
 @media only screen and (min-width: 500px) {
