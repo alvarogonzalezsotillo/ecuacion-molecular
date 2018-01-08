@@ -20,6 +20,20 @@ object EcuacionMolecularApp {
 
 
 
+  private def setupSamples( ejemplosDiv: JQuery ) = {
+    import scala.concurrent.ExecutionContext.Implicits.global
+    import scala.concurrent._
+
+    // RELLENO DE EJEMPLOS
+    for( e <- EcuacionMolecular.ejemplos ) {
+      val ec = EcuacionMolecular(e).right.get
+      Future{  ejemplosDiv.append(s"<ejemplo>${ec.toHTML}</ejemplo")
+      }
+    }
+
+
+  }
+
   def setupUI(): Unit = {
 
     val ecuacionNormalizadaDiv = jQuery("#ecuacion-normalizada")
@@ -47,12 +61,7 @@ object EcuacionMolecularApp {
       ecuacionNormalizadaDiv.html(msg)
     }
 
-    // RELLENO DE EJEMPLOS
-    for( e <- EcuacionMolecular.ejemplos ) {
-      val ec = EcuacionMolecular(e).right.get
-      ejemplosDiv.append(s"<ejemplo>${ec.toHTML}</ejemplo")
-    }
-
+    setupSamples(ejemplosDiv)
 
     // LISTENER DE CLICK EN EJEMPLO
     val ejemplos = jQuery("ejemplo")
