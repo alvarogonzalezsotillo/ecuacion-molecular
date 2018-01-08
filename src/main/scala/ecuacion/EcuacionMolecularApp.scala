@@ -20,19 +20,9 @@ object EcuacionMolecularApp {
 
 
 
-  private def setupSamples( ejemplosDiv: JQuery ) = {
-    import scala.concurrent.ExecutionContext.Implicits.global
-    import scala.concurrent._
-
-    // RELLENO DE EJEMPLOS
-    for( e <- EcuacionMolecular.ejemplos ) {
-      val ec = EcuacionMolecular(e).right.get
-      Future{  ejemplosDiv.append(s"<ejemplo>${ec.toHTML}</ejemplo")
-      }
-    }
 
 
-  }
+
 
   def setupUI(): Unit = {
 
@@ -61,19 +51,42 @@ object EcuacionMolecularApp {
       ecuacionNormalizadaDiv.html(msg)
     }
 
-    setupSamples(ejemplosDiv)
+    def setupSamples() = {
+      import scala.concurrent.ExecutionContext.Implicits.global
+      import scala.concurrent._
 
-    // LISTENER DE CLICK EN EJEMPLO
-    val ejemplos = jQuery("ejemplo")
-    ejemplos.click{ (e: JQueryEventObject, _: js.Any)=>
-      val t = jQuery(e.target).closest("ejemplo")
-      inicioElem.get(0).scrollIntoView(true)
-      ecuacionNormalizadaDiv.html("Calculando...")
-      ecuacionTex.value(t.text.toString)
-      dom.window.setTimeout( { () =>
-        ecuacionTex.keyup()
-      }, 50)
+      val ini = System.currentTimeMillis();
+
+      // LISTENER DE CLICK EN EJEMPLO
+      def ejemploClicked(e: JQueryEventObject, ignored: js.Any) = {
+        val t = jQuery(e.target).closest("ejemplo")
+        inicioElem.get(0).scrollIntoView(true)
+        ecuacionNormalizadaDiv.html("Calculando...")
+        ecuacionTex.value(t.text.toString)
+        dom.window.setTimeout( { () =>
+          ecuacionTex.keyup()
+        }, 50)
+      }
+
+      // RELLENO DE EJEMPLOS
+      for( e <- EcuacionMolecular.ejemplos ) {
+        val ec = EcuacionMolecular(e).right.get
+        Future{
+          val ejemplo = jQuery(s"<ejemplo>${ec.toHTML}</ejemplo")
+          ejemplosDiv.append(ejemplo)
+          ejemplo.click( ejemploClicked _ )
+        }
+      }
+
+
+      val end = System.currentTimeMillis();
+      //ejemplosDiv.append(s"<p>Time: ${end-ini}ms</p>")
+
+
     }
-  }
-}
 
+    setupSamples()
+
+  }
+
+}

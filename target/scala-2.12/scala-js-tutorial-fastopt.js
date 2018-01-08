@@ -2500,7 +2500,40 @@ $h_Lecuacion_EcuacionMolecularApp$.prototype = $c_Lecuacion_EcuacionMolecularApp
 $c_Lecuacion_EcuacionMolecularApp$.prototype.init___ = (function() {
   return this
 });
-$c_Lecuacion_EcuacionMolecularApp$.prototype.ecuacion$EcuacionMolecularApp$$$anonfun$setupUI$4__Lorg_scalajs_jquery_JQuery__O = (function(ecuacionTex$1) {
+$c_Lecuacion_EcuacionMolecularApp$.prototype.setupSamples$1__p1__Lorg_scalajs_jquery_JQuery__Lorg_scalajs_jquery_JQuery__Lorg_scalajs_jquery_JQuery__Lorg_scalajs_jquery_JQuery__V = (function(ecuacionNormalizadaDiv$1, ecuacionTex$1, ejemplosDiv$1, inicioElem$1) {
+  var t = $m_jl_System$().currentTimeMillis__J();
+  $m_Lecuacion_EcuacionMolecular$().ejemplos$1.foreach__F1__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this, ecuacionNormalizadaDiv$1$1, ecuacionTex$1$1, ejemplosDiv$1$1, inicioElem$1$1) {
+    return (function(e$2) {
+      var e = $as_T(e$2);
+      var this$1 = $m_Lecuacion_EcuacionMolecular$().apply__T__s_util_Either(e);
+      var ec = $as_Lecuacion_EcuacionMolecular(new $c_s_util_Either$RightProjection().init___s_util_Either(this$1).get__O());
+      return $m_s_concurrent_Future$().apply__F0__s_concurrent_ExecutionContext__s_concurrent_Future(new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this$1, ecuacionNormalizadaDiv$1$2, ecuacionTex$1$2, ejemplosDiv$1$2, inicioElem$1$2, ec$1) {
+        return (function() {
+          var ejemplo = (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)(new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["<ejemplo>", "</ejemplo"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([ec$1.toHTML__T()])));
+          ejemplosDiv$1$2.append(ejemplo);
+          return ejemplo.click((function($this$2, ecuacionNormalizadaDiv$1$3, ecuacionTex$1$3, inicioElem$1$3) {
+            return (function(e$2$1, ignored$2) {
+              return $this$2.ejemploClicked$1__p1__Lorg_scalajs_jquery_JQueryEventObject__sjs_js_Any__Lorg_scalajs_jquery_JQuery__Lorg_scalajs_jquery_JQuery__Lorg_scalajs_jquery_JQuery__I(e$2$1, ignored$2, ecuacionNormalizadaDiv$1$3, ecuacionTex$1$3, inicioElem$1$3)
+            })
+          })($this$1, ecuacionNormalizadaDiv$1$2, ecuacionTex$1$2, inicioElem$1$2))
+        })
+      })($this, ecuacionNormalizadaDiv$1$1, ecuacionTex$1$1, ejemplosDiv$1$1, inicioElem$1$1, ec)), $m_s_concurrent_ExecutionContext$Implicits$().global__s_concurrent_ExecutionContext())
+    })
+  })(this, ecuacionNormalizadaDiv$1, ecuacionTex$1, ejemplosDiv$1, inicioElem$1)));
+  $m_jl_System$().currentTimeMillis__J()
+});
+$c_Lecuacion_EcuacionMolecularApp$.prototype.ejemploClicked$1__p1__Lorg_scalajs_jquery_JQueryEventObject__sjs_js_Any__Lorg_scalajs_jquery_JQuery__Lorg_scalajs_jquery_JQuery__Lorg_scalajs_jquery_JQuery__I = (function(e, ignored, ecuacionNormalizadaDiv$1, ecuacionTex$1, inicioElem$1) {
+  var t = (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)(e.target).closest("ejemplo");
+  inicioElem$1.get(0).scrollIntoView(true);
+  ecuacionNormalizadaDiv$1.html("Calculando...");
+  ecuacionTex$1.val($as_T(t.text()));
+  return $uI($m_Lorg_scalajs_dom_package$().window__Lorg_scalajs_dom_raw_Window().setTimeout((function(ecuacionTex$1$1) {
+    return (function() {
+      return $m_Lecuacion_EcuacionMolecularApp$().ecuacion$EcuacionMolecularApp$$$anonfun$setupUI$3__Lorg_scalajs_jquery_JQuery__O(ecuacionTex$1$1)
+    })
+  })(ecuacionTex$1), 50.0))
+});
+$c_Lecuacion_EcuacionMolecularApp$.prototype.ecuacion$EcuacionMolecularApp$$$anonfun$setupUI$3__Lorg_scalajs_jquery_JQuery__O = (function(ecuacionTex$1) {
   return ecuacionTex$1.keyup()
 });
 $c_Lecuacion_EcuacionMolecularApp$.prototype.setupUI__V = (function() {
@@ -2548,21 +2581,7 @@ $c_Lecuacion_EcuacionMolecularApp$.prototype.setupUI__V = (function() {
       return ecuacionNormalizadaDiv$1.html(msg$2)
     })
   })(this, ecuacionNormalizadaDiv, ecuacionTex));
-  this.setupSamples__p1__Lorg_scalajs_jquery_JQuery__V(ejemplosDiv);
-  var ejemplos = (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)("ejemplo");
-  ejemplos.click((function(this$2, ecuacionNormalizadaDiv$2, ecuacionTex$2, inicioElem$1) {
-    return (function(e$2, x$2$2) {
-      var t = (0, $m_Lorg_scalajs_jquery_package$().jQuery$1)(e$2.target).closest("ejemplo");
-      inicioElem$1.get(0).scrollIntoView(true);
-      ecuacionNormalizadaDiv$2.html("Calculando...");
-      ecuacionTex$2.val($as_T(t.text()));
-      return $uI($m_Lorg_scalajs_dom_package$().window__Lorg_scalajs_dom_raw_Window().setTimeout((function(ecuacionTex$1$1) {
-        return (function() {
-          return $m_Lecuacion_EcuacionMolecularApp$().ecuacion$EcuacionMolecularApp$$$anonfun$setupUI$4__Lorg_scalajs_jquery_JQuery__O(ecuacionTex$1$1)
-        })
-      })(ecuacionTex$2), 50.0))
-    })
-  })(this, ecuacionNormalizadaDiv, ecuacionTex, inicioElem))
+  this.setupSamples$1__p1__Lorg_scalajs_jquery_JQuery__Lorg_scalajs_jquery_JQuery__Lorg_scalajs_jquery_JQuery__Lorg_scalajs_jquery_JQuery__V(ecuacionNormalizadaDiv, ecuacionTex, ejemplosDiv, inicioElem)
 });
 $c_Lecuacion_EcuacionMolecularApp$.prototype.main__AT__V = (function(args) {
   var v = $m_Lorg_scalajs_dom_package$().document__Lorg_scalajs_dom_raw_HTMLDocument();
@@ -2577,21 +2596,6 @@ $c_Lecuacion_EcuacionMolecularApp$.prototype.main__AT__V = (function(args) {
     var this$4 = $as_Ljava_io_PrintStream(this$3.outVar$2.v$1);
     this$4.java$lang$JSConsoleBasedPrintStream$$printString__T__V("Browser or nodejs required\n")
   }
-});
-$c_Lecuacion_EcuacionMolecularApp$.prototype.setupSamples__p1__Lorg_scalajs_jquery_JQuery__V = (function(ejemplosDiv) {
-  $m_Lecuacion_EcuacionMolecular$().ejemplos$1.foreach__F1__V(new $c_sjsr_AnonFunction1().init___sjs_js_Function1((function($this, ejemplosDiv$1) {
-    return (function(e$2) {
-      var e = $as_T(e$2);
-      var this$1 = $m_Lecuacion_EcuacionMolecular$().apply__T__s_util_Either(e);
-      var ec = $as_Lecuacion_EcuacionMolecular(new $c_s_util_Either$RightProjection().init___s_util_Either(this$1).get__O());
-      return $m_s_concurrent_Future$().apply__F0__s_concurrent_ExecutionContext__s_concurrent_Future(new $c_sjsr_AnonFunction0().init___sjs_js_Function0((function($this$1, ejemplosDiv$1$1, ec$1) {
-        return (function() {
-          var s = new $c_s_StringContext().init___sc_Seq(new $c_sjs_js_WrappedArray().init___sjs_js_Array(["<ejemplo>", "</ejemplo"])).s__sc_Seq__T(new $c_sjs_js_WrappedArray().init___sjs_js_Array([ec$1.toHTML__T()]));
-          return ejemplosDiv$1$1.append(s)
-        })
-      })($this, ejemplosDiv$1, ec)), $m_s_concurrent_ExecutionContext$Implicits$().global__s_concurrent_ExecutionContext())
-    })
-  })(this, ejemplosDiv)))
 });
 var $d_Lecuacion_EcuacionMolecularApp$ = new $TypeData().initClass({
   Lecuacion_EcuacionMolecularApp$: 0
@@ -3375,6 +3379,13 @@ $c_jl_System$.prototype.java$lang$System$$$anonfun$getHighPrecisionTime$4__D = (
 });
 $c_jl_System$.prototype.java$lang$System$$$anonfun$getHighPrecisionTime$2__D = (function() {
   return $uD($g.performance.webkitNow())
+});
+$c_jl_System$.prototype.currentTimeMillis__J = (function() {
+  var this$1 = $m_sjsr_RuntimeLong$();
+  var value = $uD(new $g.Date().getTime());
+  var lo = this$1.scala$scalajs$runtime$RuntimeLong$$fromDoubleImpl__D__I(value);
+  var hi = this$1.scala$scalajs$runtime$RuntimeLong$$hiReturn$f;
+  return new $c_sjsr_RuntimeLong().init___I__I(lo, hi)
 });
 var $d_jl_System$ = new $TypeData().initClass({
   jl_System$: 0
