@@ -228,14 +228,13 @@ object EcuacionMolecular{
     "K + H2O = KOH + H2",
     "Cu2O + H2 = Cu + H2O",
     "C9 H20 + O2 = CO2 + H2O",
-    "2Cu(NO3)2= 2CuO + 4NO2 + O2",
-    "2KOH + H2SO4= K2SO4 + 2H2O",
-    "2Na + 2H2O = 2NaOH + H2",
+    "Cu(NO3)2= CuO + NO2 + O2",
+    "KOH + H2SO4= K2SO4 + H2O",
+    "Na + H2O = NaOH + H2",
     "C6H12  +   O2 =    CO2 +     H2O",
     "C6H12O6 + O2 = CO2 + H2O",
     "C3H8O + O2 = CO2 + H2O",
     "C4H10 + O2 = CO2 + H2O",
-    "H2O = HO2"
   )
 }
 

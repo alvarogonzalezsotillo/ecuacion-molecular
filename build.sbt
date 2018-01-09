@@ -14,11 +14,11 @@ libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "0.9.1"
 libraryDependencies += "be.doeraene" %%% "scalajs-jquery" % "0.9.1"
 
 // SCALATEST
-libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.0-M10" % "test"
+libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.0" % "test"
 
 // PARSERS
-// NO CONSIGO QUE FUNCIONE, ME HE BAJADO DIRECTAMENTE LOS FUENTES
-libraryDependencies += "org.scala-lang.modules" %%% "scala-parser-combinators" % "1.0.6"
+// NO CONSIGO QUE FUNCIONE CON LA 1.0.6 SIN BAJAR DIRECTAMENTE LOS FUENTES, ME QUEDO CON LA 1.0.5
+libraryDependencies += "org.scala-lang.modules" %%% "scala-parser-combinators" % "1.0.5"
 
 
 
