@@ -1,11 +1,13 @@
+import org.scalatest._
+
 package ecuacion
 
 /**
   * Created by alvaro on 19/12/17.
   */
-object EcuacionMolecularTest extends App {
+object EcuacionMolecularTest extends FlatSpec {
 
-  def testEcuacion = {
+  it should " ajustar todas las ecuaciones de ejemplo" in {
     import EcuacionMolecular._
 
     for (e <- ejemplos) {
@@ -15,6 +17,8 @@ object EcuacionMolecularTest extends App {
       println(ecuacion.right.get)
       val ecuacionAjustada = ecuacion.map(AjustadorEcuacionMolecular(_))
       println(ecuacionAjustada.right.get.get)
+
+      assert( ecuacionAjustada.esAjustada() )
     }
   }
 
@@ -22,7 +26,5 @@ object EcuacionMolecularTest extends App {
     import Secuencias._
     for (s <- Secuencias.iterator(3, 3)) println(s.mkString(","))
   }
-
-  testEcuacion
 
 }
