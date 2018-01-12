@@ -45,6 +45,11 @@ div.error{
     border: 2px solid red;
 }
 
+div.error::before{
+    content: "⚠ ";
+    font-size: 1.5em;
+}
+
 
 
 @media only screen and (min-width: 500px) {
