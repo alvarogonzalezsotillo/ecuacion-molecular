@@ -33,6 +33,7 @@ object EcuacionMolecularApp {
 
     // LISTENER TEXTO DE ECUACION
     ecuacionTex.keyup{ () =>
+      implicit val explicador = Explicador.default
       val s = ecuacionTex.value()
       val ec = EcuacionMolecular(s.toString)
       val msg = ec.map(AjustadorEcuacionMolecular(_)) match {

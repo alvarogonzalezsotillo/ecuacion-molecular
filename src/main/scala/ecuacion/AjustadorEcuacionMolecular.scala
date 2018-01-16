@@ -12,11 +12,8 @@ object AjustadorEcuacionMolecular {
 
   def log( s: String ) = println(s)
 
-  implicit val explicador = new Explicador {
-    override def explica(a : Any) = log(a.toString)
-  }
   
-  def apply( ecuacion: EcuacionMolecular, maxSum: Int = 30 ): Option[EcuacionMolecular] = {
+  def apply( ecuacion: EcuacionMolecular, maxSum: Int = 30 )(implicit explicador: Explicador): Option[EcuacionMolecular] = {
     //ajustaTanteo(ecuacion,maxSum)
     Try(ajustaAlgebraico(ecuacion)) match{
       case Success(Some(ec)) => Some(ec)
@@ -45,7 +42,7 @@ object AjustadorEcuacionMolecular {
     }
   }
 
-  private def ajustaAlgebraico(e: EcuacionMolecular ) : Option[EcuacionMolecular] = {
+  private def ajustaAlgebraico(e: EcuacionMolecular )(implicit explicador: Explicador) : Option[EcuacionMolecular] = {
 
     def printM[T]( msg: String, m: Array[Array[T]] ) = {
       log( "*********")
@@ -56,16 +53,30 @@ object AjustadorEcuacionMolecular {
       log( "*********")
     }
 
-    assert( e.ladoDerecho.atomos().keySet == e.ladoIzquierdo.atomos().keySet )
+
+    val atomosLadoDerecho = e.ladoDerecho.atomos().keySet
+    val atomosLadoIzquierdo = e.ladoIzquierdo.atomos().keySet
+
+    explicador.explica(
+      "Antes de comenzar, se comprueba que a los dos lados de la ecuación aparecen los mismos átomos.",
+      s"Átomos en la derecha: ${atomosLadoDerecho.mkString(",")}",
+      s"Átomos en la izquierda: ${atomosLadoIzquierdo.mkString(",")}",
+      if( atomosLadoDerecho == atomosLadoIzquierdo ) "Como son iguales, se puede continuar" else "No son iguales, no es posible balancear la ecuación"
+    )
+
+    assert( atomosLadoDerecho == atomosLadoIzquierdo )
 
     implicit val fractional = Racional.FractionalRacional
     import fractional._
+    val cero = fractional.fromInt(0)
     val menosuno = fractional.fromInt(-1)
 
     val atomos = e.atomos.keySet.toArray
 
-    log( e.toString )
-    log( s"Atomos:${atomos.mkString(",")}")
+    explicador.explica(
+      "Se crea una ecuación por cada átomo",
+      "Las variables serán los coeficientes estequiométricos de cada una de las moléculas, y los coeficientes son el número de átomos de ese tipo dentro de cada molécula"
+    )
 
     val mat = {
       def lado( l: LadoEcuacion ) = Array.tabulate( atomos.size, l.moleculas.size ){ (a,m) =>
@@ -80,6 +91,17 @@ object AjustadorEcuacionMolecular {
       def ld = lado(e.ladoDerecho)
 
       li.zip(ld).map{ case (i,d) => i ++ d.map(_ * menosuno)}
+    }
+
+    explicador.siActivo{
+      for( (a,fila) <- atomos.zip(mat) ){
+        val numeros = Iterator.from(1).take(fila.size).toSeq
+        val ec = fila.zip(numeros).map{ case(coef,n) =>
+          val signo = if( coef > cero ) "+" else ""
+          if( coef != 0 ) s"${signo}$coef*x$n" else ""
+        }.mkString( "\t" )
+        explicador.explica( s"Átomo $a: $ec = 0" )
+      }
     }
 
     printM( "Matriz original:" + e.toString, mat )
@@ -119,9 +141,6 @@ object AjustadorEcuacionMolecular {
   }
 }
 
-trait Explicador{
-  def explica( a : Any )
-}
 
 class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fractional[T], ct: ClassTag[T]){
 
