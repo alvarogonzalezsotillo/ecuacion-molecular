@@ -79,11 +79,11 @@ object AjustadorEcuacionMolecular {
     )
 
     explicador.siActivo{
-      val ld = e.ladoDerecho.moleculas.zipWithIndex
-      val lds = ld.map{ case(m,i) => s"x$i $m" }.mkString(" + " )
       val li = e.ladoIzquierdo.moleculas.zipWithIndex
-      val base = ld.size
-      val lis = li.map{ case(m,i) => s"x${i+base} $m" }.mkString(" + " )
+      val lis = li.map{ case(m,i) => s"x${i} $m" }.mkString(" + " )
+      val base = li.size
+      val ld = e.ladoDerecho.moleculas.zipWithIndex
+      val lds = ld.map{ case(m,i) => s"x${i+base} $m" }.mkString(" + " )
 
       explicador.explica( s"$lis = $lds" )
     }
