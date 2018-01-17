@@ -78,6 +78,16 @@ object AjustadorEcuacionMolecular {
       "Las variables serán los coeficientes estequiométricos de cada una de las moléculas, y los coeficientes son el número de átomos de ese tipo dentro de cada molécula"
     )
 
+    explicador.siActivo{
+      val ld = e.ladoDerecho.moleculas.zipWithIndex
+      val lds = ld.map{ case(m,i) => s"x$i $m" }.mkString(" + " )
+      val li = e.ladoIzquierdo.moleculas.zipWithIndex
+      val base = ld.size
+      val lis = li.map{ case(m,i) => s"x${i+base} $m" }.mkString(" + " )
+
+      explicador.explica( s"$lis = $lds" )
+    }
+
     val mat = {
       def lado( l: LadoEcuacion ) = Array.tabulate( atomos.size, l.moleculas.size ){ (a,m) =>
         val atomo = atomos(a)
@@ -94,17 +104,18 @@ object AjustadorEcuacionMolecular {
     }
 
     explicador.siActivo{
+      explicador.explica( s"Las ecuaciones resultantes serían:" )
       for( (a,fila) <- atomos.zip(mat) ){
-        val numeros = Iterator.from(1).take(fila.size).toSeq
-        val ec = fila.zip(numeros).map{ case(coef,n) =>
+        val ec = fila.zipWithIndex.map{ case(coef,n) =>
           val signo = if( coef > cero ) "+" else ""
-          if( coef != 0 ) s"${signo}$coef*x$n" else ""
-        }.mkString( "\t" )
-        explicador.explica( s"Átomo $a: $ec = 0" )
+          val ret = if( coef != cero ) s" $signo$coef*x$n" else ""
+          ret
+        }
+        explicador.explica( s"Átomo $a: ${ec.mkString("")} = 0" )
       }
     }
 
-    printM( "Matriz original:" + e.toString, mat )
+    //printM( "Matriz original:" + e.toString, mat )
 
     val matrizDiagonalizada = new Mat(mat).diagonalize
     val matDiag = matrizDiagonalizada.valuesCopy()

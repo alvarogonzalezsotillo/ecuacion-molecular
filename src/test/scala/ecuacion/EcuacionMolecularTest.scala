@@ -16,13 +16,19 @@ class EcuacionMolecularTest extends FlatSpec {
 
 
     for (e <- ejemplos) {
-      println("******************************************************************************************")
-      println(e)
-      val ecuacion = EcuacionMolecular(e)
-      val ecuacionAjustadaEither = ecuacion.map(AjustadorEcuacionMolecular(_))
-      val ecuacionAjustada = ecuacionAjustadaEither.right.get.get
-      println(ecuacionAjustada)
-      assert( ecuacionAjustada.esAjustada() )
+      try{
+        println("******************************************************************************************")
+        println(e)
+        val ecuacion = EcuacionMolecular(e)
+        val ecuacionAjustadaEither = ecuacion.map(AjustadorEcuacionMolecular(_))
+        println( ecuacionAjustadaEither )
+        val ecuacionAjustada = ecuacionAjustadaEither.right.get.get
+        println(ecuacionAjustada)
+        assert( ecuacionAjustada.esAjustada() )
+      }
+      catch{
+        case e : Throwable => e.printStackTrace()
+      }
     }
   }
 }
