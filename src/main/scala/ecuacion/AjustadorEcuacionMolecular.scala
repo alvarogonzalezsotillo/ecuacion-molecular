@@ -44,6 +44,9 @@ object AjustadorEcuacionMolecular {
 
   private def ajustaAlgebraico(e: EcuacionMolecular )(implicit explicador: Explicador) : Option[EcuacionMolecular] = {
 
+    import explicador.siExplicadorActivo
+    import explicador.explica
+
     def printM[T]( msg: String, m: Array[Array[T]] ) = {
       log( "*********")
       log( msg )
@@ -57,7 +60,7 @@ object AjustadorEcuacionMolecular {
     val atomosLadoDerecho = e.ladoDerecho.atomos().keySet
     val atomosLadoIzquierdo = e.ladoIzquierdo.atomos().keySet
 
-    explicador.explica(
+    explica(
       "Antes de comenzar, se comprueba que a los dos lados de la ecuación aparecen los mismos átomos.",
       s"Átomos en la derecha: ${atomosLadoDerecho.mkString(",")}",
       s"Átomos en la izquierda: ${atomosLadoIzquierdo.mkString(",")}",
@@ -73,19 +76,16 @@ object AjustadorEcuacionMolecular {
 
     val atomos = e.atomos.keySet.toArray
 
-    explicador.explica(
-      "Se crea una ecuación por cada átomo",
-      "Las variables serán los coeficientes estequiométricos de cada una de las moléculas, y los coeficientes son el número de átomos de ese tipo dentro de cada molécula"
-    )
 
-    explicador.siActivo{
+    siExplicadorActivo{
       val li = e.ladoIzquierdo.moleculas.zipWithIndex
       val lis = li.map{ case(m,i) => s"x${i} $m" }.mkString(" + " )
       val base = li.size
       val ld = e.ladoDerecho.moleculas.zipWithIndex
       val lds = ld.map{ case(m,i) => s"x${i+base} $m" }.mkString(" + " )
 
-      explicador.explica( s"$lis = $lds" )
+      explica( "Se asignan variables (x0, x1, x2...) a los coeficientes de cada molécula, de forma que la ecuación molecular pasa a ser:" )
+      explica( s"$lis = $lds" )
     }
 
     val mat = {
@@ -103,15 +103,16 @@ object AjustadorEcuacionMolecular {
       li.zip(ld).map{ case (i,d) => i ++ d.map(_ * menosuno)}
     }
 
-    explicador.siActivo{
-      explicador.explica( s"Las ecuaciones resultantes serían:" )
+    siExplicadorActivo{
+      explica( "De esta forma se define un sistema de ecuaciones lineales, con una ecuación por cada tipo de átomo." )
+      explica( s"Las ecuaciones resultantes serían:" )
       for( (a,fila) <- atomos.zip(mat) ){
         val ec = fila.zipWithIndex.map{ case(coef,n) =>
           val signo = if( coef > cero ) "+" else ""
           val ret = if( coef != cero ) s" $signo$coef*x$n" else ""
           ret
         }
-        explicador.explica( s"Átomo $a: ${ec.mkString("")} = 0" )
+        explica( s"Átomo $a: ${ec.mkString("")} = 0" )
       }
     }
 
@@ -120,9 +121,17 @@ object AjustadorEcuacionMolecular {
     val matrizDiagonalizada = new Mat(mat).diagonalize
     val matDiag = matrizDiagonalizada.valuesCopy()
 
-    printM( "Matriz diagonalizada:", matDiag )
+    //printM( "Matriz diagonalizada:", matDiag )
 
     val variables = matrizDiagonalizada.solveWithoutFreeTerms()
+
+    siExplicadorActivo{
+      explica( "El sistema es indeterminado, por lo que se asume que x0 tiene valor 1" )
+      explica( "Tras resolver el sistema, quedan los siguientes valores:" )
+      for( (v,i) <- variables.zipWithIndex ; valor <- v ){
+        explica( s"x$i = $valor" )
+      }
+    }
 
 
     log( "Variables fraccionadas:" + variables.mkString(", "))
