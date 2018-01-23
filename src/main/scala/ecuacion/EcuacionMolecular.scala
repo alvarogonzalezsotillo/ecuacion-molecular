@@ -35,11 +35,15 @@ class EcuacionMolecular(val ladoIzquierdo: LadoEcuacion, val ladoDerecho: LadoEc
 
 object EcuacionMolecular{
 
+  import scala.xml._
+  import scala.xml.NodeSeq._
+
   trait Grupo{
     val cantidad: Int
     def grupos : Seq[Grupo]
     def atomos( multiplier: Int = 1 ) : Map[String,Int] = sumaAtomos( grupos.map(_.atomos(cantidad*multiplier)) )
     def toHTML: String
+    def toXML : Node
   }
 
   object Grupo{
@@ -60,6 +64,14 @@ object EcuacionMolecular{
     override val cantidad = 1
     override val grupos = Seq( GrupoAtomico(Seq(this), cantidad ) )
     override def atomos( multiplier: Int) = Map(elemento -> cantidad*multiplier)
+
+    override def toXML: Node = <atomo>{elemento}</atomo>
+  }
+
+  def toNodeSeq( ns: Seq[NodeSeq] ) : NodeSeq = {
+    ns.tail.fold(ns.head){ case (grupo, elem) =>
+      grupo ++ elem
+    }
   }
 
   case class GrupoAtomico(override val grupos:  Seq[Grupo], cantidad: Int = 1) extends Grupo{
@@ -73,11 +85,25 @@ object EcuacionMolecular{
       case _ => "(" + grupos.foldLeft(""){case (h,g) => h + g.toHTML} + ")<sub>" + toStringC(cantidad) + "</sub>"
     }
 
+    override def toXML: Node = {
+      val nodes = grupos.map(_.toXML)
+      grupos.size match{
+        case 1 => <grupo>{nodes.head}<sub>{toStringC(cantidad)}</sub></grupo>
+        case _ => <grupo>({toNodeSeq(nodes)})<sub>{toStringC(cantidad)}</sub></grupo>
+      }
+    }
   }
 
   case class Molecula( override val grupos:  Seq[Grupo], cantidad: Int = 1 ) extends Grupo{
+
     override def toString = toStringC(cantidad) + grupos.mkString("")
     override def toHTML = toStringC(cantidad) + grupos.foldLeft(""){case (h,g) => h + g.toHTML}
+    override def toXML : Node = {
+      val nodes = grupos.map(_.toXML)
+      <span>{toStringC(cantidad)}{nodes.tail.foldLeft(Seq(nodes.head)){ case (seq, g) =>
+          seq :+ g
+      }}</span>
+    }
   }
 
 
@@ -90,6 +116,18 @@ object EcuacionMolecular{
     }
     override def toString = moleculas.mkString(" + ")
     def toHTML = moleculas.tail.foldLeft(moleculas.head.toHTML){ case (h,m) => h + " + " + m.toHTML }
+
+    def toXML: Node = {
+        val nodes = moleculas.map(_.toXML)
+        <span>
+          (
+          {nodes.tail.foldLeft(Seq(nodes.head)){ case (seq, g) =>
+          seq :+ <span>+</span> :+ g
+        }}
+          )
+        </span>
+    }
+
   }
 
 

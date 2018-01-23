@@ -51,6 +51,22 @@ div.error::before{
 }
 
 
+atomo, grupo, molecula{
+    border: 0px;
+    margin: 0px;
+    padding: 0px;
+}
+
+
+table{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+td, th{
+    text-align: left;
+}
+
 
 @media only screen and (min-width: 500px) {
     /* MAYOR DE 768px */

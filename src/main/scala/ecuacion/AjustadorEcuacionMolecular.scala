@@ -4,6 +4,7 @@ import ecuacion.EcuacionMolecular.{LadoEcuacion, Molecula}
 
 import scala.reflect.ClassTag
 import scala.util.{Success, Try}
+import scala.xml._
 
 /**
   * Created by alvaro on 23/12/17.
@@ -60,18 +61,34 @@ object AjustadorEcuacionMolecular {
     val atomosLadoDerecho = e.ladoDerecho.atomos().keySet
     val atomosLadoIzquierdo = e.ladoIzquierdo.atomos().keySet
 
-    explica(
-      "Antes de comenzar, se comprueba que a los dos lados de la ecuación aparecen los mismos átomos.",
-      s"Átomos en la derecha: ${atomosLadoDerecho.mkString(",")}",
-      s"Átomos en la izquierda: ${atomosLadoIzquierdo.mkString(",")}",
-      if( atomosLadoDerecho == atomosLadoIzquierdo ) "Como son iguales, se puede continuar" else "No son iguales, no es posible balancear la ecuación"
-    )
+    siExplicadorActivo {
+      explica( <p>Antes de comenzar, se comprueba que a los dos lados de la ecuación aparecen los mismos átomos. </p> )
+      explica( <b>hola</b> )
+      explica(
+          <ul>
+            <li>
+              Átomos en la derecha:
+              {atomosLadoDerecho.toSeq.sorted.mkString(",")}
+            </li>
+            <li>
+              Átomos en la izquierda:
+              {atomosLadoIzquierdo.toSeq.sorted.mkString(",")}
+            </li>
+          </ul>
+      )
+      if (atomosLadoDerecho == atomosLadoIzquierdo)
+        explica(<p>Como son iguales, se puede continuar</p>)
+      else
+        explica(<p>No son iguales, no es posible balancear la ecuación</p>)
+    }
+
 
     assert( atomosLadoDerecho == atomosLadoIzquierdo )
 
     implicit val fractional = Racional.FractionalRacional
     import fractional._
     val cero = fractional.fromInt(0)
+    val uno = fractional.fromInt(1)
     val menosuno = fractional.fromInt(-1)
 
     val atomos = e.atomos.keySet.toArray
@@ -79,13 +96,17 @@ object AjustadorEcuacionMolecular {
 
     siExplicadorActivo{
       val li = e.ladoIzquierdo.moleculas.zipWithIndex
-      val lis = li.map{ case(m,i) => s"x${i} $m" }.mkString(" + " )
+      val lis = li.map{ case(m,i) => <span>x<sub>{i}</sub>⋅{m.toXML}</span> }
       val base = li.size
       val ld = e.ladoDerecho.moleculas.zipWithIndex
-      val lds = ld.map{ case(m,i) => s"x${i+base} $m" }.mkString(" + " )
+      val lds = ld.map{ case(m,i) => <span>x<sub>{i+base}</sub>⋅{m.toXML}</span> }
 
-      explica( "Se asignan variables (x0, x1, x2...) a los coeficientes de cada molécula, de forma que la ecuación molecular pasa a ser:" )
-      explica( s"$lis = $lds" )
+      explica( <p>Se asignan variables (x<sub>0</sub>, x<sub>1</sub>, x<sub>2</sub>...) a los coeficientes de cada molécula, de forma que la ecuación molecular pasa a ser:</p> )
+
+      val lisxml = Explicador.intercala( lis, <mas> + </mas> )
+      val ldsxml = Explicador.intercala( lds, <mas> + </mas> )
+
+      explica( <p>{lisxml} = {ldsxml}</p> )
     }
 
     val mat = {
@@ -104,46 +125,71 @@ object AjustadorEcuacionMolecular {
     }
 
     siExplicadorActivo{
-      explica( "De esta forma se define un sistema de ecuaciones lineales, con una ecuación por cada tipo de átomo." )
-      explica( s"Las ecuaciones resultantes serían:" )
-      for( (a,fila) <- atomos.zip(mat) ){
+      explica( <p>De esta forma se define un sistema de ecuaciones lineales, con una ecuación por cada tipo de átomo</p> )
+      explica( <p>El sistema será indeterminado, por lo que se añade la restricción adicional de que  que x<sub>0</sub> tiene valor 1</p> )
+      explica( <p>Las ecuaciones resultantes serían</p> )
+      val tableBody = for( (a,fila) <- atomos.zip(mat) ) yield {
         val ec = fila.zipWithIndex.map{ case(coef,n) =>
-          val signo = if( coef > cero ) "+" else ""
-          val ret = if( coef != cero ) s" $signo$coef*x$n" else ""
+          val signo = if( coef > cero ) <mas> + </mas> else <menos> - </menos>
+          val ret = coef match{
+            case x if x == cero => <coef></coef>
+            case x if (x == uno || x == menosuno) => <coef>{signo}x<sub>{n}</sub></coef>
+            case _ => <coef>{signo}{Math.abs(coef.toInt)}x<sub>{n}</sub></coef>
+          }
           ret
         }
-        explica( s"Átomo $a: ${ec.mkString("")} = 0" )
+        <tr><td>{a}</td><td><ecuacion>{ec} = 0</ecuacion></td></tr>
       }
+      explica(
+        <table>
+          <tr><th>Átomo</th><th>Ecuación</th></tr>
+          {tableBody}
+          <tr><td>Restricción adicional</td><td><mas> + </mas>x<sub>0</sub> = 1 </td></tr>
+        </table>
+      )
     }
-
-    //printM( "Matriz original:" + e.toString, mat )
 
     val matrizDiagonalizada = new Mat(mat).diagonalize
     val matDiag = matrizDiagonalizada.valuesCopy()
 
-    //printM( "Matriz diagonalizada:", matDiag )
 
     val variables = matrizDiagonalizada.solveWithoutFreeTerms()
 
-    siExplicadorActivo{
-      explica( "El sistema es indeterminado, por lo que se asume que x0 tiene valor 1" )
-      explica( "Tras resolver el sistema, quedan los siguientes valores:" )
-      for( (v,i) <- variables.zipWithIndex ; valor <- v ){
-        explica( s"x$i = $valor" )
+
+    def explicaVariables[T]( v: Seq[T] ) = {
+      val tableBody = for( (valor,i) <- v.zipWithIndex ) yield {
+        <tr><td><ecuacion>x<sub>{i}</sub> = {valor}</ecuacion></td></tr>
       }
+      explica( <table>{tableBody}</table>)
+
     }
 
+    siExplicadorActivo{
+      explica( <p>Tras resolver el sistema, quedan los siguientes valores</p> )
+      explicaVariables( variables.map(_.get) )
+    }
 
-    log( "Variables fraccionadas:" + variables.mkString(", "))
 
     val variablesEnteras = {
       val s = variables.map( _.get )
       val mcm = Racional.mcm(s.map(_.den))
-      s.map( r => r.num * mcm / r.den ).map( Math.abs )
+      val ret = s.map( r => r.num * mcm / r.den ).map( Math.abs )
+
+      siExplicadorActivo{
+        if(s.map(_.den).exists( _ > 1 ) ){
+          explica( <p>Algunos valores de variables no son enteros.
+            Multiplicaremos cada fracción hasta hacer que todos los denominadores sean el
+            mínimo común múltiplo de los originales ({mcm})</p> )
+          
+          explica( <p>Las variables ajustadas quedan</p> )
+          explicaVariables( ret )
+        }
+
+      }
+
+      ret
     }
 
-
-    log( "variablesEnteras:" + variablesEnteras.mkString(","))
 
 
     val (mi, md) = variablesEnteras.splitAt(e.ladoIzquierdo.moleculas.size)
@@ -235,7 +281,6 @@ class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fraction
         //log( s"  noEsCero:$noEsCero  anterioresCero:$anterioresCero" )
         noEsCero && anterioresCero
       }
-      exp.explica( s"Para diagonalizar la columna $col, utilizaremos la fila $fil" )
 
       for( f <- 0 until m.size if f != fil && fil != -1 ){
 

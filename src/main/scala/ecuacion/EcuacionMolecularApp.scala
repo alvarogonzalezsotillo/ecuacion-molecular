@@ -13,15 +13,17 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 object EcuacionMolecularApp {
 
-  def log(s: String) = {}
+  def log(s: String) = println(s)
 
   def main(args: Array[String]): Unit = {
+    log( "En el main")
     if( !scala.scalajs.js.isUndefined(document) ){
-      jQuery(() => setupUI())
+      jQuery(() =>setupUI())
     }
     else{
       println( "Browser or nodejs required" )
     }
+    log( "Se acaba el main")
   }
 
 
@@ -36,34 +38,57 @@ object EcuacionMolecularApp {
     val ecuacionNormalizadaDiv = jQuery("#ecuacion-normalizada")
     val ecuacionTex = jQuery("#ecuacion")
     val ejemplosDiv = jQuery("#ejemplos")
+    val explicacionDiv = jQuery("#explicacion")
     val inicioElem = jQuery("#inicio")
 
+
+
+    def ajustaEcuacion( s : String ) : (String,Boolean,String) = {
+
+
+      class Expl extends Explicador{
+        var s = ""
+        def explica( a : Any ) = s += a.toString + "\n"
+        override def toString() = s
+      }
+
+      if( s.trim == "" ){
+        ("Introduce una ecuación, o selecciona un ejemplo",false,"")
+      }
+      else{
+
+        EcuacionMolecular(s) match{
+          case Left(msg) =>
+            (msg,true,"")
+          case Right(ec) =>
+            implicit val explicador = new Expl()
+            AjustadorEcuacionMolecular(ec) match{
+              case Some(ecAjustada) =>
+                (ecAjustada.toHTML,false,explicador.toString)
+              case None =>
+                ("No se puede ajustar la ecuación",true,explicador.toString)
+            }
+
+        }
+      }
+      
+    }
+
     // LISTENER TEXTO DE ECUACION
-    implicit val explicador = Explicador.default
     ecuacionTex.keyup{ () =>
       val s = ecuacionTex.value().toString
       log( "keyup:" + s )
 
-      if( s.trim == "" ){
-        ecuacionNormalizadaDiv.html("Introduce una ecuación, o selecciona un ejemplo");
-      }
-      else{
-        val ec = EcuacionMolecular(s)
-        val msg = ec.map(AjustadorEcuacionMolecular(_)) match {
-          case Left(msg) =>
-            ecuacionNormalizadaDiv.addClass("error")
-            s"$msg"
-          case Right(oec) => oec match {
-            case Some(e) =>
-              ecuacionNormalizadaDiv.removeClass("error")
-              e.toHTML
-            case None =>
-              ecuacionNormalizadaDiv.addClass("error")
-              s"No se puede ajustar la ecuación (índices muy altos o átomos no balanceables):$ec"
-          }
-        }
-        ecuacionNormalizadaDiv.html(msg)
-      }
+      val (ecuacion,error,explicacion) = ajustaEcuacion(s)
+
+      if( error )
+        ecuacionNormalizadaDiv.addClass("error")
+      else
+        ecuacionNormalizadaDiv.removeClass("error")
+
+      ecuacionNormalizadaDiv.html(ecuacion)
+      explicacionDiv.html(explicacion)
+      
     }
 
     def setupSamples() = {
