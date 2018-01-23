@@ -58,7 +58,12 @@ atomo, grupo, molecula{
 }
 
 
-table{
+ecuaciones{
+    display: block;
+    text-align: center;
+}
+
+ecuaciones table{
     margin-left: auto;
     margin-right: auto;
 }

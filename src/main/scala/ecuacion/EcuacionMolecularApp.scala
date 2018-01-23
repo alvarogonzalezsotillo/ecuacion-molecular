@@ -34,6 +34,8 @@ object EcuacionMolecularApp {
 
   def setupUI(): Unit = {
 
+    import scala.xml._
+
     log( "setupUI" )
     val ecuacionNormalizadaDiv = jQuery("#ecuacion-normalizada")
     val ecuacionTex = jQuery("#ecuacion")
@@ -42,8 +44,9 @@ object EcuacionMolecularApp {
     val inicioElem = jQuery("#inicio")
 
 
+    case class ResultadoAjustaEcuacion( msg: String, error: Boolean, explicacion: String )
 
-    def ajustaEcuacion( s : String ) : (String,Boolean,String) = {
+    def ajustaEcuacion( s : String ) : ResultadoAjustaEcuacion = {
 
 
       class Expl extends Explicador{
@@ -53,20 +56,20 @@ object EcuacionMolecularApp {
       }
 
       if( s.trim == "" ){
-        ("Introduce una ecuación, o selecciona un ejemplo",false,"")
+        ResultadoAjustaEcuacion("Introduce una ecuación, o selecciona un ejemplo",false,"")
       }
       else{
 
         EcuacionMolecular(s) match{
           case Left(msg) =>
-            (msg,true,"")
+            ResultadoAjustaEcuacion(msg,true,"")
           case Right(ec) =>
             implicit val explicador = new Expl()
             AjustadorEcuacionMolecular(ec) match{
               case Some(ecAjustada) =>
-                (ecAjustada.toHTML,false,explicador.toString)
+                ResultadoAjustaEcuacion(ecAjustada.toHTML,false,explicador.toString)
               case None =>
-                ("No se puede ajustar la ecuación",true,explicador.toString)
+                ResultadoAjustaEcuacion("No se puede ajustar la ecuación",true,explicador.toString)
             }
 
         }
@@ -79,7 +82,7 @@ object EcuacionMolecularApp {
       val s = ecuacionTex.value().toString
       log( "keyup:" + s )
 
-      val (ecuacion,error,explicacion) = ajustaEcuacion(s)
+      val ResultadoAjustaEcuacion(ecuacion,error,explicacion) = ajustaEcuacion(s)
 
       if( error )
         ecuacionNormalizadaDiv.addClass("error")
@@ -97,22 +100,23 @@ object EcuacionMolecularApp {
       val ini = System.currentTimeMillis();
 
       // LISTENER DE CLICK EN EJEMPLO
-      def ejemploClicked(e: JQueryEventObject, ignored: js.Any) = {
+      def ejemploClicked(e: JQueryEventObject, ignored: js.Any) : Unit = {
         val t = jQuery(e.target).closest("ejemplo")
         inicioElem.get(0).scrollIntoView(true)
         ecuacionNormalizadaDiv.html("Calculando...")
-        ecuacionTex.value(t.text.toString)
+        ecuacionTex.value(t.text.toString.replace( " ", "").replace("="," = "))
         Future{
           ecuacionTex.keyup()
         }
       }
+
 
       // RELLENO DE EJEMPLOS
       for( e <- EcuacionMolecular.ejemplos ) {
         val ec = EcuacionMolecular(e).right.get
         log( "Ejemplo de " + ec )
         Future{
-          val ejemplo = jQuery(s"<ejemplo>${ec.toHTML}</ejemplo")
+          val ejemplo = jQuery( <ejemplo>{ec.toXML}</ejemplo>.toString() )
           ejemplosDiv.append(ejemplo)
           ejemplo.click( ejemploClicked _ )
         }

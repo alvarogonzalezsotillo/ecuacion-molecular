@@ -19,6 +19,8 @@ class EcuacionMolecular(val ladoIzquierdo: LadoEcuacion, val ladoDerecho: LadoEc
 
   def toHTML = ladoIzquierdo.toHTML + " = " + ladoDerecho.toHTML
 
+  def toXML = <ecuacion>{ladoIzquierdo.toXML} = {ladoDerecho.toXML}</ecuacion>
+
   def atomos = sumaAtomos( Seq(ladoIzquierdo.atomos(None), ladoDerecho.atomos(None)))
 
   def esAjustada(multipliers: Option[Seq[Int]] = None ): Boolean = {
@@ -120,11 +122,9 @@ object EcuacionMolecular{
     def toXML: Node = {
         val nodes = moleculas.map(_.toXML)
         <span>
-          (
           {nodes.tail.foldLeft(Seq(nodes.head)){ case (seq, g) =>
-          seq :+ <span>+</span> :+ g
-        }}
-          )
+            seq :+ <span>+</span> :+ g
+          }}
         </span>
     }
 
@@ -138,11 +138,11 @@ object EcuacionMolecular{
 
     def atomo: Parser[Atomo] = "[A-Z][a-z]?".r ^^ {
       case s => Atomo(s)
-    }| failure( "Un símbolo atómico es una letra mayúscula con una letra minúscula opcional" )
+    }
 
     def numero: Parser[Int] = "[0-9]+".r ^^ {
       case n => n.toInt
-    } | failure( "Se esperaba un número")
+    }
 
 
 
@@ -166,11 +166,11 @@ object EcuacionMolecular{
       case n ~ as =>
         Molecula( as, n.getOrElse(1))
 
-    } | failure( "Una molécula son varios símbolos atómicos, cada uno con un número opcional")
+    }
 
     def ladoDeEcuacion : Parser[LadoEcuacion] = molecula ~ rep((blanco ~ "\\+".r ~ blanco) ~> molecula) ^^ {
       case m ~ ms => LadoEcuacion(m :: ms)
-    } | failure( "Un lado de la ecuación son varias moléculas separadas por +")
+    }
 
     def separadorLados : Parser[Any] = blanco <~ ("=".r | "<-*>".r) ~> blanco
 

@@ -48,14 +48,6 @@ object AjustadorEcuacionMolecular {
     import explicador.siExplicadorActivo
     import explicador.explica
 
-    def printM[T]( msg: String, m: Array[Array[T]] ) = {
-      log( "*********")
-      log( msg )
-      for( f <- m ){
-        log( f.mkString("\t"))
-      }
-      log( "*********")
-    }
 
 
     val atomosLadoDerecho = e.ladoDerecho.atomos().keySet
@@ -63,7 +55,6 @@ object AjustadorEcuacionMolecular {
 
     siExplicadorActivo {
       explica( <p>Antes de comenzar, se comprueba que a los dos lados de la ecuación aparecen los mismos átomos. </p> )
-      explica( <b>hola</b> )
       explica(
           <ul>
             <li>
@@ -106,7 +97,7 @@ object AjustadorEcuacionMolecular {
       val lisxml = Explicador.intercala( lis, <mas> + </mas> )
       val ldsxml = Explicador.intercala( lds, <mas> + </mas> )
 
-      explica( <p>{lisxml} = {ldsxml}</p> )
+      explica( <ecuaciones><ecuacion>{lisxml} = {ldsxml}</ecuacion></ecuaciones> )
     }
 
     val mat = {
@@ -134,18 +125,20 @@ object AjustadorEcuacionMolecular {
           val ret = coef match{
             case x if x == cero => <coef></coef>
             case x if (x == uno || x == menosuno) => <coef>{signo}x<sub>{n}</sub></coef>
-            case _ => <coef>{signo}{Math.abs(coef.toInt)}x<sub>{n}</sub></coef>
+            case _ => <coef>{signo}{Math.abs(coef.toInt)}⋅x<sub>{n}</sub></coef>
           }
           ret
         }
         <tr><td>{a}</td><td><ecuacion>{ec} = 0</ecuacion></td></tr>
       }
       explica(
-        <table>
-          <tr><th>Átomo</th><th>Ecuación</th></tr>
-          {tableBody}
-          <tr><td>Restricción adicional</td><td><mas> + </mas>x<sub>0</sub> = 1 </td></tr>
-        </table>
+        <ecuaciones>
+          <table>
+            <tr><th>Átomo</th><th>Ecuación</th></tr>
+            {tableBody}
+            <tr><td><i>Restricción adicional</i></td><td><mas> + </mas>x<sub>0</sub> = 1 </td></tr>
+          </table>
+        </ecuaciones>
       )
     }
 
@@ -160,7 +153,7 @@ object AjustadorEcuacionMolecular {
       val tableBody = for( (valor,i) <- v.zipWithIndex ) yield {
         <tr><td><ecuacion>x<sub>{i}</sub> = {valor}</ecuacion></td></tr>
       }
-      explica( <table>{tableBody}</table>)
+      explica( <ecuaciones><table>{tableBody}</table></ecuaciones>)
 
     }
 
@@ -229,6 +222,40 @@ class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fraction
     values(r)(c)
   }
 
+  def dump( printline : (String) => Unit = println ) = {
+    for( r <- rows ){
+      printline( r.mkString("\t") )
+    }
+  }
+
+  def solve = {
+    import fractional.mkNumericOps
+
+    val nColumns = columns.size
+    val nRows = rows.size
+    assert( nColumns-1 <= nRows, s"El sistema no puede estar definido si hay menos filas ($nRows) que variables ($nColumns-1)" )
+
+    val diag = diagonalize()
+    val matDiag = diag.valuesCopy()
+
+    dump()
+    diag.dump()
+
+    val variables = for( v <- 0 until nColumns-1 ) yield {
+      val filaO = diag.rows.find( f => f(v) != cero )
+      assert( filaO.isDefined, s"No se puede encontrar una fila que defina la variable x$v")
+      val fila = filaO.get
+
+      val variablesEnFila = fila.take(nColumns-1).count( _ != cero )
+      assert( variablesEnFila == 1, s"La fila que da valor a la variable x$v no está definida (depende de variables sin valor $variablesEnFila)" )
+
+      fila(nColumns-1)/fila(v)
+    }
+
+
+
+    variables
+  }
 
   def solveWithoutFreeTerms(firstVariableHint : T = uno ) = {
 
@@ -260,7 +287,7 @@ class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fraction
     variables
   }
 
-  def diagonalize( implicit exp: Explicador ) : Mat[T] = {
+  def diagonalize() : Mat[T] = {
 
     def log( s: String ) = println(s)
 
