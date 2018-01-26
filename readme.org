@@ -4,7 +4,7 @@ Una ecuación estequiométrica o ecuación química muestra las moléculas inici
 
 Por ejemplo, la reacción de combustión de hidrógeno ($H_2$) y oxígeno ($O_2$) para formar agua (${H_2}O$) se representa como:
 
-$$H_2 + O_2 = {H_2}O$$
+\[H_2 + O_2 = {H_2}O\]
 
 Se puede ver que los índices moleculares no /cuadran/: en el lado izquierdo de la ecuación hay dos átomos de oxígeno, pero en el lado derecho solo hay uno.
 
