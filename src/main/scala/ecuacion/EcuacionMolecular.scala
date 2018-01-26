@@ -234,7 +234,7 @@ object EcuacionMolecular{
     "C6H12  +   O2 =    CO2 +     H2O",
     "C6H12O6 + O2 = CO2 + H2O",
     "C3H8O + O2 = CO2 + H2O",
-    "C4H10 + O2 = CO2 + H2O",
+    "C4H10 + O2 = CO2 + H2O"
   )
 }
 
