@@ -24,5 +24,9 @@ class RacionalTest extends FlatSpec{
     assert( (-1\\ -3).num == 1 )
     assert( (-1\\ -3).den == 3 )
   }
+ 
+  "Jaime" should "ver esto" in{
+    println( "Hola Jaime");
+  }
 
 }
