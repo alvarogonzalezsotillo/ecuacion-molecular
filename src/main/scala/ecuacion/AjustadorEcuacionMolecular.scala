@@ -142,11 +142,10 @@ object AjustadorEcuacionMolecular {
       )
     }
 
-    val matrizDiagonalizada = new Mat(mat).diagonalize
-    val matDiag = matrizDiagonalizada.valuesCopy()
-
-
-    val variables = matrizDiagonalizada.solveWithoutFreeTerms()
+    val adicional = Array(uno) ++ Array.fill(mat(0).size-1)(cero) :+ uno
+    val toSolve = mat.map( array => array :+ cero ) :+ adicional
+    val matriz = new Mat(toSolve)
+    val variables = matriz.solve.get
 
 
     def explicaVariables[T]( v: Seq[T] ) = {
@@ -159,17 +158,16 @@ object AjustadorEcuacionMolecular {
 
     siExplicadorActivo{
       explica( <p>Tras resolver el sistema, quedan los siguientes valores</p> )
-      explicaVariables( variables.map(_.get) )
+      explicaVariables( variables )
     }
 
 
     val variablesEnteras = {
-      val s = variables.map( _.get )
-      val mcm = Racional.mcm(s.map(_.den))
-      val ret = s.map( r => r.num * mcm / r.den ).map( Math.abs )
+      val mcm = Racional.mcm(variables.map(_.den))
+      val ret = variables.map( r => r.num * mcm / r.den ).map( Math.abs )
 
       siExplicadorActivo{
-        if(s.map(_.den).exists( _ > 1 ) ){
+        if(variables.map(_.den).exists( _ > 1 ) ){
           explica( <p>Algunos valores de variables no son enteros.
             Multiplicaremos cada fracción hasta hacer que todos los denominadores sean el
             mínimo común múltiplo de los originales ({mcm})</p> )
@@ -194,7 +192,7 @@ object AjustadorEcuacionMolecular {
     }
 
     val ret = EcuacionMolecular(LadoEcuacion(li), LadoEcuacion(ld))
-    log( "ret:" + ret.toString )
+    log( s"e:$e ret:$ret" )
     assert( ret.esAjustada() )
     Some(ret)
   }
@@ -203,7 +201,11 @@ object AjustadorEcuacionMolecular {
 
 class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fractional[T], ct: ClassTag[T]){
 
-  def this( a : Array[Array[T]] )(implicit f: Fractional[T], ct: ClassTag[T] ) = this( a.map( _.toIndexedSeq) )
+  println( "HACIENDO UNA MATRIZ:" +values )
+
+  def this( a : Array[Array[T]] )(implicit f: Fractional[T], ct: ClassTag[T] ){
+    this( a.map( _.toIndexedSeq) )
+  }
 
   assert( values.forall( _.size == values(0).size ) )
 
@@ -228,18 +230,37 @@ class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fraction
     }
   }
 
-  def solve = {
+  def asXML( m: Array[Array[T]]) = {
+
+    val filas = for( f <- m ) yield{
+      val fila = f.map( e => <elemento>{e}</elemento> )
+      <fila>{fila}</fila>
+    }
+
+    <matriz>{filas}</matriz>
+  }
+
+  def solve(implicit explicador: Explicador ) : Some[IndexedSeq[T]] = {
     import fractional.mkNumericOps
+    import explicador._
+
+    explica( <p>El sistema de ecuaciones puede representarse como una matriz y resolverse por el
+      <a href="https://es.wikipedia.org/wiki/Sistema_de_ecuaciones_lineales#M%C3%A9todo_de_Gauss">método de Gauss</a>
+    </p> )
+
+    explica( <ecuaciones>{asXML(valuesCopy())}</ecuaciones> )
+
+    explica( <p>La secuencia de combinaciones de filas es la siguiente:</p>)
+
 
     val nColumns = columns.size
     val nRows = rows.size
-    assert( nColumns-1 <= nRows, s"El sistema no puede estar definido si hay menos filas ($nRows) que variables ($nColumns-1)" )
+    if( nColumns-1 > nRows ){
+      explica( <p>El sistema no puede estar definido si hay menos filas ({nRows}) que variables ({nColumns-1}) </p> )
+    }
 
-    val diag = diagonalize()
+    val diag = diagonalize
     val matDiag = diag.valuesCopy()
-
-    dump()
-    diag.dump()
 
     val variables = for( v <- 0 until nColumns-1 ) yield {
       val filaO = diag.rows.find( f => f(v) != cero )
@@ -252,44 +273,15 @@ class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fraction
       fila(nColumns-1)/fila(v)
     }
 
-
-
-    variables
+    Some(variables)
   }
 
-  def solveWithoutFreeTerms(firstVariableHint : T = uno ) = {
-
-    import fractional.mkNumericOps
-
-    val matDiag = valuesCopy()
-    val variables = Array.fill[Option[T]]( matDiag(0).size )(None)
-    variables(0) = Some(uno)
-
-    var changed = true
-    while( changed ){
-      changed = false
-      for( fila <- matDiag ) {
-        val a = fila.indexWhere(_ != cero)
-        val b = fila.indexWhere(_ != cero, a + 1)
-
-        for( (i1,i2) <- Seq( (a,b), (b,a)) if i1 != -1 && i2 != -1 ){
-          if (variables(i1).isDefined && variables(i2).isEmpty) {
-            val factor = fila(i1)/fila(i2)
-            //fi1*vi1 + fi2*vi2 = 0   vi2 =  -vi1*fi1/fi2
-            variables(i2) = variables(i1).map( -_ * factor)
-            changed = true
-          }
-        }
-      }
-    }
 
 
-    variables
-  }
 
-  def diagonalize() : Mat[T] = {
+  def diagonalize(implicit explicador: Explicador ) : Mat[T] = {
 
-    def log( s: String ) = println(s)
+    def log( s: String ) = {}
 
     import fractional.mkNumericOps
 
@@ -298,14 +290,11 @@ class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fraction
 
     val columns = (m(0).size min m.size)
 
-    for( col <- 0 until columns ){
+    val xml = for( col <- 0 until columns ) yield{
       val fil = m.indexWhere{ fila =>
-        //log( "Mirando fila:" + fila.mkString((",")) )
         val noEsCero = fila(col) != cero
         val anteriores = fila.take(col)
-        //log( "anteriores:" + anteriores.mkString(","))
         val anterioresCero = anteriores.forall( _ == cero )
-        //log( s"  noEsCero:$noEsCero  anterioresCero:$anterioresCero" )
         noEsCero && anterioresCero
       }
 
@@ -317,8 +306,12 @@ class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fraction
         }
       }
 
-
+      asXML(m)
     }
+
+    explicador.explica( <ecuaciones>{Explicador.intercala( xml, <implica>-></implica> )}</ecuaciones> )
+
+
     new Mat(m)
 
   }

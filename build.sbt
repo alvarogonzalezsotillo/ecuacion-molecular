@@ -28,7 +28,6 @@ libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % "1.0.6"
 
 
 // USAR WEBJARS PARA JQUERY
-// esto crea scala-js-tutorial-jsdeps.js
 skip in packageJSDependencies := false
 jsDependencies += "org.webjars" % "jquery" % "2.1.4" / "2.1.4/jquery.js"
 

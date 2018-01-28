@@ -12,11 +12,10 @@ class EcuacionMolecularTest extends FlatSpec {
   it should "ajustar todas las ecuaciones de ejemplo" in {
     import EcuacionMolecular._
 
-    def log(s:String) = { }
+    def log(s:String) = { println(s) }
 
 
     for (e <- ejemplos) {
-      try{
         log("******************************************************************************************")
 
         var explicacion = ""
@@ -26,14 +25,15 @@ class EcuacionMolecularTest extends FlatSpec {
         }
 
         val ecuacion = EcuacionMolecular(e)
-        val ecuacionAjustadaEither = ecuacion.map(AjustadorEcuacionMolecular(_))
+        log( s"ecuacion:$ecuacion")
+        assert( ecuacion.isRight )
+        val ecuacionAjustadaO = AjustadorEcuacionMolecular( ecuacion.getOrElse(???) )
+        log( s"ecuacionAjustadaO:$ecuacionAjustadaO")
         log( explicacion )
-        val ecuacionAjustada = ecuacionAjustadaEither.right.get.get
+        assert( ecuacionAjustadaO.isDefined )
+        val ecuacionAjustada = ecuacionAjustadaO.get
+        log( s"ecuacionAjustada:$ecuacionAjustada")
         assert( ecuacionAjustada.esAjustada() )
-      }
-      catch{
-        case e : Throwable => e.printStackTrace()
-      }
     }
   }
 }

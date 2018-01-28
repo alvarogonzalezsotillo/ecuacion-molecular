@@ -72,6 +72,29 @@ td, th{
     text-align: left;
 }
 
+matriz{
+    display: inline-block;
+    border-right: 2px solid black;
+    border-left: 2px solid black;
+    padding: 0.5em;
+    border-top-left-radius: 0.7em 5em;
+    border-top-right-radius: 0.7em 5em;
+    border-bottom-right-radius: 0.7em 5em;
+    border-bottom-left-radius: 0.7em 5em;
+}
+
+fila{
+    display: table-row;
+}
+
+elemento{
+    display: table-cell;
+    padding: 0.3em;
+}
+
+implica{
+    display: inline-block;
+}
 
 @media only screen and (min-width: 500px) {
     /* MAYOR DE 768px */

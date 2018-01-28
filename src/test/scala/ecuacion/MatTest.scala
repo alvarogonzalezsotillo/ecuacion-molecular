@@ -7,6 +7,8 @@ import scala.util.Try
 class MatTest extends FlatSpec {
 
 
+  implicit val explicador = ecuacion.Explicador.default
+
   it should "Resolver un sistema definido" in {
     import EcuacionMolecular._
     import ecuacion.Racional._
