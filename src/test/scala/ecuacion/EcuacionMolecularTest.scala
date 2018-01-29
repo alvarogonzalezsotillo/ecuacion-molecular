@@ -27,7 +27,7 @@ class EcuacionMolecularTest extends FlatSpec {
         val ecuacion = EcuacionMolecular(e)
         log( s"ecuacion:$ecuacion")
         assert( ecuacion.isRight )
-        val ecuacionAjustadaO = AjustadorEcuacionMolecular( ecuacion.getOrElse(???) )
+        val ecuacionAjustadaO = AjustadorEcuacionMolecular( ecuacion.right.get )
         log( s"ecuacionAjustadaO:$ecuacionAjustadaO")
         log( explicacion )
         assert( ecuacionAjustadaO.isDefined )

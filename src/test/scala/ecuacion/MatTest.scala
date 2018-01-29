@@ -20,7 +20,7 @@ class MatTest extends FlatSpec {
       Array(2\\1, 3\\1, 1\\1, 4\\1)
     ))
 
-    val variables = m.solve.get
+    val variables = m.solve.right.get
     println( "Las variables son:" + variables.mkString(", ") )
     assert( variables(0) == 3\\4)
     assert( variables(1) == 3\\4)
@@ -36,8 +36,8 @@ class MatTest extends FlatSpec {
       Array(2.0, 4.0, 6.0, 4.0)
     ))
 
-    val t = Try(m.solve)
-    assert(t.isFailure)
+    val variables = m.solve
+    assert(variables.isLeft)
   }
 
   it should "Fallar en un sistema indefinido" in {
@@ -49,8 +49,8 @@ class MatTest extends FlatSpec {
       Array(2.0, 4.0, 6.0, 8.0)
     ))
 
-    val t = Try(m.solve)
-    assert(t.isFailure)
+    val variables = m.solve
+    assert(variables.isLeft)
   }
 
 

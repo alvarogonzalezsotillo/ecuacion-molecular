@@ -15,7 +15,6 @@ object AjustadorEcuacionMolecular {
 
   
   def apply( ecuacion: EcuacionMolecular, maxSum: Int = 30 )(implicit explicador: Explicador): Option[EcuacionMolecular] = {
-    //ajustaTanteo(ecuacion,maxSum)
     Try(ajustaAlgebraico(ecuacion)) match{
       case Success(Some(ec)) => Some(ec)
       case _ => None
@@ -87,10 +86,10 @@ object AjustadorEcuacionMolecular {
 
     siExplicadorActivo{
       val li = e.ladoIzquierdo.moleculas.zipWithIndex
-      val lis = li.map{ case(m,i) => <span>x<sub>{i}</sub>⋅{m.toXML}</span> }
+      val lis = li.map{ case(m,i) => <span><b>x<sub>{i}</sub></b>⋅{m.toXML}</span> }
       val base = li.size
       val ld = e.ladoDerecho.moleculas.zipWithIndex
-      val lds = ld.map{ case(m,i) => <span>x<sub>{i+base}</sub>⋅{m.toXML}</span> }
+      val lds = ld.map{ case(m,i) => <span><b>x<sub>{i+base}</sub></b>⋅{m.toXML}</span> }
 
       explica( <p>Se asignan variables (x<sub>0</sub>, x<sub>1</sub>, x<sub>2</sub>...) a los coeficientes de cada molécula, de forma que la ecuación molecular pasa a ser:</p> )
 
@@ -104,7 +103,6 @@ object AjustadorEcuacionMolecular {
       def lado( l: LadoEcuacion ) = Array.tabulate( atomos.size, l.moleculas.size ){ (a,m) =>
         val atomo = atomos(a)
         val atomosDeLado = l.moleculas(m).atomos()
-        //log( s"Lado:${l.toString} atomosDeLado:$atomosDeLado")
         val coef = atomosDeLado.getOrElse(atomo,0)
         fractional.fromInt(coef)
       }
@@ -116,8 +114,12 @@ object AjustadorEcuacionMolecular {
     }
 
     siExplicadorActivo{
-      explica( <p>De esta forma se define un sistema de ecuaciones lineales, con una ecuación por cada tipo de átomo</p> )
-      explica( <p>El sistema será indeterminado, por lo que se añade la restricción adicional de que  que x<sub>0</sub> tiene valor 1</p> )
+      explica(
+        <p>
+          De esta forma se define un sistema de ecuaciones lineales, con una ecuación por cada tipo de átomo.
+          El sistema será indeterminado, por lo que se añade la restricción adicional de que  que x<sub>0</sub> tiene valor 1
+        </p>
+      )
       explica( <p>Las ecuaciones resultantes serían</p> )
       val tableBody = for( (a,fila) <- atomos.zip(mat) ) yield {
         val ec = fila.zipWithIndex.map{ case(coef,n) =>
@@ -145,8 +147,17 @@ object AjustadorEcuacionMolecular {
     val adicional = Array(uno) ++ Array.fill(mat(0).size-1)(cero) :+ uno
     val toSolve = mat.map( array => array :+ cero ) :+ adicional
     val matriz = new Mat(toSolve)
-    val variables = matriz.solve.get
+    val errorOVariables = matriz.solve
 
+    println( s"errorOvariables:$errorOVariables" )
+
+
+    if( errorOVariables.isLeft ){
+      explica( <p>El sistema no puede resolverse</p> )
+      return None
+    }
+
+    val variables = errorOVariables.right.get  
 
     def explicaVariables[T]( v: Seq[T] ) = {
       val tableBody = for( (valor,i) <- v.zipWithIndex ) yield {
@@ -159,6 +170,11 @@ object AjustadorEcuacionMolecular {
     siExplicadorActivo{
       explica( <p>Tras resolver el sistema, quedan los siguientes valores</p> )
       explicaVariables( variables )
+    }
+
+    if( variables.exists( _ == cero ) ){
+      explica( <p>Alguna variable ha quedado a cero, lo que indica que la ecuación no puede ajustarse</p> )
+      return None
     }
 
 
@@ -240,7 +256,7 @@ class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fraction
     <matriz>{filas}</matriz>
   }
 
-  def solve(implicit explicador: Explicador ) : Some[IndexedSeq[T]] = {
+  def solve(implicit explicador: Explicador ) : String Either IndexedSeq[T] = {
     import fractional.mkNumericOps
     import explicador._
 
@@ -262,18 +278,38 @@ class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fraction
     val diag = diagonalize
     val matDiag = diag.valuesCopy()
 
-    val variables = for( v <- 0 until nColumns-1 ) yield {
-      val filaO = diag.rows.find( f => f(v) != cero )
-      assert( filaO.isDefined, s"No se puede encontrar una fila que defina la variable x$v")
-      val fila = filaO.get
-
-      val variablesEnFila = fila.take(nColumns-1).count( _ != cero )
-      assert( variablesEnFila == 1, s"La fila que da valor a la variable x$v no está definida (depende de variables sin valor $variablesEnFila)" )
-
-      fila(nColumns-1)/fila(v)
+    if( matDiag.exists( f => f.take(nColumns-1).forall( _ == cero ) && f.last != cero ) ){
+      return Left( s"Hay una fila con coeficientes a cero, pero el término independiente no es cero" )
     }
 
-    Some(variables)
+    val erroresOVariables = for( v <- 0 until nColumns-1 ) yield {
+      val filaO = diag.rows.find( f => f(v) != cero )
+      if( !filaO.isDefined ){
+        val error = <p>No se puede encontrar una fila que defina la variable x<sub>{v}</sub></p>
+        explica( error )
+        return Left(error.toString)
+      } 
+      val fila = filaO.get
+      val variablesEnFila = fila.take(nColumns-1).count( _ != cero )
+      if( variablesEnFila != 1 ){
+        val error = <p>La fila que da valor a la variable x<sub>{v}</sub> no está definida, porque aparece más de una variable</p>
+        explica(error)
+        return Left(error.toString)
+      }
+
+      Right(fila(nColumns-1)/fila(v))
+    }
+
+    val errores = erroresOVariables.filter(_.isLeft).map(_.left)
+
+    if( errores.size > 0 ){
+      var error = errores.mkString( ", " )
+      return Left(error)
+    }
+    else{
+      val variables = erroresOVariables.map( _.right.get )
+      Right(variables)
+    }
   }
 
 
