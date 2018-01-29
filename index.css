@@ -46,7 +46,7 @@ ejemplo{
     display: none;
 }
 
-.explicacion .visible{
+.explicacion.visible{
     display: block;
 }
 
