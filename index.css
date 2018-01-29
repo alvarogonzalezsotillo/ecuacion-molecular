@@ -46,6 +46,12 @@ ejemplo{
     display: none;
 }
 
+
+#ecuacion-normalizada a{
+    margin-left: 1em;
+    font-size: 0.7em;
+}
+
 .explicacion.visible{
     display: block;
 }

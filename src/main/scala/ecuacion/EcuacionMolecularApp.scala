@@ -79,7 +79,6 @@ object EcuacionMolecularApp {
     // LISTENER TEXTO DE ECUACION
     ecuacionTex.keyup{ () =>
       val s = ecuacionTex.value().toString
-      log( "keyup:" + s )
 
       val ResultadoAjustaEcuacion(ecuacion,error,explicacion) = ajustaEcuacion(s)
 
@@ -89,8 +88,10 @@ object EcuacionMolecularApp {
         ecuacionNormalizadaDiv.removeClass("error")
 
       ecuacionNormalizadaDiv.html(ecuacion)
-      agregaExplicacion(ecuacionNormalizadaDiv,explicacion)
-     
+      if( s.trim != "" ) {
+        agregaExplicacion(ecuacionNormalizadaDiv, explicacion)
+      }
+      log( "keyup:" + s )
     }
 
     def agregaExplicacion( div: JQuery, explicacion: String ) = {
@@ -103,6 +104,12 @@ object EcuacionMolecularApp {
 
       boton.click{() =>
         newDiv.toggleClass("visible")
+        if( newDiv.hasClass("visible") ){
+          boton.text("ocultar explicación")
+        }
+        else{
+          boton.text("ver explicación")
+        }
       }
 
     }
@@ -117,7 +124,7 @@ object EcuacionMolecularApp {
         val t = jQuery(e.target).closest("ejemplo")
         inicioElem.get(0).scrollIntoView(true)
         ecuacionNormalizadaDiv.html("Calculando...")
-        ecuacionTex.value(t.text.toString.replace( " ", "").replace("="," = "))
+        ecuacionTex.value(t.text.toString.replace( " ", "").replace("="," = ").replace("+", " + "))
         Future{
           ecuacionTex.keyup()
         }
