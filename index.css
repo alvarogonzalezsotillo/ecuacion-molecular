@@ -40,6 +40,16 @@ ejemplo{
     margin-bottom: 1em;
 }
 
+.explicacion{
+    text-align: left;
+    color: black;
+    display: none;
+}
+
+.explicacion .visible{
+    display: block;
+}
+
 div.error{
     color: #ff00ff;
     border: 2px solid red;

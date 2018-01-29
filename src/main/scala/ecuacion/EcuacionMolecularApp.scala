@@ -40,7 +40,6 @@ object EcuacionMolecularApp {
     val ecuacionNormalizadaDiv = jQuery("#ecuacion-normalizada")
     val ecuacionTex = jQuery("#ecuacion")
     val ejemplosDiv = jQuery("#ejemplos")
-    val explicacionDiv = jQuery("#explicacion")
     val inicioElem = jQuery("#inicio")
 
 
@@ -90,8 +89,21 @@ object EcuacionMolecularApp {
         ecuacionNormalizadaDiv.removeClass("error")
 
       ecuacionNormalizadaDiv.html(ecuacion)
-      explicacionDiv.html(explicacion)
-      
+      agregaExplicacion(ecuacionNormalizadaDiv,explicacion)
+     
+    }
+
+    def agregaExplicacion( div: JQuery, explicacion: String ) = {
+      val boton = jQuery(<a>¿Por qué?</a>.toString)
+      val newDiv = jQuery(<div class="explicacion"></div>.toString)
+      newDiv.append(boton)
+      newDiv.append(explicacion)
+      newDiv.appendTo(div)
+
+      boton.click{() =>
+        newDiv.addClass("visible")
+      }
+
     }
 
     def setupSamples() = {
