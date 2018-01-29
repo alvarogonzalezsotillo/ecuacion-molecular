@@ -9,18 +9,22 @@
   <body>
 
     <h1 id="inicio">Ajuste de ecuaciones moleculares</h1>
-    La ecuación molecular introducida se ajustará mediante el <a href="https://es.wikipedia.org/wiki/M%C3%A9todo_algebraico">método algebraico</a>. Puedes consultar el <a href="https://github.com/alvarogonzalezsotillo/ecuacion-molecular">código fuente en GitHub</a>.
+    La ecuación molecular introducida se ajustará mediante el <a href="https://es.wikipedia.org/wiki/M%C3%A9todo_algebraico">método algebraico</a>.
+    Puedes consultar el <a href="https://github.com/alvarogonzalezsotillo/ecuacion-molecular">código fuente en GitHub</a>.
 
     <!-- Include JavaScript dependencies, webjars -->
-    <script type="text/javascript" src="./target/scala-2.12/scala-js-tutorial-jsdeps.js"></script>
+    <script type="text/javascript" src="./target/scala-2.12/ajustador-de-ecuacion-jsdeps.js"></script>
 
     <!-- Include Scala.js compiled code, generated with fastOptJS|fullOptJS in sbt -->
-    <script type="text/javascript" src="./target/scala-2.12/scala-js-tutorial-opt.js"></script>
+    <script type="text/javascript" src="./target/scala-2.12/ajustador-de-ecuacion-opt.js"></script>
 
+    
     <input type="text" id="ecuacion" placeholder="Ejemplo: H2+O2=H2O"/>
 
     <div id="ecuacion-normalizada"></div>
 
+    <div id="explicacion"></div>
+    
     <div id="ejemplos"></div>
 
     
