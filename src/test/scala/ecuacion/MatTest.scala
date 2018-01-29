@@ -20,7 +20,7 @@ class MatTest extends FlatSpec {
       Array(2\\1, 3\\1, 1\\1, 4\\1)
     ))
 
-    val variables = m.solve
+    val variables = m.solve.get
     println( "Las variables son:" + variables.mkString(", ") )
     assert( variables(0) == 3\\4)
     assert( variables(1) == 3\\4)
