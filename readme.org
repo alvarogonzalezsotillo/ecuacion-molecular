@@ -13,7 +13,23 @@ Por ejemplo, la reacción de combustión de hidrógeno ($H_2$) y oxígeno ($O_2$
 
 Se puede ver que los índices moleculares no /cuadran/: en el lado izquierdo de la ecuación hay dos átomos de oxígeno, pero en el lado derecho solo hay uno.
 
-Una ecuación ajustada es una en la que los coeficientes estequiométricos (cantidad de cada molécula) hace que haya el mismo número de átomos a cada lado de la ecuación. Para el caso anterior:
+Una ecuación *ajustada* es una en la que los coeficientes estequiométricos (cantidad de cada molécula) hace que haya el mismo número de átomos a cada lado de la ecuación. Para el caso anterior:
 
 $$H_2 + O_2 = 2{H_2}O$$
 
+* Ajuste de ecuaciones
+Se pueden ajustar ecuaciones estequiométricas por el método del tanteo o por el método algebraico.
+
+El *método del tanteo* no es realmente un método: se van probando coeficientes hasta que la ecuación queda ajustada.
+
+En el *método algebraico* se utiliza un sistema de ecuaciones lineales:
+- Las incógnitas son los coeficientes estequiométricos
+- Por cada tipo de átomo hay una ecuación
+- Los coeficientes de cada incógnita son los coeficientes moleculares del átomo en cada molécula
+  - Los de la parte derecha son positivos
+  - Los de la parte izquierda son negativos
+- Cada ecuación lineal se iguala a cero
+
+Para la ecuación $H_2 + O_2 = 2{H_2}O$:
+
+$H: 2a + 0b - 
