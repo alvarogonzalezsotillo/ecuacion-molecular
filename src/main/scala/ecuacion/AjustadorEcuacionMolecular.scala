@@ -117,7 +117,8 @@ object AjustadorEcuacionMolecular {
       explica(
         <p>
           De esta forma se define un sistema de ecuaciones lineales, con una ecuación por cada tipo de átomo.
-          El sistema será indeterminado, por lo que se añade la restricción adicional de que  que x<sub>0</sub> tiene valor 1
+          El sistema será <a href="https://es.wikipedia.org/wiki/Sistema_de_ecuaciones_algebraicas#Clasificaci%C3%B3n_de_los_sistemas">indeterminado</a>,
+          por lo que se añade la restricción adicional de que  que x<sub>0</sub> tiene valor 1
         </p>
       )
       explica( <p>Las ecuaciones resultantes serían</p> )

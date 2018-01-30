@@ -95,7 +95,7 @@ object EcuacionMolecularApp {
     }
 
     def agregaExplicacion( div: JQuery, explicacion: String ) = {
-      val boton = jQuery(<a href="#">ver explicación</a>.toString)
+      val boton = jQuery(<a class="acordeon" href="#">ver explicación</a>.toString)
       val newDiv = jQuery(<div class="explicacion"></div>.toString)
       println( boton )
       newDiv.append(explicacion)
