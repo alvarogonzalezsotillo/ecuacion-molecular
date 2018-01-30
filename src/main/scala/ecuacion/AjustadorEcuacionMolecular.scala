@@ -53,7 +53,7 @@ object AjustadorEcuacionMolecular {
     val atomosLadoIzquierdo = e.ladoIzquierdo.atomos().keySet
 
     siExplicadorActivo {
-      explica( <p>Antes de comenzar, se comprueba que a los dos lados de la ecuación aparecen los mismos átomos. </p> )
+      explica( <p>Antes de comenzar, se comprueba que a los dos lados de la ecuación aparecen los mismos átomos: </p> )
       explica(
           <ul>
             <li>
@@ -67,9 +67,9 @@ object AjustadorEcuacionMolecular {
           </ul>
       )
       if (atomosLadoDerecho == atomosLadoIzquierdo)
-        explica(<p>Como son iguales, se puede continuar</p>)
+        explica(<p>Como son iguales, se puede continuar.</p>)
       else
-        explica(<p>No son iguales, no es posible balancear la ecuación</p>)
+        explica(<p>No son iguales, no es posible balancear la ecuación.</p>)
     }
 
 
@@ -118,7 +118,7 @@ object AjustadorEcuacionMolecular {
         <p>
           De esta forma se define un sistema de ecuaciones lineales, con una ecuación por cada tipo de átomo.
           El sistema será <a href="https://es.wikipedia.org/wiki/Sistema_de_ecuaciones_algebraicas#Clasificaci%C3%B3n_de_los_sistemas">indeterminado</a>,
-          por lo que se añade la restricción adicional de que  que x<sub>0</sub> tiene valor 1
+          por lo que se añade la restricción adicional de que  que x<sub>0</sub> tiene valor 1.
         </p>
       )
       explica( <p>Las ecuaciones resultantes serían</p> )
@@ -154,7 +154,7 @@ object AjustadorEcuacionMolecular {
 
 
     if( errorOVariables.isLeft ){
-      explica( <p>El sistema no puede resolverse</p> )
+      explica( <p>El sistema no puede resolverse.</p> )
       return None
     }
 
@@ -169,27 +169,38 @@ object AjustadorEcuacionMolecular {
     }
 
     siExplicadorActivo{
-      explica( <p>Tras resolver el sistema, quedan los siguientes valores</p> )
+      explica( <p>Tras resolver el sistema, quedan los siguientes valores:</p> )
       explicaVariables( variables )
     }
 
     if( variables.exists( _ == cero ) ){
-      explica( <p>Alguna variable ha quedado a cero, lo que indica que la ecuación no puede ajustarse</p> )
+      explica( <p>Alguna variable ha quedado a cero, lo que indica que la ecuación no puede ajustarse.</p> )
       return None
     }
 
 
     val variablesEnteras = {
-      val mcm = Racional.mcm(variables.map(_.den))
+      val denominadores = variables.map(_.den)
+      val mcm = Racional.mcm(denominadores)
       val ret = variables.map( r => r.num * mcm / r.den ).map( Math.abs )
 
       siExplicadorActivo{
-        if(variables.map(_.den).exists( _ > 1 ) ){
-          explica( <p>Algunos valores de variables no son enteros.
-            Multiplicaremos cada fracción hasta hacer que todos los denominadores sean el
-            mínimo común múltiplo de los originales ({mcm})</p> )
+        if(denominadores.exists( _ > 1 ) ){
+          explica(
+            <p>Algunos valores de variables no son enteros.
+              Multiplicaremos cada fracción hasta hacer que todos los denominadores sean el
+              mínimo común múltiplo de los originales.
+            </p>
+          )
+          explica(
+            <ecuaciones>
+              <ecuacion>
+                mcm({denominadores.mkString(",")}) = {mcm}
+              </ecuacion>
+            </ecuaciones>
+          )
           
-          explica( <p>Las variables ajustadas quedan</p> )
+          explica( <p>Las variables ajustadas quedan:</p> )
           explicaVariables( ret )
         }
 
@@ -209,8 +220,11 @@ object AjustadorEcuacionMolecular {
     }
 
     val ret = EcuacionMolecular(LadoEcuacion(li), LadoEcuacion(ld))
-    log( s"e:$e ret:$ret" )
-    assert( ret.esAjustada() )
+
+    explica(
+      <p>La ecuación {ret.toXML} queda ajustada.</p>
+    )
+
     Some(ret)
   }
 }

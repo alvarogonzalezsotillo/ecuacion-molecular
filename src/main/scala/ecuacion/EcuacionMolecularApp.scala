@@ -95,7 +95,7 @@ object EcuacionMolecularApp {
     }
 
     def agregaExplicacion( div: JQuery, explicacion: String ) = {
-      val boton = jQuery(<a class="acordeon" href="#">ver explicación</a>.toString)
+      val boton = jQuery(<a class="acordeon" href="#">ver explicación 🔽</a>.toString)
       val newDiv = jQuery(<div class="explicacion"></div>.toString)
       println( boton )
       newDiv.append(explicacion)
@@ -105,10 +105,10 @@ object EcuacionMolecularApp {
       boton.click{() =>
         newDiv.toggleClass("visible")
         if( newDiv.hasClass("visible") ){
-          boton.text("ocultar explicación")
+          boton.text("ocultar explicación 🔼")
         }
         else{
-          boton.text("ver explicación")
+          boton.text("ver explicación 🔽")
         }
       }
 
