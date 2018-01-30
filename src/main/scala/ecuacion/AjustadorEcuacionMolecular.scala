@@ -294,7 +294,9 @@ class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fraction
     val matDiag = diag.valuesCopy()
 
     if( matDiag.exists( f => f.take(nColumns-1).forall( _ == cero ) && f.last != cero ) ){
-      return Left( s"Hay una fila con coeficientes a cero, pero el término independiente no es cero" )
+      val error = <p>Hay una fila con coeficientes a cero, pero el término independiente no es cero.</p>
+      explica( error )
+      return Left( error.toString() )
     }
 
     val erroresOVariables = for( v <- 0 until nColumns-1 ) yield {

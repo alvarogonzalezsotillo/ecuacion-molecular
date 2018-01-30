@@ -187,8 +187,13 @@ object EcuacionMolecular{
     val parser = new EcuacionMolecularParser
     import parser._
     parser.parse(parser.ecuacion, s) match{
-      case Success(ecuacion, _) => Right(ecuacion)
-      case NoSuccess(msg,_) => Left(msg)
+      case Success(ecuacion, input) =>
+        if( input.atEnd )
+          Right(ecuacion)
+        else
+          Left("La ecuación no puede entenderse completamente.")
+      case NoSuccess(msg,_) =>
+        Left(msg)
     }
   }
 

@@ -88,7 +88,7 @@ object EcuacionMolecularApp {
         ecuacionNormalizadaDiv.removeClass("error")
 
       ecuacionNormalizadaDiv.html(ecuacion)
-      if( s.trim != "" ) {
+      if( s.trim != "" && explicacion.trim != "" ) {
         agregaExplicacion(ecuacionNormalizadaDiv, explicacion)
       }
       log( "keyup:" + s )
