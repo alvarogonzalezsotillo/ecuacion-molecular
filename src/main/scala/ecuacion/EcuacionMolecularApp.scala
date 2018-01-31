@@ -2,6 +2,7 @@ package ecuacion
 
 import org.scalajs.dom
 import dom.document
+import dom.window
 import org.scalajs.jquery._
 
 import scala.scalajs.js
@@ -78,8 +79,8 @@ object EcuacionMolecularApp {
 
     // LISTENER TEXTO DE ECUACION
     ecuacionTex.keyup{ () =>
-      val s = ecuacionTex.value().toString
-
+      val s = ecuacionTex.value().toString.trim
+      window.location.hash = s
       val ResultadoAjustaEcuacion(ecuacion,error,explicacion) = ajustaEcuacion(s)
 
       if( error )
@@ -148,6 +149,9 @@ object EcuacionMolecularApp {
     }
 
     setupSamples()
+
+    val ecuacionPasada = window.location.hash.replace("#","").replace(" ","")
+    ecuacionTex.value(ecuacionPasada)
 
     Future{
       ecuacionTex.keyup()

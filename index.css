@@ -94,6 +94,7 @@ td, th{
 
 matriz{
     display: inline-block;
+    vertical-align: middle;
     border-right: 2px solid black;
     border-left: 2px solid black;
     padding: 0.5em;
@@ -114,6 +115,8 @@ elemento{
 
 implica{
     display: inline-block;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
 }
 
 @media only screen and (min-width: 500px) {

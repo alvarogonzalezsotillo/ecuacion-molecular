@@ -275,8 +275,8 @@ class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fraction
     import fractional.mkNumericOps
     import explicador._
 
-    explica( <p>El sistema de ecuaciones puede representarse como una matriz y resolverse por el
-      <a href="https://es.wikipedia.org/wiki/Sistema_de_ecuaciones_lineales#M%C3%A9todo_de_Gauss">método de Gauss</a>
+    explica( <p>El sistema de ecuaciones puede representarse como una matriz y resolverse con una variante del
+      <a href="https://es.wikipedia.org/wiki/Eliminaci%C3%B3n_de_Gauss-Jordan">método de Gauss-Jordan</a>
     </p> )
 
     explica( <ecuaciones>{asXML(valuesCopy())}</ecuaciones> )
@@ -362,7 +362,7 @@ class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fraction
       asXML(m)
     }
 
-    explicador.explica( <ecuaciones>{Explicador.intercala( xml, <implica>-></implica> )}</ecuaciones> )
+    explicador.explica( <ecuaciones>{Explicador.intercala( xml, <implica>→</implica> )}</ecuaciones> )
 
 
     new Mat(m)
