@@ -1,7 +1,7 @@
 
 * Ecuaciones estequiométricas
 
-[[https://travis-ci.org/alvarogonzalezsotillo/ecuacion-molecular.svg?branch=master)]]
+[[https://travis-ci.org/alvarogonzalezsotillo/ecuacion-molecular.svg?branch=master]]
 
 En vivo en [[https://alvarogonzalezsotillo.github.io/ecuacion-molecular]]
 
@@ -9,7 +9,7 @@ Una ecuación estequiométrica o ecuación química muestra las moléculas inici
 
 Por ejemplo, la reacción de combustión de hidrógeno ($H_2$) y oxígeno ($O_2$) para formar agua (${H_2}O$) se representa como:
 
-\[H_2 + O_2 = {H_2}O\]
+$$H_2 + O_2 = {H_2}O$$
 
 Se puede ver que los índices moleculares no /cuadran/: en el lado izquierdo de la ecuación hay dos átomos de oxígeno, pero en el lado derecho solo hay uno.
 
@@ -30,6 +30,171 @@ En el *método algebraico* se utiliza un sistema de ecuaciones lineales:
   - Los de la parte izquierda son negativos
 - Cada ecuación lineal se iguala a cero
 
-Para la ecuación $H_2 + O_2 = 2{H_2}O$:
+Como ejemplo, se ajustará la ecuación $H_2 + O_2 = {H_2}O$. Se asigna una variable a cada molécula que será su coeficiente
 
-$H: 2a + 0b - 
+$$x_0\times H_2 + x_1 \times O_2 = x_2 \times {H_2}O$$
+
+El desglose de la ecuación anterior por cada átomo da lugar a un sistema de ecuaciones
+$$H: 2x_0 + 0x_1 - 2x_2 = 0 $$
+$$O: 0x_0 + 2x_1 - x_2 = 0 $$
+
+Este sistema queda siempre indeterminado, pues cualquier múltiplo de los coeficientes finales será también una solución. Para definir el sistema, se añade arbitrariamente la ecuación
+$$ x_0 = 1 $$
+
+Al resolver el sistema, queda
+$$x_0 = 1$$
+$$x_1 = \frac{1}{2}$$
+$$x_2 = 1$$
+
+Para conseguir coeficientes enteros, se multiplican hasta conseguir que el denominador de todos los coeficientes sea el mínimo común múltiplo de los originales. Tras ello, tenemos:
+
+$$x_0 = 2$$
+$$x_1 = 1$$
+$$x_2 = 2$$
+
+Quedando la ecuación ajustada como $2H_2O + O_2 = 2{H_2}O$
+
+* Implementación
+
+Se ha implementado la lógica en Scala, y se ha /transpilado/ posteriormente a Javascript con Scalajs. El código fuente está disponible en un [[https://github.com/alvarogonzalezsotillo/ecuacion-molecular][repositorio de Github]].
+
+** /Parseo/ de la ecuación
+Se ha utilizado ~scala.util.parsing.combinator.RegexParsers~ para validar la ecuación introducida.
+
+Se necesitan varias /case class/ para representar internamente una ecuación:
+- Una ~EcuacionMolecular~ tiene dos ~LadoEcuacion~.
+- Un ~LadoEcuacion~ tiene un número variable de ~Molecula.
+- Una ~Molecula~ puede ir precedida de un multiplicador, y tiene varios ~GrupoAtomico~.
+- Un ~GrupoAtomico~ puede ser:
+  - Un ~Atomo~.
+  - Un ~GrupoAtomico~ seguido de un multiplicador.
+  - Varios ~GrupoAtomico~, que aparecerán entre paréntesis.
+- Un ~Atomo~ es una cadena que empieza por mayúscula, seguido de hasta dos minúsculas.
+
+
+#+caption: Implementación del /parser/ de ecuaciones moleculares
+#+begin_src scala
+  class EcuacionMolecularParser extends RegexParsers {
+
+    def blanco = "\\s*".r
+
+    def atomo: Parser[Atomo] = "[A-Z][a-z]?[a-z]?".r ^^ {
+      case s => Atomo(s)
+    }
+
+    def numero: Parser[Int] = "[0-9]+".r ^^ {
+      case n => n.toInt
+    }
+
+    def grupo : Parser[GrupoAtomico] = rep1(("(" ~> grupo <~ ")"|atomo) ~ numero.?) ~ numero.? ^^ {
+      case l ~ c =>
+
+        val grupos = l.map {
+          case grupo ~ None => grupo
+          case grupo ~ cantidad => GrupoAtomico(grupo.grupos,cantidad.get)
+        }
+
+        GrupoAtomico( grupos, c.getOrElse(1))
+    }
+
+    def molecula: Parser[Molecula] = blanco ~> (numero.? ~ rep1(grupo)) <~ blanco ^^ {
+      case n ~ as if  as.size == 1 && as.head.cantidad == 1 =>
+        // PARA EVITAR UN EXCESO DE PARENTESIS EN LA REPRESENTACION TEXTO
+        Molecula( as.head.grupos, n.getOrElse(1))
+      case n ~ as =>
+        Molecula( as, n.getOrElse(1))
+    }
+
+    def suma : Parser[String] = blanco ~> "\\+".r <~ blanco
+
+    def ladoDeEcuacion : Parser[LadoEcuacion] =  molecula ~ rep( suma ~> molecula) ^^ {
+      case m ~ ms => LadoEcuacion(m :: ms)
+    }
+
+    def separadorLados : Parser[String] = blanco <~ ("=".r | "<-*>".r) ~> blanco
+
+    def ecuacion : Parser[EcuacionMolecular] =  ladoDeEcuacion ~ separadorLados ~ ladoDeEcuacion  ^^ {
+      case li ~ _ ~ ld => EcuacionMolecular(li, ld)
+    }
+
+  }
+#+end_src
+
+** Explicaciones del proceso
+Durante el proceso de ajuste, se generan explicaciones de los pasos seguidos. Esto se consigue a partir de /literales XML/ volcados en un ~Explicador~. Este explicador se pasa como parámetro implícito, se importan sus métodos ~explica~ y ~siExplicadorActivo~ para poder usarse directamente.
+
+#+caption: Ejemplo de uso del ~Explicador~
+#+begin_src scala
+    val variablesEnteras = {
+      val denominadores = variables.map(_.den)
+      val mcm = Racional.mcm(denominadores)
+      val ret = variables.map( r => r.num * mcm / r.den ).map( Math.abs )
+
+      siExplicadorActivo{
+        if(denominadores.exists( _ > 1 ) ){
+          explica(
+            <p>
+              Algunos valores de variables no son enteros.
+              Multiplicaremos cada fracción hasta hacer que todos los denominadores sean el
+              mínimo común múltiplo de los originales.
+            </p>
+          )
+          explica(
+            <ecuaciones>
+              <ecuacion>
+                mcm({denominadores.mkString(",")}) = {mcm}
+              </ecuacion>
+            </ecuaciones>
+          )
+          
+          explica( <p>Las variables ajustadas quedan:</p> )
+          explicaVariables( ret )
+        }
+      }
+      ret
+    }
+#+end_src
+
+** Ajuste de la ecuación
+A partir de la ecuación molecular, se construye una matriz que representa el sistema de ecuaciones lineales descrito anteriormente. 
+
+Las ecuaciones deben resolverse con números racionales para poder reajustar las soluciones no enteras. Se ha implementado una clase ~Racional~ y su correspondiente implementación de ~Fractional~, de forma que puede usarse de forma genérica.
+
+#+caption: Implementación de números racionales
+#+begin_src scala
+class Racional(num_ : Numero, den_ : Numero ){
+
+  import Racional._
+  import Math.abs
+
+  assert( den_ != 0 )
+
+  val num = Math.signum(den_).toInt * num_ / mcd(abs(num_),abs(den_))
+  val den = Math.abs( den_ / mcd(abs(num_),abs(den_)) )
+
+  def plus( r: Racional ) = Racional( num*r.den + r.num*den, den*r.den )
+
+  lazy val negate = Racional( -num, den )
+
+  def minus( r: Racional ) = plus( r.negate )
+
+  def times( r: Racional ) = Racional( num*r.num, den * r.den )
+
+  def div( r: Racional ) = Racional( num*r.den, den * r.num )
+
+  def compare( r: Racional ) = minus(r).num.toInt
+
+  override lazy val toString = if( num == 0 ) "0" else if( den == 1 ) s"$num" else s"$num/$den"
+
+  override def equals( r: Any ) = r match {
+    case r: Racional => compare(r) == 0
+    case a => this == a
+  }
+
+  lazy val toInt = num/den
+  lazy val toLong = 1L*num/den
+  lazy val toFloat = toDouble.toFloat
+  lazy val toDouble = 1.0F * num/den
+}
+#+end_src
+

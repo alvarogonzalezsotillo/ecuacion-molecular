@@ -165,7 +165,6 @@ object AjustadorEcuacionMolecular {
         <tr><td><ecuacion>x<sub>{i}</sub> = {valor}</ecuacion></td></tr>
       }
       explica( <ecuaciones><table>{tableBody}</table></ecuaciones>)
-
     }
 
     siExplicadorActivo{
@@ -187,7 +186,8 @@ object AjustadorEcuacionMolecular {
       siExplicadorActivo{
         if(denominadores.exists( _ > 1 ) ){
           explica(
-            <p>Algunos valores de variables no son enteros.
+            <p>
+              Algunos valores de variables no son enteros.
               Multiplicaremos cada fracción hasta hacer que todos los denominadores sean el
               mínimo común múltiplo de los originales.
             </p>
@@ -232,7 +232,6 @@ object AjustadorEcuacionMolecular {
 
 class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fractional[T], ct: ClassTag[T]){
 
-  println( "HACIENDO UNA MATRIZ:" +values )
 
   def this( a : Array[Array[T]] )(implicit f: Fractional[T], ct: ClassTag[T] ){
     this( a.map( _.toIndexedSeq) )

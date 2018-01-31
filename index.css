@@ -50,6 +50,10 @@ ejemplo{
     padding: 1em;
 }
 
+a{
+    text-decoration: underline;
+    color: #0f00e0;
+}
 
 .acordeon{
     margin-left: 1em;

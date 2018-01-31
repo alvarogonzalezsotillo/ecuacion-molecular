@@ -17,7 +17,6 @@ class Racional(num_ : Numero, den_ : Numero ){
   val num = Math.signum(den_).toInt * num_ / mcd(abs(num_),abs(den_))
   val den = Math.abs( den_ / mcd(abs(num_),abs(den_)) )
 
-
   def plus( r: Racional ) = Racional( num*r.den + r.num*den, den*r.den )
 
   lazy val negate = Racional( -num, den )
@@ -30,14 +29,12 @@ class Racional(num_ : Numero, den_ : Numero ){
 
   def compare( r: Racional ) = minus(r).num.toInt
 
-
   override lazy val toString = if( num == 0 ) "0" else if( den == 1 ) s"$num" else s"$num/$den"
 
   override def equals( r: Any ) = r match {
     case r: Racional => compare(r) == 0
     case a => this == a
   }
-
 
   lazy val toInt = num/den
   lazy val toLong = 1L*num/den
@@ -69,7 +66,7 @@ object Racional {
     implicit def intToRational(i: Numero) = Racional(i)
     implicit class IntConstructor(i:Numero){
       def \\ (den: Numero) = Racional(i,den)
-  }
+    }
   }
 
   implicit object FractionalRacional extends Fractional[Racional] {

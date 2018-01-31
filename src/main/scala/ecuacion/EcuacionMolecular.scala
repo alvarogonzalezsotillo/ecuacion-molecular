@@ -133,10 +133,9 @@ object EcuacionMolecular{
 
   class EcuacionMolecularParser extends RegexParsers {
 
-
     def blanco = "\\s*".r
 
-    def atomo: Parser[Atomo] = "[A-Z][a-z]?".r ^^ {
+    def atomo: Parser[Atomo] = "[A-Z][a-z]?[a-z]?".r ^^ {
       case s => Atomo(s)
     }
 
@@ -144,38 +143,35 @@ object EcuacionMolecular{
       case n => n.toInt
     }
 
-
-
     def grupo : Parser[GrupoAtomico] = rep1(("(" ~> grupo <~ ")"|atomo) ~ numero.?) ~ numero.? ^^ {
       case l ~ c =>
 
-        val grupos = l.map { v =>
-          v match {
-            case kk: ~[Grupo, Option[Int]] => GrupoAtomico(Seq(kk._1), kk._2.getOrElse(1))
-          }
+        val grupos = l.map {
+          case grupo ~ None => grupo
+          case grupo ~ cantidad => GrupoAtomico(grupo.grupos,cantidad.get)
         }
 
         GrupoAtomico( grupos, c.getOrElse(1))
     }
 
-
-
     def molecula: Parser[Molecula] = blanco ~> (numero.? ~ rep1(grupo)) <~ blanco ^^ {
       case n ~ as if  as.size == 1 && as.head.cantidad == 1 =>
+        // PARA EVITAR UN EXCESO DE PARENTESIS EN LA REPRESENTACION TEXTO
         Molecula( as.head.grupos, n.getOrElse(1))
       case n ~ as =>
         Molecula( as, n.getOrElse(1))
-
     }
 
-    def ladoDeEcuacion : Parser[LadoEcuacion] = molecula ~ rep((blanco ~ "\\+".r ~ blanco) ~> molecula) ^^ {
+    def suma : Parser[String] = blanco ~> "\\+".r <~ blanco
+
+    def ladoDeEcuacion : Parser[LadoEcuacion] =  molecula ~ rep( suma ~> molecula) ^^ {
       case m ~ ms => LadoEcuacion(m :: ms)
     }
+    
 
-    def separadorLados : Parser[Any] = blanco <~ ("=".r | "<-*>".r) ~> blanco
+    def separadorLados : Parser[String] = blanco <~ ("=".r | "<-*>".r) ~> blanco
 
-
-    def ecuacion : Parser[EcuacionMolecular] = (blanco ~> ladoDeEcuacion) ~ separadorLados ~ (ladoDeEcuacion <~ blanco) ^^ {
+    def ecuacion : Parser[EcuacionMolecular] =  ladoDeEcuacion ~ separadorLados ~ ladoDeEcuacion  ^^ {
       case li ~ _ ~ ld => EcuacionMolecular(li, ld)
     }
 
@@ -198,44 +194,44 @@ object EcuacionMolecular{
   }
 
   val ejemplos = Seq(
-    "H2+ O2 = H2O",
-    "N2 +  H2  =   NH3",
-    "H2O + Na  = Na(OH) + H2",
-    "KClO3 = KCl + O2",
-    "BaO2 + HCl = BaCl2 + H2O2",
-    "H2SO4 + NaCl =  Na2SO4 + HCl",
-    "FeS2 =  Fe3S4 + S2",
-    "H2SO4 + C  =  H2O + SO2 + CO2",
-    "SO2 + O2 =  SO3",
-    "NaCl  = Na + Cl2",
-    "HCl + MnO2 =  MnCl2 + H2O + Cl2",
-    "K2CO3 + C =  CO + K",
-    "Ag2SO4 + NaCl =  Na2SO4 + AgCl",
-    "NaNO3 + KCl =  NaCl + KNO3",
-    "Fe2O3 + CO =  CO2 + Fe",
-    "Na2CO3 + H2O  + CO2 =  NaHCO3",
-    "FeS2 + O2 = Fe2O3 + SO2",
-    "Cr2O3 + Al =  Al2O3 + Cr",
-    "Ag + HNO3 =  NO + H2O + AgNO3",
-    "CuFeS2 + O2 =  SO2 + CuO + FeO",
-    "Mg + H2SO4 = MgSO4 + H2",
-    "C4H10 + O2 = CO2 + H2O",
-    "CaCO3 = CaO + CO2",
-    "Cd + HCl = CdCl2 + H2",
-    "CO + O2 = CO2",
-    "MgCO3 = CO2 + MgO",
-    "C6H6 + O2 = CO2 + H2O",
-    "Al + HCl = AlCl3 + H2",
-    "ZnS + O2 = ZnO + SO2",
-    "H2O + Na = Na(OH) + H2",
-    "H(O(OH)2)2 + Fe2 = FeH2 + O2",
-    "Na2SO4 + BaCl2 = NaCl + BaSO4",
-    "FeS + O2 = Fe2O3 + SO2",
-    "Al + H2SO4 = Al2(SO4)3 + H2",
-    "N2 + H2 = NH3",
-    "Na + H2O = NaOH + H2",
-    "H2S + O2 = SO2 + H2O",
-    "C5H12 + O2 = CO2 + H2O",
+    "H2+ O2 = H2O     ",
+    "N2 +  H2  =   NH3     ",
+    "H2O + Na  = Na(OH) + H2     ",
+    "KClO3 = KCl + O2     ",
+    "BaO2 + HCl = BaCl2 + H2O2     ",
+    "H2SO4 + NaCl =  Na2SO4 + HCl     ",
+    "FeS2 =  Fe3S4 + S2     ",
+    "H2SO4 + C  =  H2O + SO2 + CO2     ",
+    "SO2 + O2 =  SO3     ",
+    "NaCl  = Na + Cl2     ",
+    "HCl + MnO2 =  MnCl2 + H2O + Cl2     ",
+    "K2CO3 + C =  CO + K     ",
+    "Ag2SO4 + NaCl =  Na2SO4 + AgCl     ",
+    "NaNO3 + KCl =  NaCl + KNO3     ",
+    "Fe2O3 + CO =  CO2 + Fe     ",
+    "Na2CO3 + H2O  + CO2 =  NaHCO3     ",
+    "FeS2 + O2 = Fe2O3 + SO2     ",
+    "Cr2O3 + Al =  Al2O3 + Cr     ",
+    "Ag + HNO3 =  NO + H2O + AgNO3     ",
+    "CuFeS2 + O2 =  SO2 + CuO + FeO     ",
+    "Mg + H2SO4 = MgSO4 + H2     ",
+    "C4H10 + O2 = CO2 + H2O     ",
+    "CaCO3 = CaO + CO2     ",
+    "Cd + HCl = CdCl2 + H2     ",
+    "CO + O2 = CO2     ",
+    "MgCO3 = CO2 + MgO     ",
+    "C6H6 + O2 = CO2 + H2O     ",
+    "Al + HCl = AlCl3 + H2     ",
+    "ZnS + O2 = ZnO + SO2     ",
+    "H2O + Na = Na(OH) + H2     ",
+    "H(O(OH)2)2 + Fe2 = FeH2 + O2     ",
+    "Na2SO4 + BaCl2 = NaCl + BaSO4     ",
+    "FeS + O2 = Fe2O3 + SO2     ",
+    "Al + H2SO4 = Al2(SO4)3 + H2     ",
+    "N2 + H2 = NH3     ",
+    "Na + H2O = NaOH + H2     ",
+    "H2S + O2 = SO2 + H2O     ",
+    "C5H12 + O2 = CO2 + H2O     ",
     "(NH4)2SO4 + NaOH = Na2SO4 + NH3 + H2O",
     "HCl + MnO2 = Cl2 + MnCl2 + H2O",
     "Na2CO3 + HCl = NaCl + CO2 + H2O",
@@ -245,21 +241,21 @@ object EcuacionMolecular{
     "CaCO3 + HCl = CaCl2 + CO2 + H2O",
     "N2 + H2 = NH3",
     "NaClO3 = NaCl + O2",
-    "C2 H4 + O2 = CO2 + H2 O",
-    "Al2O3 + CO = Al + CO2",
-    "C7H16 + O2 = CO2 + H2O",
-    "K + H2O = KOH + H2",
-    "(NH4)2S + HCl = NH4Cl + H2S",
-    "Zn + HNO3 = Zn (NO3)2 + H2",
-    "CaC2 + H2O = Ca(OH)2 + C2H2",
-    "HCl + Al (OH)3 = Al Cl3 + H2O",
-    "H3PO4 + Ca(OH)2 = Ca(H2 PO4)2 + H2O",
-    "HCl + MnO2 = MnCl2 + Cl2 + H2O",
-    "H2 SO4 + NH4 OH = (NH4)2SO4+ H2O",
-    "HCl + Al2O3 = AlCl3 + H2O",
-    "C15H32 + O2 = CO2 + H2O",
-    "NH3 + O2 = NO + H2O",
-    "ZnS + O2 = ZnO + SO2",
+    "C2 H4   +   O2 = CO2   +   H2 O",
+    "Al2O3   +   CO = Al   +   CO2",
+    "C7H16   +   O2 = CO2   +   H2O",
+    "K   +   H2O = KOH   +   H2",
+    "(NH4)2S   +   HCl = NH4Cl   +   H2S",
+    "Zn   +   HNO3 = Zn (NO3)2   +   H2",
+    "CaC2   +   H2O = Ca(OH)2   +   C2H2",
+    "HCl   +   Al (OH)3 = Al Cl3   +   H2O",
+    "H3PO4   +   Ca(OH)2 = Ca(H2 PO4)2   +   H2O",
+    "   HCl   +   MnO2 = MnCl2   +   Cl2   +   H2O",
+    "   H2 SO4   +   NH4 OH = (NH4)2SO4+ H2O",
+    "   HCl   +   Al2O3 = AlCl3   +   H2O",
+    "   C15H32   +   O2 = CO2   +   H2O",
+    "   NH3   +   O2 = NO   +   H2O",
+    "ZnS   +   O2 = ZnO   +   SO2",
     "Fe2O3 + CO = CO2 + Fe",
     "HNO3 + Cu = Cu(NO3)2 + NO2 + H2O",
     "Na3P + H2O = PH3 + NaOH",
