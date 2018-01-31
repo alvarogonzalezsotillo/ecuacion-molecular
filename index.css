@@ -56,7 +56,7 @@ a{
 }
 
 .acordeon{
-    cursor: poiner;
+    cursor: pointer;
     margin-left: 1em;
     font-size: 0.7em;
 }
