@@ -1,9 +1,11 @@
 
-* Ecuaciones estequiométricas
-
 [[https://travis-ci.org/alvarogonzalezsotillo/ecuacion-molecular.svg?branch=master]]
 
-En vivo en [[https://alvarogonzalezsotillo.github.io/ecuacion-molecular]]
+Este proyecto es un ajustador de ecuaciones estequiométricas. Puede verse en vivo en [[https://alvarogonzalezsotillo.github.io/ecuacion-molecular]]. también puede enlazarse directamente con la ecuación ajustar:  [[https://alvarogonzalezsotillo.github.io/ecuacion-molecular#H2+O2=H2O]]
+
+
+
+* Ecuaciones estequiométricas
 
 Una ecuación estequiométrica o ecuación química muestra las moléculas iniciales de una reacción y los resultados de dicha reacción.
 
@@ -198,3 +200,30 @@ class Racional(num_ : Numero, den_ : Numero ){
 }
 #+end_src
 
+Las ecuaciones se combinan linealmente para conseguir despejar las incógnitas, con una variación del [[https://es.wikipedia.org/wiki/Eliminaci%25C3%25B3n_de_Gauss-Jordan][método de Gauss-Jordan]].
+
+#+caption: Diagonalización de la matriz del sistema de ecuaciones (~xml~ forma parte de la explicación del proceso)
+#+begin_src scala
+    val m: Array[Array[T]] = valuesCopy()
+
+    val columns = (m(0).size min m.size)
+
+    val xml = for( col <- 0 until columns ) yield{
+      val fil = m.indexWhere{ fila =>
+        val noEsCero = fila(col) != cero
+        val anteriores = fila.take(col)
+        val anterioresCero = anteriores.forall( _ == cero )
+        noEsCero && anterioresCero
+      }
+
+      for( f <- 0 until m.size if f != fil && fil != -1 ){
+
+        val factor = m(f)(col) / m(fil)(col)
+        for( c <- col until m(0).size ) {
+          m(f)(c) = m(f)(c) - m(fil)(c) * factor
+        }
+      }
+
+      asXML(m)
+    }
+#+end_src

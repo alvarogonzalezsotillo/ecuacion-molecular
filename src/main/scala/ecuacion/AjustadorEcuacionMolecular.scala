@@ -339,7 +339,6 @@ class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fraction
 
     val m: Array[Array[T]] = valuesCopy()
 
-
     val columns = (m(0).size min m.size)
 
     val xml = for( col <- 0 until columns ) yield{
