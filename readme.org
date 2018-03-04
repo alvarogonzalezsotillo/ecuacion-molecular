@@ -1,8 +1,46 @@
+#+title: Ajuste de ecuaciones moleculares
+#+PROPERTY: header-arg :eval query
+#+LANGUAGE: es
+#+options: toc:nil 
+#+latex_class_options: [a4paper]
+#+latex_header: \usepackage[margin=2cm]{geometry}
+#+latex_header: \usepackage{amsmath}
+#+latex_header: \usepackage{xcolor}
+#+latex_header: \usepackage[spanish]{babel}
+#+latex_header: \usepackage{caption}
+#+latex_header: \usepackage{listings}
+#+LATEX_HEADER_EXTRA: \makeatletter
+#+LATEX_HEADER_EXTRA:\def\ifenv#1{
+#+LATEX_HEADER_EXTRA:   \def\@tempa{#1}%
+#+LATEX_HEADER_EXTRA:   \ifx\@tempa\@currenvir
+#+LATEX_HEADER_EXTRA:      \expandafter\@firstoftwo
+#+LATEX_HEADER_EXTRA:    \else
+#+LATEX_HEADER_EXTRA:      \expandafter\@secondoftwo
+#+LATEX_HEADER_EXTRA:   \fi
+#+LATEX_HEADER_EXTRA:}
+#+LATEX_HEADER_EXTRA:\makeatother
+#+LATEX_HEADER_EXTRA: \usepackage{letltxmacro}
+#+LATEX_HEADER_EXTRA: \LetLtxMacro{\originalincludegraphics}{\includegraphics}
+#+latex_header_extra: \newcommand{\nuevoincludegraphics}[2][]{\IfFileExists{#2.pdf}{\originalincludegraphics[#1]{#2.pdf}}{\originalincludegraphics[#1]{#2}}}
+#+LATEX_HEADER_EXTRA: \renewcommand{\includegraphics}[2][]{\ifenv{longtable}{\nuevoincludegraphics[#1]{#2}}{\begin{center}\nuevoincludegraphics[#1]{#2}\end{center}}}
+#+latex_header_extra: \lstset{frame=single,columns=fixed,basicstyle=\scriptsize\ttfamily,breaklines=true,postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}},keywordstyle=\color{blue}\ttfamily,stringstyle=\color{red}\ttfamily,commentstyle=\color{green}\ttfamily}
+#+latex_header_extra: \lstset{emph={function,let,len,import,translate,module,rotate,module,hull,sphere},emphstyle=\color{blue}\ttfamily}
+#+latex_header_extra: \hypersetup{colorlinks,citecolor=black,filecolor=black,linkcolor=black,urlcolor=blue}
+#+latex_header_extra: \renewcommand{\lstlistingname}{Listado}
+#+latex_header_extra: \captionsetup{font={scriptsize}}
+
+#+latex_header_extra: \lstset{  literate={á}{{\'a}}1    {é}{{\'e}}1    {í}{{\'i}}1    {ó}{{\'o}}1    {ú}{{\'u}}1    {Á}{{\'A}}1    {É}{{\'E}}1    {Í}{{\'Y}}1    {Ó}{{\'O}}1    {Ú}{{\'U}}1}
+
+
+#+author: Álvaro González Sotillo
 
 [[https://travis-ci.org/alvarogonzalezsotillo/ecuacion-molecular.svg?branch=master]]
 
-Este proyecto es un ajustador de ecuaciones estequiométricas. Puede verse en vivo en [[https://alvarogonzalezsotillo.github.io/ecuacion-molecular]]. también puede enlazarse directamente con la ecuación ajustar:  [[https://alvarogonzalezsotillo.github.io/ecuacion-molecular#H2+O2=H2O]]
+Este proyecto es un ajustador de ecuaciones estequiométricas. 
+- Puede verse en vivo en [[https://alvarogonzalezsotillo.github.io/ecuacion-molecular]].
+- Con la ecuación ajustar:  [[https://alvarogonzalezsotillo.github.io/ecuacion-molecular#H2+O2=H2O]]
 
+#+TOC: headlines 2 local
 
 
 * Ecuaciones estequiométricas
