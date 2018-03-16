@@ -1,7 +1,7 @@
 
-[[https://travis-ci.org/alvarogonzalezsotillo/ecuacion-molecular.svg?branch=master]]
+[[https://travis-ci.org/alvarogonzalezsotillo/ecuacion-molecular.png?branch=master&ext=.png]]
 
-Este proyecto es un ajustador de ecuaciones estequiométricas. Puede verse en vivo en [[https://alvarogonzalezsotillo.github.io/ecuacion-molecular]]. también puede enlazarse directamente con la ecuación ajustar:  [[https://alvarogonzalezsotillo.github.io/ecuacion-molecular#H2+O2=H2O]]
+Este proyecto es un ajustador de ecuaciones estequiométricas. Puede verse en vivo en [[https://alvarogonzalezsotillo.github.io/ecuacion-molecular]]. También puede enlazarse directamente con la ecuación ajustar:  [[https://alvarogonzalezsotillo.github.io/ecuacion-molecular#H2+O2=H2O]]
 
 
 
@@ -58,7 +58,7 @@ Quedando la ecuación ajustada como $2H_2O + O_2 = 2{H_2}O$
 
 * Implementación
 
-Se ha implementado la lógica en Scala, y se ha /transpilado/ posteriormente a Javascript con Scalajs. El código fuente está disponible en un [[https://github.com/alvarogonzalezsotillo/ecuacion-molecular][repositorio de Github]].
+Se ha implementado la lógica en Scala, y se ha /transpilado/ posteriormente a Javascript con Scalajs. El código fuente está disponible en un [[https://github.com/alvarogonzalezsotillo/ecuacion-molecular][repositorio de Github]], y puede probarse en vivo en https://alvarogonzalezsotillo.github.io/ecuacion-molecular. 
 
 ** /Parseo/ de la ecuación
 Se ha utilizado ~scala.util.parsing.combinator.RegexParsers~ para validar la ecuación introducida.
@@ -123,7 +123,7 @@ Se necesitan varias /case class/ para representar internamente una ecuación:
 #+end_src
 
 ** Explicaciones del proceso
-Durante el proceso de ajuste, se generan explicaciones de los pasos seguidos. Esto se consigue a partir de /literales XML/ volcados en un ~Explicador~. Este explicador se pasa como parámetro implícito, se importan sus métodos ~explica~ y ~siExplicadorActivo~ para poder usarse directamente.
+Durante el proceso de ajuste, se generan explicaciones de los pasos seguidos. Esto se consigue a partir de [[https://alvinalexander.com/scala/scala-xml-examples-xml-literals-source-code-searching-xpath][/literales XML/]] volcados en un ~Explicador~. Este explicador se pasa como parámetro implícito, se importan sus métodos ~explica~ y ~siExplicadorActivo~ para poder usarse directamente.
 
 #+caption: Ejemplo de uso del ~Explicador~
 #+begin_src scala
