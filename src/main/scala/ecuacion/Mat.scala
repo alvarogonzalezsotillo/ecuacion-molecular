@@ -6,9 +6,28 @@ import scala.reflect.ClassTag
 import scala.util.{Success, Try}
 import scala.xml._
 
+object Mat{
+
+  trait SolveResult[T]{
+    val msg: Elem
+    val mat: Mat[T]
+    val solved: Boolean = false
+  }
+
+  case class Incompatible[T](msg: Elem, mat: Mat[T]) extends SolveResult[T]
+  case class SolutionFound[T](msg: Elem, mat: Mat[T], variables: IndexedSeq[T] ) extends SolveResult[T]{
+    override val solved = true
+  }
+  case class VariablesUndefined[T](msg: Elem, mat: Mat[T], variables: IndexedSeq[Option[T]]) extends SolveResult[T]
+
+}
 
 class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fractional[T], ct: ClassTag[T]){
 
+  type SolveResult = Mat.SolveResult[T]
+  type Incompatible = Mat.Incompatible[T]
+  type SolutionFound = Mat.SolutionFound[T]
+  type VariablesUndefined = Mat.VariablesUndefined[T]
 
   def this( a : Array[Array[T]] )(implicit f: Fractional[T], ct: ClassTag[T] ){
     this( a.map( _.toIndexedSeq) )
@@ -16,7 +35,7 @@ class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fraction
 
   def addRow( row: IndexedSeq[T] )(implicit fractional: Fractional[T], ct: ClassTag[T]) : Mat[T] = {
     assert( row.size == columns.size )
-    new Mat( values ++ IndexedSeq(row) )
+    new Mat[T]( values ++ IndexedSeq(row) )
   }
 
 
@@ -53,31 +72,43 @@ class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fraction
     <matriz>{filas}</matriz>
   }
 
-  def solveUndefined(implicit explicador: Explicador ) : String Either IndexedSeq[T] = {
+  def solveUndefined(implicit explicador: Explicador, fractional: Fractional[T] ) : SolveResult = {
     solve match{
-      case Incompatible(msg,_) =>
-        Left(msg.toString)
-      case SolutionFound(_,_,ret) =>
-        Right(ret)
-      case VariablesUndefined(_,diag,variables) =>
-        val firstUndefinedIndex = variables.indexWhere(!_.isDefined)
+      case i : Incompatible =>
+        i
+
+      case sf: SolutionFound  =>
+        sf
+
+      case Mat.VariablesUndefined(_,diag,_) =>
+        // HAY QUE DAR VALOR A LA VARIABLE MÁS PEQUEÑA SI EL TÉRMINO INDEPENDIENTE ES POSITIVO
+        import fractional._
+
+        val cero = fractional.fromInt(0)
+
+        val firstUndefinedRow = diag.undefinedRows.head
+        explicador.explica(<p>firstUndefinedRow:${firstUndefinedRow.mkString(",")} </p>)
+        val row = if( firstUndefinedRow.last > cero ) firstUndefinedRow else firstUndefinedRow.map(f => -f)
+        explicador.explica(<p>row:${row.mkString(",")} </p>)
+
+        val coefs = row.take(row.size-1)
+        explicador.explica(<p>coefs:${coefs.mkString(",")} </p>)
+
+        val smallerUndefinedIndex = coefs.zipWithIndex.filter{case (c,i) => c != cero }.minBy( _._1)._2 
+        explicador.explica(<p>smallerUndefinedIndex:${smallerUndefinedIndex} </p>)
+
         val newRow = Array.tabulate(columns.size){ i =>
-          if( i == firstUndefinedIndex || i == columns.size-1 ) uno else cero
+          if( i == smallerUndefinedIndex || i == columns.size-1 ) uno else cero
         }
+
+        explicador.explica(<p>newRow:${newRow} </p>)
+
         val newMat = diag.addRow(newRow.toIndexedSeq)
         newMat.solveUndefined
     }
   }
 
 
-  trait SolveResult{
-    val msg: Elem
-    val mat: Mat[T]
-  }
-
-  case class Incompatible(msg: Elem, mat: Mat[T]) extends SolveResult
-  case class SolutionFound(msg: Elem, mat: Mat[T], variables: IndexedSeq[T] ) extends SolveResult
-  case class VariablesUndefined(msg: Elem, mat: Mat[T], variables: IndexedSeq[Option[T]]) extends SolveResult
 
   def solve(implicit explicador: Explicador ) : SolveResult  = {
     import fractional.mkNumericOps
@@ -97,9 +128,6 @@ class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fraction
 
     val nColumns = columns.size
     val nRows = rows.size
-    if( nColumns-1 > nRows ){
-      explica( <p>El sistema no puede estar definido si hay menos filas ({nRows}) que variables ({nColumns-1}) </p> )
-    }
 
     val diag = diagonalize
     val matDiag = diag.valuesCopy()
@@ -107,7 +135,7 @@ class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fraction
     if( matDiag.exists( f => f.take(nColumns-1).forall( _ == cero ) && f.last != cero ) ){
       val error = <p>Hay una fila con coeficientes a cero, pero el término independiente no es cero.</p>
       explica( error )
-      return Incompatible(error,diag)
+      return Mat.Incompatible(error,diag)
     }
 
     def solveVariable(v: Int) : Option[T]= {
@@ -130,14 +158,20 @@ class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fraction
 
     val variables = for( v <- 0 until nColumns-1 ) yield solveVariable(v)
     if( variables.count( _.isDefined) == variables.size ){
-      SolutionFound(<p>Solución encontrada</p>, diag, variables.map(_.get))
+      Mat.SolutionFound(<p>Solución encontrada</p>, diag, variables.map(_.get))
     }
     else{
-      VariablesUndefined(<p>Algunas variables no están definidas</p>, diag, variables)
+      Mat.VariablesUndefined(<p>Algunas variables no están definidas</p>, diag, variables)
     }
   }
 
-
+  private def undefinedRows() = {
+    for( fila <- rows.take(rows.length-1) ;
+      variablesEnFila = fila.take(columns.length-1).count( _ != cero )
+      if( variablesEnFila != 1 ) ) yield{
+      fila
+    }
+  }
 
 
   def diagonalize(implicit explicador: Explicador ) : Mat[T] = {

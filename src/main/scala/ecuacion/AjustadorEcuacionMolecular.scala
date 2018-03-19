@@ -5,6 +5,7 @@ import ecuacion.EcuacionMolecular.{LadoEcuacion, Molecula}
 import scala.reflect.ClassTag
 import scala.util.{Success, Try}
 import scala.xml._
+import ecuacion.Mat._
 
 /**
   * Created by alvaro on 23/12/17.
@@ -148,17 +149,18 @@ object AjustadorEcuacionMolecular {
     val adicional = Array(uno) ++ Array.fill(mat(0).size-1)(cero) :+ uno
     val toSolve = mat.map( array => array :+ cero ) :+ adicional
     val matriz = new Mat(toSolve)
+
     val errorOVariables = matriz.solve
 
     println( s"errorOvariables:$errorOVariables" )
 
 
-    if( errorOVariables.isLeft ){
+    if( !errorOVariables.solved ){
       explica( <p>El sistema no puede resolverse.</p> )
       return None
     }
 
-    val variables = errorOVariables.right.get  
+    val variables = errorOVariables.asInstanceOf[SolutionFound[Racional]].variables
 
     def explicaVariables[T]( v: Seq[T] ) = {
       val tableBody = for( (valor,i) <- v.zipWithIndex ) yield {

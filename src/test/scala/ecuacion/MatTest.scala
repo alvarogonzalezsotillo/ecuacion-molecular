@@ -20,7 +20,10 @@ class MatTest extends FlatSpec {
       Array(2\\1, 3\\1, 1\\1, 4\\1)
     ))
 
-    val variables = m.solve.right.get
+    val result = m.solve
+    assert( result.isInstanceOf[m.SolutionFound] )
+    val variables = result.asInstanceOf[m.SolutionFound].variables
+
     println( "Las variables son:" + variables.mkString(", ") )
     assert( variables(0) == 3\\4)
     assert( variables(1) == 3\\4)
@@ -36,8 +39,8 @@ class MatTest extends FlatSpec {
       Array(2.0, 4.0, 6.0, 4.0)
     ))
 
-    val variables = m.solve
-    assert(variables.isLeft)
+    val result = m.solve
+    assert( result.isInstanceOf[m.Incompatible] )
   }
 
   it should "Fallar en un sistema indefinido" in {
@@ -49,8 +52,24 @@ class MatTest extends FlatSpec {
       Array(2.0, 4.0, 6.0, 8.0)
     ))
 
-    val variables = m.solve
-    assert(variables.isLeft)
+    val result = m.solve
+    assert( result.isInstanceOf[m.VariablesUndefined] )
+  }
+
+  it should "Definirse en un sistema indefinido" in {
+    import EcuacionMolecular._
+
+    val m = new Mat( Array (
+      Array(1.0, 2.0, 3.0, 4.0),
+      Array(3.0, 2.0, 1.0, 4.0),
+      Array(2.0, 4.0, 6.0, 8.0)
+    ))
+
+    val result = m.solveUndefined
+    assert( result.isInstanceOf[m.SolutionFound] )
+    val variables = result.asInstanceOf[m.SolutionFound].variables
+
+    println( "Las variables son:" + variables.mkString(", ") )
   }
 
 
