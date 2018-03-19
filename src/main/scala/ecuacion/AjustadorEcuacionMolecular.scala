@@ -150,7 +150,7 @@ object AjustadorEcuacionMolecular {
     val toSolve = mat.map( array => array :+ cero ) :+ adicional
     val matriz = new Mat(toSolve)
 
-    val errorOVariables = matriz.solveUndefined
+    val errorOVariables = matriz.solve
 
     println( s"errorOvariables:$errorOVariables" )
 

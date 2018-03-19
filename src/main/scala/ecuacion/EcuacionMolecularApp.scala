@@ -80,7 +80,7 @@ object EcuacionMolecularApp {
     // LISTENER TEXTO DE ECUACION
     ecuacionTex.keyup{ () =>
       val s = ecuacionTex.value().toString.trim
-      window.location.hash = s
+      window.location.hash = s.replace(" ","")
       val ResultadoAjustaEcuacion(ecuacion,error,explicacion) = ajustaEcuacion(s)
 
       if( error )

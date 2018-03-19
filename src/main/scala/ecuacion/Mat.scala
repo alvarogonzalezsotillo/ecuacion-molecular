@@ -82,15 +82,27 @@ class Mat[T]( values : IndexedSeq[IndexedSeq[T]] )(implicit fractional: Fraction
 
       case Mat.VariablesUndefined(_,diag,_) =>
         // HAY QUE DAR VALOR A LA VARIABLE MÁS PEQUEÑA SI EL TÉRMINO INDEPENDIENTE ES POSITIVO
-        import fractional.mkNumericOps
+        import fractional._
+
         val cero = fractional.fromInt(0)
 
         val firstUndefinedRow = diag.undefinedRows.head
+        explicador.explica(<p>firstUndefinedRow:${firstUndefinedRow.mkString(",")} </p>)
         val row = if( firstUndefinedRow.last > cero ) firstUndefinedRow else firstUndefinedRow.map(f => -f)
-        val firstUndefinedIndex = firstUndefinedRow
+        explicador.explica(<p>row:${row.mkString(",")} </p>)
+
+        val coefs = row.take(row.size-1)
+        explicador.explica(<p>coefs:${coefs.mkString(",")} </p>)
+
+        val smallerUndefinedIndex = coefs.zipWithIndex.filter{case (c,i) => c != cero }.minBy( _._1)._2 
+        explicador.explica(<p>smallerUndefinedIndex:${smallerUndefinedIndex} </p>)
+
         val newRow = Array.tabulate(columns.size){ i =>
-          if( i == firstUndefinedIndex || i == columns.size-1 ) uno else cero
+          if( i == smallerUndefinedIndex || i == columns.size-1 ) uno else cero
         }
+
+        explicador.explica(<p>newRow:${newRow} </p>)
+
         val newMat = diag.addRow(newRow.toIndexedSeq)
         newMat.solveUndefined
     }
